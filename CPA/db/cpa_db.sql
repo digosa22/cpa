@@ -1,6 +1,6 @@
 CREATE DATABASE IF NOT EXISTS `cpa_db` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 
-USE `cpa_dbdatos_plantilla`;
+USE `cpa_db`;
 
 CREATE TABLE `datos_plantilla` (
 `id` VARCHAR(10) NOT NULL PRIMARY KEY,
