@@ -30,59 +30,63 @@ public class prueba {
 	
 	public static void main(String[] argv) {
 		 
-//		System.out.println("-------- MySQL JDBC Connection Testing ------------");
-//	 
-//		try {
-//			Class.forName("com.mysql.jdbc.Driver");
-//		} catch (ClassNotFoundException e) {
-//			System.out.println("Where is your MySQL JDBC Driver?");
-//			e.printStackTrace();
-//			return;
-//		}
-//	 
-//		System.out.println("MySQL JDBC Driver Registered!");
-//		Connection connection = null;
-//	 
-//		try {
-//			connection = DriverManager
-//			.getConnection("jdbc:mysql://localhost:3306/cpa_db","root", "admin");
-//	 
-//		} catch (SQLException e) {
-//			System.out.println("Connection Failed! Check output console");
-//			e.printStackTrace();
-//			return;
-//		}
-//	 
-//		if (connection != null) {
-//			System.out.println("You made it, take control your database now!");
-//		} else {
-//			System.out.println("Failed to make connection!");
-//		}
-//				
-//			
-//			
-//		try {
-//			Statement statement = connection.createStatement();
-//			String sql = "SELECT * FROM datos_plantilla";
-//			ResultSet rs = statement.executeQuery(sql);
-//			
-//			while (rs.next()) {
-//				System.out.println(rs.getString("id") + "  -  " + rs.getString("posicion"));
-//			}		
-//			
-//			statement.close();
-//			connection.close();
-//			
-//			} catch(Exception ex) {
-//				JOptionPane.showMessageDialog(null, ex.getMessage(), ex.getClass().getName(),
-//						JOptionPane.ERROR_MESSAGE);
-//			}
+		System.out.println("-------- MySQL JDBC Connection Testing ------------");
+	 
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			System.out.println("Where is your MySQL JDBC Driver?");
+			e.printStackTrace();
+			return;
+		}
+	 
+		System.out.println("MySQL JDBC Driver Registered!");
+		Connection connection = null;
+	 
+		try {
+			connection = DriverManager
+			.getConnection("jdbc:mysql://lhcp1017.webapps.net:3306/he1hqohd_prueba","he1hqohd_ireguat", "Ireguatekcpa1");
+	 
+		} catch (SQLException e) {
+			System.out.println("Connection Failed! Check output console");
+			e.printStackTrace();
+			return;
+		}
+	 
+		if (connection != null) {
+			System.out.println("You made it, take control your database now!");
+		} else {
+			System.out.println("Failed to make connection!");
+		}
+				
+			
+			
+		try {
+			
+			Statement statement = connection.createStatement();
+			
+			statement.execute("Insert into p(nombre) VALUES ('pepito')");
+			
+			String sql = "SELECT * FROM p";
+			ResultSet rs = statement.executeQuery(sql);
+			
+			while (rs.next()) {
+				System.out.println(rs.getInt("id") + "  -  " + rs.getString("nombre"));
+			}		
+			
+			statement.close();
+			connection.close();
+			
+			} catch(Exception ex) {
+				JOptionPane.showMessageDialog(null, ex.getMessage(), ex.getClass().getName(),
+						JOptionPane.ERROR_MESSAGE);
+			}
 		
 		
 		
 		
 		
-		
+/*		
 		
 		
 		
@@ -250,5 +254,8 @@ public class prueba {
         	    
         	    System.out.println("File is copied successful!");
 	}
+	
+	*/
 
+	}
 }

@@ -18,10 +18,10 @@ public class FTPUploadFileDemo {
     	
     	System.setProperty("java.net.preferIPv4Stack", "true");
     	
-        String server = "ftp.salongaudi.esy.es";
+        String server = "lhcp1017.webapps.net";
         int port = 21;
-        String user = "u982068658";
-        String pass = "159*963";
+        String user = "ireguatek@clientes-cpavitoria06.com";
+        String pass = "Ireguatekcpa1";
  
         FTPClient ftpClient = new FTPClient();
         try {
@@ -33,9 +33,12 @@ public class FTPUploadFileDemo {
             ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
  
             // APPROACH #1: uploads first file using an InputStream
-            File firstLocalFile = new File("pdfs/validacion.pdf");
- 
-            String firstRemoteFile = "cpa/validacion.pdf";
+            File firstLocalFile = new File("img/cuadrado.jpg");
+            
+            String dirToCreate = "/cpa";
+            ftpClient.makeDirectory(dirToCreate);
+            
+            String firstRemoteFile = "cpa/cuadrado.jpg";
             InputStream inputStream = new FileInputStream(firstLocalFile);
  
             System.out.println("Start uploading first file");

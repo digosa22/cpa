@@ -14,6 +14,12 @@ import javax.swing.JOptionPane;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.Picture;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -51,6 +57,46 @@ public class facturasprueba {
 			cell = sheet.getRow(16).getCell(3);
 			cell.setCellValue("molero");
 
+			
+			InputStream inputStream = new FileInputStream("img/descarga.jpg");
+			   //Get the contents of an InputStream as a byte[].
+			   byte[] bytes = IOUtils.toByteArray(inputStream);
+			   //Adds a picture to the workbook
+			   int pictureIdx = workbook.addPicture(bytes, Workbook.PICTURE_TYPE_PNG);
+			   //close the input stream
+			   inputStream.close();
+			 
+			   //Returns an object that handles instantiating concrete classes
+			   CreationHelper helper = workbook.getCreationHelper();
+			 
+			   //Creates the top-level drawing patriarch.
+			   Drawing drawing = sheet.createDrawingPatriarch();
+			 
+			   //Create an anchor that is attached to the worksheet
+			   ClientAnchor anchor = helper.createClientAnchor();
+			   //set top-left corner for the image
+			   anchor.setCol1(1);
+			   anchor.setRow1(55);
+			 
+			   //Creates a picture
+			   Picture pict = drawing.createPicture(anchor, pictureIdx);
+			   System.out.println(pict.getImageDimension().height);
+			   //System.out.println(pict.getImageDimension().width);
+			   
+			  // double var = pict.getImageDimension().height/200;
+			   
+			   //System.out.println(var);
+			   
+			   //var = 1/var;
+			   
+			   //System.out.println(var);
+			   
+			   //Reset the image to the original size
+			   pict.resize(50,50);
+			
+			
+			
+			
 			file.close();
 
 			FileOutputStream outFile =new FileOutputStream(new File("facturas/temporal.xlsm"));
@@ -61,12 +107,12 @@ public class facturasprueba {
 			
 			
 			
-			File file2 = new File( "facturas/temporal.xlsm");
+			/*File file2 = new File( "facturas/temporal.xlsm");
 	        String macroName = "!cpa.guardar";
 	        callExcelMacro(file2, macroName);
 			Macros("ochoa");
 	        
-	        file2.delete();
+	        file2.delete();*/
 	        
 	        System.out.println("fin yeahhh");
 	        
