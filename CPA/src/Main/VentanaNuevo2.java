@@ -29,7 +29,7 @@ import javax.swing.table.TableModel;
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JDateChooserCellEditor;
 
-public class VentanaNuevo2 extends JDialog {
+public class VentanaNuevo2 extends JDialog {JTable tablaHeaders2;
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -150,7 +150,7 @@ public class VentanaNuevo2 extends JDialog {
 		panelDePestanas.setBounds(20, 100, 800, 420);
 		panel.add(panelDePestanas);
 
-		
+		tablaHeaders2 = new JTable();
 		
 		//TODO PESTAÑA ORDEN DE PEDIDO
 		ordenDePedido = new JPanel();
@@ -376,9 +376,36 @@ public class VentanaNuevo2 extends JDialog {
 		instruccionDeTrabajo.add(panelControl);
 		
 		String[] columnNames = { "Descripción", "Otros", "Aplica"};
-		Object[][] data = {{"Prueba 1","Imágenes",false},{"Prueba 2","Imágenes",true},{"Prueba 3","Imágenes",true}
+		/*Object[][] data = {{"Prueba 1","Imágenes",false},{"Prueba 2","Imágenes",true},{"Prueba 3","Imágenes",true}
 		,{"Prueba 3","Imágenes",true},{"Prueba 3","Imágenes",true},{"Prueba 3","Imágenes",true},{"Prueba 3","Imágenes",true}
-		,{"Prueba 3","Imágenes",true},{"Prueba 3","Imágenes",true},{"Prueba 3","Imágenes",true},{"Prueba 3","Imágenes",true},{"Prueba 3","Imágenes",true}};
+		,{"Prueba 3","Imágenes",true},{"Prueba 3","Imágenes",true},{"Prueba 3","Imágenes",true},{"Prueba 3","Imágenes",true},{"Prueba 3","Imágenes",true}};*/
+		
+		Object[][] data = new Object[12][3];
+		
+		String[] arr = serv.getAccionesIntruccion().split("@;@");
+		int row1 = 0;
+		int col1 = 0;
+		for(int i=0; i<arr.length; i++) {
+			if (col1 == 0) {
+				data[row1][col1] = arr[i];
+			} else {
+				if (arr[i].equalsIgnoreCase("1")) {
+					data[row1][col1] = true;
+				} else {
+					data[row1][col1] = false;
+				}
+			}
+			col1++;
+			if (col1 > 2) {
+				col1 = 0;
+				row1++;
+			}
+		}
+		for (int i=0; i<data.length; i++) {
+			data[i][1] = "Imágenes";
+		}
+		
+		
 		TableModel model = new DefaultTableModel(data, columnNames);
 		trabajos = new JTable(model) {
 
@@ -482,14 +509,14 @@ public class VentanaNuevo2 extends JDialog {
 		panelDePestanas.addTab("Información", null, informacion, null);
 		informacion.setLayout(null);
 		JTable tablaHeaders = new JTable();
-		DefaultTableModel modelo1 = (DefaultTableModel) tablaHeaders.getModel();
+		DefaultTableModel modelo1 = (DefaultTableModel) tablaHeaders2.getModel();
 		modelo1.addColumn("Tipo de defectos");
 		String[] filaVacia = new String[1];
 		for (int i=0; i<6; i++) {
 			modelo1.addRow(filaVacia);
 		}
-		tablaHeaders.getColumnModel().getColumn(0).setPreferredWidth(120);
-		tablaHeaders.getColumnModel().getColumn(0).setResizable(false);
+		tablaHeaders2.getColumnModel().getColumn(0).setPreferredWidth(120);
+		tablaHeaders2.getColumnModel().getColumn(0).setResizable(false);
 		Calendar c = Calendar.getInstance();
 		defectos = new JTable();
 		DefaultTableModel modeloDefectos = (DefaultTableModel) defectos.getModel();
@@ -511,8 +538,8 @@ public class VentanaNuevo2 extends JDialog {
 		JScrollPane scrollDefectos = new JScrollPane(defectos, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		defectos.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		defectos.getTableHeader().setReorderingAllowed(false);
-		tablaHeaders.getTableHeader().setReorderingAllowed(false);
-		JScrollPane scroll1 = new JScrollPane(tablaHeaders);
+		tablaHeaders2.getTableHeader().setReorderingAllowed(false);
+		JScrollPane scroll1 = new JScrollPane(tablaHeaders2);
 		scroll1.setBounds(10, 90, 120, 125);
 		informacion.add(scroll1);
 		scrollDefectos.setBounds(128, 90, 660, 145);
@@ -624,8 +651,8 @@ public class VentanaNuevo2 extends JDialog {
 		modelo1.addColumn("Tipo Hora");
 		filaVacia = new String[1];
 		String[] tiposHora = new String[] {"Hora Normal","Hora extra","Hora sábados","Hora festivos","Hora Nocturna",
-				"H. Especialista Normal","H. Especialista Festiva","H. Especial. Nocturna","Hora de Coordinación",
-				"H. de Administración","Gastos logisticos","Otros 1","Otros 2"};
+				"H. Especialista Normal", "H. Especialista Extra", "H. Especialista Sabado", "H. Especialista Festiva",
+				"H. Especial. Nocturna","Hora de Coordinación", "H. de Administración","Gastos logisticos","Otros 1","Otros 2"};
 		for (int i=0; i<tiposHora.length; i++) {
 			modelo1.addRow(filaVacia);
 			modelo1.setValueAt(tiposHora[i], i, 0);
@@ -656,9 +683,9 @@ public class VentanaNuevo2 extends JDialog {
 		horas.getTableHeader().setReorderingAllowed(false);
 		tablaHeaders.getTableHeader().setReorderingAllowed(false);
 		scroll1 = new JScrollPane(tablaHeaders);
-		scroll1.setBounds(10, 90, 120, 235);
+		scroll1.setBounds(10, 90, 120, 267);
 		estimacionHorasCostes.add(scroll1);
-		scrollHoras.setBounds(128, 90, 660, 255);
+		scrollHoras.setBounds(128, 90, 660, 290);
 		estimacionHorasCostes.add(scrollHoras);
 		JLabel labelEstimacionHoras = new JLabel("<html><h2>TIEMPO INVERTIDO Y COSTES</h2></html>");
 		labelEstimacionHoras.setBounds(280, 40, 300, 25);
@@ -1008,6 +1035,133 @@ public class VentanaNuevo2 extends JDialog {
 				row++;
 			}
 		}
+		
+		arrTemp = serv.getTablaDefectos().split("@;@");
+		row = 0;
+		column = 0;
+		for (int i=0; i<arrTemp.length; i++) {
+			if (column == 0) {
+				tablaHeaders2.setValueAt(arrTemp[i], row, column);
+			} else {
+				defectos.setValueAt(arrTemp[i], row, column-1);
+			}
+			column++;
+			if (column > 30) {
+				column = 0;
+				row++;
+			}
+		}
+		
+		arrTemp = serv.getArrayHoraNormal().split("@;@");
+		for (int i=0; i<arrTemp.length; i++) {
+			horas.setValueAt(arrTemp[i], 0, i );
+		}
+		
+		arrTemp = serv.getArrayHoraExtra().split("@;@");
+		for (int i=0; i<arrTemp.length; i++) {
+			horas.setValueAt(arrTemp[i], 1, i );
+		}
+		arrTemp = serv.getArrayHoraSabado().split("@;@");
+		for (int i=0; i<arrTemp.length; i++) {
+			horas.setValueAt(arrTemp[i], 2, i );
+		}
+		arrTemp = serv.getArrayHoraFestivo().split("@;@");
+		for (int i=0; i<arrTemp.length; i++) {
+			horas.setValueAt(arrTemp[i], 3, i );
+		}
+		arrTemp = serv.getArrayHoraNoctuna().split("@;@");
+		for (int i=0; i<arrTemp.length; i++) {
+			horas.setValueAt(arrTemp[i], 4, i );
+		}
+		arrTemp = serv.getArrayHoraEspecialistaNormal().split("@;@");
+		for (int i=0; i<arrTemp.length; i++) {
+			horas.setValueAt(arrTemp[i], 5, i );
+		}
+		arrTemp = serv.getArrayHoraEspecialistaExtra().split("@;@");
+		for (int i=0; i<arrTemp.length; i++) {
+			horas.setValueAt(arrTemp[i], 6, i );
+		}
+		arrTemp = serv.getArrayHoraEspecialistaSabado().split("@;@");
+		for (int i=0; i<arrTemp.length; i++) {
+			horas.setValueAt(arrTemp[i], 7, i );
+		}
+		arrTemp = serv.getArrayHoraEspecialistaFestiva().split("@;@");
+		for (int i=0; i<arrTemp.length; i++) {
+			horas.setValueAt(arrTemp[i], 8, i );
+		}
+		arrTemp = serv.getArrayHoraEspecialistaNocturna().split("@;@");
+		for (int i=0; i<arrTemp.length; i++) {
+			horas.setValueAt(arrTemp[i], 9, i );
+		}
+		arrTemp = serv.getArrayHoraCoordinacion().split("@;@");
+		for (int i=0; i<arrTemp.length; i++) {
+			horas.setValueAt(arrTemp[i], 10, i );
+		}
+		arrTemp = serv.getArrayHoraAdministracion().split("@;@");
+		for (int i=0; i<arrTemp.length; i++) {
+			horas.setValueAt(arrTemp[i], 11, i );
+		}
+		arrTemp = serv.getArrayGastosLogisticos().split("@;@");
+		for (int i=0; i<arrTemp.length; i++) {
+			horas.setValueAt(arrTemp[i], 12, i );
+		}
+		arrTemp = serv.getArrayOtros1().split("@;@");
+		for (int i=0; i<arrTemp.length; i++) {
+			horas.setValueAt(arrTemp[i], 13, i );
+		}
+		arrTemp = serv.getArrayOtros2().split("@;@");
+		for (int i=0; i<arrTemp.length; i++) {
+			horas.setValueAt(arrTemp[i], 14, i );
+		}
+		
+		realizadoRetrabajos.setText(serv.getRealizadoPorRetrabajos());
+		fechaRetrabajos.setDate(serv.getFechaRetrabajos());
+		fechaLiberacion.setDate(serv.getFechaLiberacionRetrabajos());
+		numReclamacion.setText(serv.getNumReclamacionRetrabajos());
+		fechaReclamacion.setDate(serv.getFechaReclamacionRetrabajos());
+		referenciaRetrabajos.setText(serv.getReferenciaPiezaRetrabajos());
+		fechaComienzo.setDate(serv.getFechaComienzoRetrabajos());
+		tiempo.setText(serv.getTiempoRetrabajos());
+		clienteRetrabajos.setText(serv.getClienteRetrabajos());
+		
+		arrTemp = serv.getFirmasRetrabajos().split("@;@");
+		row = 0;
+		column = 0;
+		for (int i=0; i<arrTemp.length; i++) {
+			if(column == 0) {
+				arrayNombresRetrabajos.get(row).setText(arrTemp[i]);
+			} else {
+				arrayFechasRetrabajos.get(row).setDate(new Date(arrTemp[i]));
+			}
+			column++;
+			if (column > 1) {
+				column = 0;
+				row++;
+			}
+		}
+		
+		realizadoFormado.setText(serv.getRealizadoPorPersonal());
+		fechaFormado.setDate(serv.getFechaPersonal());
+		clienteFormado.setText(serv.getClientePersonal());
+		piezaFormado.setText(serv.getPiezaPersonal());
+		referenciaFormado.setText(serv.getReferenciaPersonal());
+		
+		arrTemp = serv.getFirmasPersonal().split("@;@");
+		row = 0;
+		column = 0;
+		for (int i=0; i<arrTemp.length; i++) {
+			if(column == 0) {
+				arrayNombresPersonal.get(row).setText(arrTemp[i]);
+			} else {
+				arrayFechasPersonal.get(row).setDate(new Date(arrTemp[i]));
+			}
+			column++;
+			if (column > 1) {
+				column = 0;
+				row++;
+			}
+		}
+		
 		
 		
 		

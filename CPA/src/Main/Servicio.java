@@ -81,6 +81,8 @@ public class Servicio {
 	private String arrayHoraFestivo;
 	private String arrayHoraNoctuna;
 	private String arrayHoraEspecialistaNormal;
+	private String arrayHoraEspecialistaExtra;
+	private String arrayHoraEspecialistaSabado;
 	private String arrayHoraEspecialistaFestiva;
 	private String arrayHoraEspecialistaNocturna;
 	private String arrayHoraCoordinacion;
@@ -116,7 +118,6 @@ public class Servicio {
 	private String imagenPersonal;
 	
 	
-	
 	// CONSTRUCTOR
 	public Servicio(String nifCliente, String nomCliente, String personaCPA, String numAccion, Date fechaInicio,
 			String nombrePieza, String referencias, String numChasis1, String numChasis2, String numChasis3,
@@ -132,14 +133,14 @@ public class Servicio {
 			boolean otrosInstruccion, String accionesIntruccion, String tablaDefectos, String piezasOK,
 			String piezasRecuperadas, String recuentoFinal, String arrayHoraNormal, String arrayHoraExtra,
 			String arrayHoraSabado, String arrayHoraFestivo, String arrayHoraNoctuna,
-			String arrayHoraEspecialistaNormal, String arrayHoraEspecialistaFestiva,
-			String arrayHoraEspecialistaNocturna, String arrayHoraCoordinacion, String arrayHoraAdministracion,
-			String arrayGastosLogisticos, String arrayOtros1, String arrayOtros2, String realizadoPorRetrabajos,
-			Date fechaRetrabajos, Date fechaLiberacionRetrabajos, String numReclamacionRetrabajos,
-			Date fechaReclamacionRetrabajos, String referenciaPiezaRetrabajos, Date fechaComienzoRetrabajos,
-			String tiempoRetrabajos, String clienteRetrabajos, String firmasRetrabajos, String imagenRetrabajos,
-			String realizadoPorPersonal, Date fechaPersonal, String clientePersonal, String piezaPersonal,
-			String referenciaPersonal, String firmasPersonal, String imagenPersonal) {
+			String arrayHoraEspecialistaNormal, String arrayHoraEspecialistaExtra, String arrayHoraEspecialistaSabado,
+			String arrayHoraEspecialistaFestiva, String arrayHoraEspecialistaNocturna, String arrayHoraCoordinacion,
+			String arrayHoraAdministracion, String arrayGastosLogisticos, String arrayOtros1, String arrayOtros2,
+			String realizadoPorRetrabajos, Date fechaRetrabajos, Date fechaLiberacionRetrabajos,
+			String numReclamacionRetrabajos, Date fechaReclamacionRetrabajos, String referenciaPiezaRetrabajos,
+			Date fechaComienzoRetrabajos, String tiempoRetrabajos, String clienteRetrabajos, String firmasRetrabajos,
+			String imagenRetrabajos, String realizadoPorPersonal, Date fechaPersonal, String clientePersonal,
+			String piezaPersonal, String referenciaPersonal, String firmasPersonal, String imagenPersonal) {
 		super();
 		this.nifCliente = nifCliente;
 		this.nomCliente = nomCliente;
@@ -196,6 +197,8 @@ public class Servicio {
 		this.arrayHoraFestivo = arrayHoraFestivo;
 		this.arrayHoraNoctuna = arrayHoraNoctuna;
 		this.arrayHoraEspecialistaNormal = arrayHoraEspecialistaNormal;
+		this.arrayHoraEspecialistaExtra = arrayHoraEspecialistaExtra;
+		this.arrayHoraEspecialistaSabado = arrayHoraEspecialistaSabado;
 		this.arrayHoraEspecialistaFestiva = arrayHoraEspecialistaFestiva;
 		this.arrayHoraEspecialistaNocturna = arrayHoraEspecialistaNocturna;
 		this.arrayHoraCoordinacion = arrayHoraCoordinacion;
@@ -552,6 +555,18 @@ public class Servicio {
 	public void setArrayHoraEspecialistaNormal(String arrayHoraEspecialistaNormal) {
 		this.arrayHoraEspecialistaNormal = arrayHoraEspecialistaNormal;
 	}
+	public String getArrayHoraEspecialistaExtra() {
+		return arrayHoraEspecialistaExtra;
+	}
+	public void setArrayHoraEspecialistaExtra(String arrayHoraEspecialistaExtra) {
+		this.arrayHoraEspecialistaExtra = arrayHoraEspecialistaExtra;
+	}
+	public String getArrayHoraEspecialistaSabado() {
+		return arrayHoraEspecialistaSabado;
+	}
+	public void setArrayHoraEspecialistaFestivo(String arrayHoraEspecialistaSabado) {
+		this.arrayHoraEspecialistaSabado = arrayHoraEspecialistaSabado;
+	}
 	public String getArrayHoraEspecialistaFestiva() {
 		return arrayHoraEspecialistaFestiva;
 	}
@@ -702,4 +717,5 @@ public class Servicio {
 	public void setImagenPersonal(String imagenPersonal) {
 		this.imagenPersonal = imagenPersonal;
 	}
+	
 }
