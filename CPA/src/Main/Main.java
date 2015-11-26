@@ -19,7 +19,7 @@ public class Main {
 		Date fecha6 = c.getTime();
 		Date fecha7 = c.getTime();
 		
-		String tablaDefectos = "dsvgfvgds@;@1@;@2@;@3@;@4@;@5@;@6@;@6@;@1@;@1@;@1@;@1@;@1@;@2@;@4@;@5@;@5@;@5@;@4@;@7@;@7@;@8@;@8@;@9@;@8@;@8@;@7@;@2@;@1@;@1@;@2@;@jthyjygyj@;@1@;@2";
+		String tablaDefectos = "dsvgfvgds@;@1@;@2@;@3@;@4@;@5@;@6@;@6@;@1@;@1@;@1@;@1@;@1@;@2@;@4@;@5@;@5@;@5@;@4@;@7@;@7@;@8@;@8@;@9@;@8@;@8@;@7@;@2@;@1@;@1@;@2@;@jthyjygyj@;@1@;@44";
 		String piezasOK = "5@;@7@;@4@;@8@;@4@;@2@;@6";
 		String piezasRecuperadas = "7@;@6@;@4@;@9@;@5@;@5";
 		String recuentoFinal = "ugy@;@ugyh@;@gh@;@kh@;@fty@;@khg@;@tyf@;@jgy@;@@;@4@;@jhjkhh@;@jhkjkh@;@@;@kjkjh@;@jjhk@;@76t@;@7t6@;@@;@76t5@;@87h@;@76ty@;@78@;@87ty@;@978y@;@t876";

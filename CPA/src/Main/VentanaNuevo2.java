@@ -3,6 +3,10 @@ package Main;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -25,6 +29,17 @@ import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
+
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.Picture;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.util.IOUtils;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JDateChooserCellEditor;
@@ -947,6 +962,312 @@ public class VentanaNuevo2 extends JDialog {JTable tablaHeaders2;
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
+				
+				
+				
+				
+				
+				
+				
+				try {
+					FileInputStream file = new FileInputStream(new File("plantilla/prueba.xlsm"));
+
+					
+					XSSFWorkbook workbook = new XSSFWorkbook(file);
+
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					XSSFSheet sheet = null;
+					XSSFCell cell = null;
+					Posiciones posiciones = new Posiciones();
+					
+					
+					// ORDEN DE PEDIDO 1 
+					sheet = workbook.getSheetAt(1);
+					cell = sheet.getRow(posiciones.getNumAccion().getFila()).getCell(posiciones.getNumAccion().getColumna());
+					cell.setCellValue(serv.getNumAccion());
+					
+					cell = sheet.getRow(posiciones.getFechaInicio().getFila()).getCell(posiciones.getFechaInicio().getColumna());
+					cell.setCellValue(serv.getFechaInicio());
+					
+					cell = sheet.getRow(posiciones.getFechaFin().getFila()).getCell(posiciones.getFechaFin().getColumna());
+					Calendar calen = Calendar.getInstance();
+					
+					SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/YYYY");
+					cell.setCellValue(sdf.format(calen.getTime()));
+					
+					cell = sheet.getRow(posiciones.getNombrePieza().getFila()).getCell(posiciones.getNombrePieza().getColumna());
+					cell.setCellValue(serv.getNombrePieza());
+					
+					cell = sheet.getRow(posiciones.getReferencias().getFila()).getCell(posiciones.getReferencias().getColumna());
+					cell.setCellValue(serv.getReferencias());
+					
+					cell = sheet.getRow(posiciones.getNumChasis1().getFila()).getCell(posiciones.getNumChasis1().getColumna());
+					cell.setCellValue(serv.getNumChasis1());
+					
+					cell = sheet.getRow(posiciones.getNumChasis2().getFila()).getCell(posiciones.getNumChasis2().getColumna());
+					cell.setCellValue(serv.getNumChasis2());
+					
+					cell = sheet.getRow(posiciones.getNumChasis3().getFila()).getCell(posiciones.getNumChasis3().getColumna());
+					cell.setCellValue(serv.getNumChasis3());
+					
+					cell = sheet.getRow(posiciones.getNumChasis4().getFila()).getCell(posiciones.getNumChasis4().getColumna());
+					cell.setCellValue(serv.getNumChasis4());
+					
+					cell = sheet.getRow(posiciones.getResponsableCPA().getFila()).getCell(posiciones.getResponsableCPA().getColumna());
+					cell.setCellValue(serv.getResponsableCPA());
+					
+					cell = sheet.getRow(posiciones.getPiezasVerde().getFila()).getCell(posiciones.getPiezasVerde().getColumna());
+					if (serv.isPiezasVerde())
+						cell.setCellValue("X");
+					
+					cell = sheet.getRow(posiciones.getPiezasBlanco().getFila()).getCell(posiciones.getPiezasBlanco().getColumna());
+					if (serv.isPiezasBlanco())
+						cell.setCellValue("X");
+					
+					cell = sheet.getRow(posiciones.getPiezasOtros().getFila()).getCell(posiciones.getPiezasOtros().getColumna());
+					if (serv.isPiezasOtros())
+						cell.setCellValue("X");
+					
+					cell = sheet.getRow(posiciones.getPiezasRojo().getFila()).getCell(posiciones.getPiezasRojo().getColumna());
+					if (serv.isPiezasRojo())
+						cell.setCellValue("X");
+					
+					cell = sheet.getRow(posiciones.getContenedorVerde().getFila()).getCell(posiciones.getContenedorVerde().getColumna());
+					if (serv.isContenedorVerde())
+						cell.setCellValue("X");
+					
+					cell = sheet.getRow(posiciones.getContenedorRojo().getFila()).getCell(posiciones.getContenedorRojo().getColumna());
+					if (serv.isContenedorRojo())
+						cell.setCellValue("X");
+					
+					cell = sheet.getRow(posiciones.getPersonaRecomendador().getFila()).getCell(posiciones.getPersonaRecomendador().getColumna());
+					cell.setCellValue(serv.getPersonaRecomendador());
+					
+					cell = sheet.getRow(posiciones.getDepartamentoRecomendador().getFila()).getCell(posiciones.getDepartamentoRecomendador().getColumna());
+					cell.setCellValue(serv.getDepartamentoRecomendador());
+					
+					cell = sheet.getRow(posiciones.getTelefonoRecomendador().getFila()).getCell(posiciones.getTelefonoRecomendador().getColumna());
+					cell.setCellValue(serv.getTelefonoRecomendador());
+					
+					cell = sheet.getRow(posiciones.getEmailRecomendador().getFila()).getCell(posiciones.getEmailRecomendador().getColumna());
+					cell.setCellValue(serv.getEmailRecomendador());
+					
+					cell = sheet.getRow(posiciones.getFechaSolicitudRecomendador().getFila()).getCell(posiciones.getFechaSolicitudRecomendador().getColumna());
+					cell.setCellValue(serv.getFechaSolicitudRecomendador());
+					
+					cell = sheet.getRow(posiciones.getEmpresaCliente().getFila()).getCell(posiciones.getEmpresaCliente().getColumna());
+					cell.setCellValue("Empresa cliente");
+					
+					cell = sheet.getRow(posiciones.getDireccionCliente().getFila()).getCell(posiciones.getDireccionCliente().getColumna());
+					cell.setCellValue("getDireccionCliente");
+					
+					cell = sheet.getRow(posiciones.getCodigoPostalCliente().getFila()).getCell(posiciones.getCodigoPostalCliente().getColumna());
+					cell.setCellValue("getCodigoPostalCliente");
+					
+					cell = sheet.getRow(posiciones.getPaisCliente().getFila()).getCell(posiciones.getPaisCliente().getColumna());
+					cell.setCellValue("getPaisCliente");
+					
+					cell = sheet.getRow(posiciones.getPoblacionCliente().getFila()).getCell(posiciones.getPoblacionCliente().getColumna());
+					cell.setCellValue("getPoblacionCliente");
+					
+					cell = sheet.getRow(posiciones.getApartadoDeCorreosCliente().getFila()).getCell(posiciones.getApartadoDeCorreosCliente().getColumna());
+					cell.setCellValue("getApartadoDeCorreosCliente");
+					
+					cell = sheet.getRow(posiciones.getCodigoPostalCliente2().getFila()).getCell(posiciones.getCodigoPostalCliente2().getColumna());
+					cell.setCellValue("getCodigoPostalCliente2");
+					
+					cell = sheet.getRow(posiciones.getCodigoPostalEmpresaCliente().getFila()).getCell(posiciones.getCodigoPostalEmpresaCliente().getColumna());
+					cell.setCellValue("getCodigoPostalEmpresaCliente");
+					
+					cell = sheet.getRow(posiciones.getPersonaDeContactoCliente().getFila()).getCell(posiciones.getPersonaDeContactoCliente().getColumna());
+					cell.setCellValue("getPersonaDeContactoCliente");
+					
+					cell = sheet.getRow(posiciones.getDepartamentoCliente().getFila()).getCell(posiciones.getDepartamentoCliente().getColumna());
+					cell.setCellValue("getDepartamentoCliente");
+					
+					cell = sheet.getRow(posiciones.getTelefonoCliente().getFila()).getCell(posiciones.getTelefonoCliente().getColumna());
+					cell.setCellValue("getTelefonoCliente");
+					
+					cell = sheet.getRow(posiciones.getEmailCliente().getFila()).getCell(posiciones.getEmailCliente().getColumna());
+					cell.setCellValue("getEmailCliente");
+					
+					cell = sheet.getRow(posiciones.getDescripcionInstruccionDelServicio().getFila()).getCell(posiciones.getDescripcionInstruccionDelServicio().getColumna());
+					cell.setCellValue(serv.getDescripcionInstruccionDelServicio());
+					
+					cell = sheet.getRow(posiciones.getSeguridadCalzado().getFila()).getCell(posiciones.getSeguridadCalzado().getColumna());
+					if (serv.isSeguridadCalzado())
+						cell.setCellValue("X");
+					
+					cell = sheet.getRow(posiciones.getSeguridadGafas().getFila()).getCell(posiciones.getSeguridadGafas().getColumna());
+					if (serv.isSeguridadGafas())
+						cell.setCellValue("X");
+					
+					cell = sheet.getRow(posiciones.getSeguridadChaleco().getFila()).getCell(posiciones.getSeguridadChaleco().getColumna());
+					if (serv.isSeguridadChaleco())
+						cell.setCellValue("X");
+					
+					cell = sheet.getRow(posiciones.getSeguridadTapones().getFila()).getCell(posiciones.getSeguridadTapones().getColumna());
+					if (serv.isSeguridadTapones())
+						cell.setCellValue("X");
+					
+					cell = sheet.getRow(posiciones.getSeguridadGuantes().getFila()).getCell(posiciones.getSeguridadGuantes().getColumna());
+					if (serv.isSeguridadGuantes())
+						cell.setCellValue("X");
+					
+					if (serv.getInformacionResultados() == 0)
+						cell = sheet.getRow(posiciones.getInformacionResultadosDiaria().getFila()).getCell(posiciones.getInformacionResultadosDiaria().getColumna());
+					else if (serv.getInformacionResultados() == 1)
+						cell = sheet.getRow(posiciones.getInformacionResultadosSemanal().getFila()).getCell(posiciones.getInformacionResultadosSemanal().getColumna());
+					else if (serv.getInformacionResultados() == 2)
+						cell = sheet.getRow(posiciones.getInformacionResultadosMensual().getFila()).getCell(posiciones.getInformacionResultadosMensual().getColumna());
+					else
+						cell = sheet.getRow(posiciones.getInformacionResultadosOtros().getFila()).getCell(posiciones.getInformacionResultadosOtros().getColumna());
+					cell.setCellValue("X");
+					
+					
+					
+					
+					// INFORMACION DE RESULTADOS 3
+					
+					sheet = workbook.getSheetAt(3);
+					
+					String[] arrTemp = serv.getTablaDefectos().split("@;@");
+					int fila = 0;
+					int columna = 0;
+					int contador = 0;
+					boolean esDefecto = true;
+					for (int i=0; i<arrTemp.length; i++) {
+						if (esDefecto) {
+							esDefecto = false;
+							if (fila == 0) {
+								cell = sheet.getRow(posiciones.getDefecto1Nombre().getFila()).getCell(posiciones.getDefecto1Nombre().getColumna());
+								cell.setCellValue(arrTemp[i]);
+							}
+							else if (fila == 1) {
+								cell = sheet.getRow(posiciones.getDefecto2Nombre().getFila()).getCell(posiciones.getDefecto2Nombre().getColumna());
+								cell.setCellValue(arrTemp[i]);
+							}
+							else if (fila == 2) {
+								cell = sheet.getRow(posiciones.getDefecto3Nombre().getFila()).getCell(posiciones.getDefecto3Nombre().getColumna());
+								cell.setCellValue(arrTemp[i]);
+							}
+							else if (fila == 3) {
+								cell = sheet.getRow(posiciones.getDefecto4Nombre().getFila()).getCell(posiciones.getDefecto4Nombre().getColumna());
+								cell.setCellValue(arrTemp[i]);
+							}
+							else if (fila == 4) {
+								cell = sheet.getRow(posiciones.getDefecto5Nombre().getFila()).getCell(posiciones.getDefecto5Nombre().getColumna());
+								cell.setCellValue(arrTemp[i]);
+							}
+							else if (fila == 5) {
+								cell = sheet.getRow(posiciones.getDefecto6Nombre().getFila()).getCell(posiciones.getDefecto6Nombre().getColumna());
+								cell.setCellValue(arrTemp[i]);
+							}
+						}
+						else {
+							if (fila == 0) {
+								cell = sheet.getRow(posiciones.getDefecto1Fechas().getFila()).getCell(posiciones.getDefecto1Fechas().getColumna()+contador);
+								cell.setCellValue(Integer.parseInt(arrTemp[i]));
+							}
+							else if (fila == 1) {
+								cell = sheet.getRow(posiciones.getDefecto2Fechas().getFila()).getCell(posiciones.getDefecto2Fechas().getColumna()+contador);
+								cell.setCellValue(Integer.parseInt(arrTemp[i]));
+							}
+							else if (fila == 2) {
+								cell = sheet.getRow(posiciones.getDefecto3Fechas().getFila()).getCell(posiciones.getDefecto3Fechas().getColumna()+contador);
+								cell.setCellValue(Integer.parseInt(arrTemp[i]));
+							}
+							else if (fila == 3) {
+								cell = sheet.getRow(posiciones.getDefecto4Fechas().getFila()).getCell(posiciones.getDefecto4Fechas().getColumna()+contador);
+								cell.setCellValue(Integer.parseInt(arrTemp[i]));
+							}
+							else if (fila == 4) {
+								cell = sheet.getRow(posiciones.getDefecto5Fechas().getFila()).getCell(posiciones.getDefecto5Fechas().getColumna()+contador);
+								cell.setCellValue(Integer.parseInt(arrTemp[i]));
+							}
+							else if (fila == 5) {
+								cell = sheet.getRow(posiciones.getDefecto6Fechas().getFila()).getCell(posiciones.getDefecto6Fechas().getColumna()+contador);
+								cell.setCellValue(Integer.parseInt(arrTemp[i]));
+							}
+							contador++;
+						}
+						columna++;
+						if (columna > 30) {
+							fila++;
+							contador = 0;
+							columna = 0;
+							esDefecto = true;
+						}
+					}
+					
+					
+					
+					arrTemp = serv.getPiezasOK().split("@;@");
+					for (int i=0; i<arrTemp.length; i++) {
+						cell = sheet.getRow(posiciones.getPiezasOK().getFila()).getCell(posiciones.getPiezasOK().getColumna()+i);
+						cell.setCellValue(Integer.parseInt(arrTemp[i]));
+					}
+					arrTemp = serv.getPiezasRecuperadas().split("@;@");
+					for (int i=0; i<arrTemp.length; i++) {
+						cell = sheet.getRow(posiciones.getPiezasRecuperadas().getFila()).getCell(posiciones.getPiezasRecuperadas().getColumna()+i);
+						cell.setCellValue(Integer.parseInt(arrTemp[i]));
+					}
+					
+					
+					
+					
+					
+					XSSFFormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
+					evaluator.evaluateAllFormulaCells(workbook);
+					
+					
+					
+					// INSTRUCCION DE TRABAJO 2
+					
+					// RECUENTO FINAL 5
+					// ESTIMACION DE HORAS Y COSTES 6
+					
+					
+					
+					
+					
+					
+					file.close();
+
+					FileOutputStream outFile =new FileOutputStream(new File("plantilla/resultado.xlsm"));
+					workbook.write(outFile);
+					outFile.close();
+					
+			        
+			        System.out.println("fin yeahhh");
+			        
+
+				} catch (Exception exp) {
+					exp.printStackTrace();
+				}
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
 			}
 		});
 		
@@ -1050,6 +1371,16 @@ public class VentanaNuevo2 extends JDialog {JTable tablaHeaders2;
 				column = 0;
 				row++;
 			}
+		}
+		
+		arrTemp = serv.getPiezasOK().split("@;@");
+		for (int i=0; i<arrTemp.length; i++) {
+			piezas.setValueAt(arrTemp[i], 0, i);
+		}
+		
+		arrTemp = serv.getPiezasRecuperadas().split("@;@");
+		for (int i=0; i<arrTemp.length; i++) {
+			piezas.setValueAt(arrTemp[i], 1, i);
 		}
 		
 		arrTemp = serv.getArrayHoraNormal().split("@;@");

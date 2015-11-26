@@ -9,6 +9,9 @@ import javax.imageio.ImageIO;
 
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import Main.Posicion;
+
 import org.apache.poi.ss.usermodel.ClientAnchor;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Drawing;
@@ -18,18 +21,18 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.util.IOUtils;
  
  
-public class Image {
+public class Utilidades {
  
 	 private static final int IMG_WIDTH = 500;
 	 private static final int IMG_HEIGHT = 500;
 	
- public static void main(String[] args) {
+ public void insertarImagen(String imagen, Posicion posicion, int ancho, int alto) {
  
   try {
 	  
 	  File i = new File("img/descarga_prueba.jpg");
 	  
-	  BufferedImage originalImage = ImageIO.read(new File("img/cuadrado.jpg"));
+	  BufferedImage originalImage = ImageIO.read(new File(imagen));
 		int type = originalImage.getType() == 0? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
 			
 		BufferedImage resizeImageJpg = resizeImage(originalImage, type);
@@ -71,7 +74,7 @@ public class Image {
  
    //Write the Excel file
    FileOutputStream fileOut = null;
-   fileOut = new FileOutputStream("facturas/myFile.xlsx");
+   fileOut = new FileOutputStream("plantilla/myFile.xlsx");
    wb.write(fileOut);
    fileOut.close();
  
@@ -82,7 +85,7 @@ public class Image {
  
  }
  
- private static BufferedImage resizeImage(BufferedImage originalImage, int type){
+ private BufferedImage resizeImage(BufferedImage originalImage, int type){
 		BufferedImage resizedImage = new BufferedImage(IMG_WIDTH, IMG_HEIGHT, type);
 		Graphics2D g = resizedImage.createGraphics();
 		g.drawImage(originalImage, 0, 0, IMG_WIDTH, IMG_HEIGHT, null);
