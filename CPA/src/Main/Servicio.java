@@ -79,7 +79,7 @@ public class Servicio {
 	private String arrayHoraExtra;
 	private String arrayHoraSabado;
 	private String arrayHoraFestivo;
-	private String arrayHoraNoctuna;
+	private String arrayHoraNocturna;
 	private String arrayHoraEspecialistaNormal;
 	private String arrayHoraEspecialistaExtra;
 	private String arrayHoraEspecialistaSabado;
@@ -132,7 +132,7 @@ public class Servicio {
 			boolean seleccionPiezasInstruccion, boolean retrabajoPiezasInstruccion, boolean trasvaseInstruccion,
 			boolean otrosInstruccion, String accionesIntruccion, String tablaDefectos, String piezasOK,
 			String piezasRecuperadas, String recuentoFinal, String arrayHoraNormal, String arrayHoraExtra,
-			String arrayHoraSabado, String arrayHoraFestivo, String arrayHoraNoctuna,
+			String arrayHoraSabado, String arrayHoraFestivo, String arrayHoraNocturna,
 			String arrayHoraEspecialistaNormal, String arrayHoraEspecialistaExtra, String arrayHoraEspecialistaSabado,
 			String arrayHoraEspecialistaFestiva, String arrayHoraEspecialistaNocturna, String arrayHoraCoordinacion,
 			String arrayHoraAdministracion, String arrayGastosLogisticos, String arrayOtros1, String arrayOtros2,
@@ -195,7 +195,7 @@ public class Servicio {
 		this.arrayHoraExtra = arrayHoraExtra;
 		this.arrayHoraSabado = arrayHoraSabado;
 		this.arrayHoraFestivo = arrayHoraFestivo;
-		this.arrayHoraNoctuna = arrayHoraNoctuna;
+		this.arrayHoraNocturna = arrayHoraNocturna;
 		this.arrayHoraEspecialistaNormal = arrayHoraEspecialistaNormal;
 		this.arrayHoraEspecialistaExtra = arrayHoraEspecialistaExtra;
 		this.arrayHoraEspecialistaSabado = arrayHoraEspecialistaSabado;
@@ -543,11 +543,11 @@ public class Servicio {
 	public void setArrayHoraFestivo(String arrayHoraFestivo) {
 		this.arrayHoraFestivo = arrayHoraFestivo;
 	}
-	public String getArrayHoraNoctuna() {
-		return arrayHoraNoctuna;
+	public String getArrayHoraNocturna() {
+		return arrayHoraNocturna;
 	}
-	public void setArrayHoraNoctuna(String arrayHoraNoctuna) {
-		this.arrayHoraNoctuna = arrayHoraNoctuna;
+	public void setArrayHoraNocturna(String arrayHoraNocturna) {
+		this.arrayHoraNocturna = arrayHoraNocturna;
 	}
 	public String getArrayHoraEspecialistaNormal() {
 		return arrayHoraEspecialistaNormal;

@@ -129,30 +129,30 @@ public class Posiciones {
 	
 	
 	// GAMA DE RETRABAJOS
-	private Posicion realizadoPorRetrabajos = new Posicion(16,0); // R1
-	private Posicion fechaRetrabajos = new Posicion(16,1); // R2
-	private Posicion fechaLiberacionRetrabajos = new Posicion(16,3); // R4 
+	private Posicion realizadoPorRetrabajos = new Posicion(17,0); // R1
+	private Posicion fechaRetrabajos = new Posicion(17,1); // R2
+	private Posicion fechaLiberacionRetrabajos = new Posicion(17,3); // R4 
 	private Posicion numReclamacionRetrabajos = new Posicion(0,5); // A6
 	private Posicion fechaReclamacionRetrabajos = new Posicion(4,5); // E6
 	private Posicion referenciaPiezaRetrabajos = new Posicion(6,5); // G6
-	private Posicion fechaComienzoRetrabajos = new Posicion(17,5); // S6
-	private Posicion tiempoRetrabajos = new Posicion(19,5); // U6
+	private Posicion fechaComienzoRetrabajos = new Posicion(18,5); // S6
+	private Posicion tiempoRetrabajos = new Posicion(20,5); // U6
 	private Posicion clienteRetrabajos = new Posicion(3,6); // D7
 	private Posicion firmasRetrabajosNombres = new Posicion(1,9); // B10
-	private Posicion firmasRetrabajosFechas = new Posicion(16,9); // R10
-	private Posicion imagenRetrabajos = new Posicion(22,0); // X1
+	private Posicion firmasRetrabajosFechas = new Posicion(17,9); // R10
+	private Posicion imagenRetrabajos = new Posicion(23,0); // X1
 	
 	
 	
 	// PERSONAL FORMADO
-	private Posicion realizadoPorPersonal = new Posicion(16,0); // R1
-	private Posicion fechaPersonal = new Posicion(16,1); // R2
+	private Posicion realizadoPorPersonal = new Posicion(17,0); // R1
+	private Posicion fechaPersonal = new Posicion(17,1); // R2
 	private Posicion clientePersonal = new Posicion(4,2); // E3
 	private Posicion piezaPersonal = new Posicion(4,3); // E4
 	private Posicion referenciaPersonal = new Posicion(4,4); // E5
 	private Posicion firmasPersonalNombres = new Posicion(1,6); // B7
-	private Posicion firmasPersonalFechas = new Posicion(16,6); // R7
-	private Posicion imagenPersonal = new Posicion(22,0); // X1
+	private Posicion firmasPersonalFechas = new Posicion(17,6); // R7
+	private Posicion imagenPersonal = new Posicion(23,0); // X1
 	
 	public Posiciones(){}
 

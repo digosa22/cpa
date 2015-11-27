@@ -970,7 +970,7 @@ public class VentanaNuevo2 extends JDialog {JTable tablaHeaders2;
 				
 				
 				try {
-					FileInputStream file = new FileInputStream(new File("plantilla/prueba.xlsm"));
+					FileInputStream file = new FileInputStream(new File("plantilla/ochoa.xlsm"));
 
 					
 					XSSFWorkbook workbook = new XSSFWorkbook(file);
@@ -1000,7 +1000,7 @@ public class VentanaNuevo2 extends JDialog {JTable tablaHeaders2;
 					cell = sheet.getRow(posiciones.getFechaFin().getFila()).getCell(posiciones.getFechaFin().getColumna());
 					Calendar calen = Calendar.getInstance();
 					
-					SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/YYYY");
+					SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");
 					cell.setCellValue(sdf.format(calen.getTime()));
 					
 					cell = sheet.getRow(posiciones.getNombrePieza().getFila()).getCell(posiciones.getNombrePieza().getColumna());
@@ -1224,6 +1224,207 @@ public class VentanaNuevo2 extends JDialog {JTable tablaHeaders2;
 					
 					
 					
+					// RECUENTO FINAL 5
+					sheet = workbook.getSheetAt(5);
+					
+					arrTemp = serv.getRecuentoFinal().split("@;@");
+					columna = 0;
+					fila = 0;
+					for (int i=0; i<arrTemp.length; i++) {
+						cell = sheet.getRow(posiciones.getRecuentoFinal().getFila()+fila).getCell(posiciones.getRecuentoFinal().getColumna()+columna);
+						if (columna < 4)
+							cell.setCellValue(arrTemp[i]);
+						else
+							cell.setCellValue(Integer.parseInt(arrTemp[i]));
+						columna++;
+						if (columna > 6) {
+							fila++;
+							columna = 0;
+						}
+					}
+					
+					
+					
+					
+					// ESTIMACION DE HORAS Y COSTES 6
+					sheet = workbook.getSheetAt(6);
+					
+					arrTemp = serv.getArrayHoraNormal().split("@;@");
+					for (int i=0; i<arrTemp.length; i++) {
+						cell = sheet.getRow(posiciones.getArrayHoraNormal().getFila()).getCell(posiciones.getArrayHoraNormal().getColumna()+i);
+						cell.setCellValue(Integer.parseInt(arrTemp[i]));
+					}
+					
+					
+					arrTemp = serv.getArrayHoraExtra().split("@;@");
+					for (int i=0; i<arrTemp.length; i++) {
+						cell = sheet.getRow(posiciones.getArrayHoraExtra().getFila()).getCell(posiciones.getArrayHoraExtra().getColumna()+i);
+						cell.setCellValue(Integer.parseInt(arrTemp[i]));
+					}
+					
+					
+					arrTemp = serv.getArrayHoraSabado().split("@;@");
+					for (int i=0; i<arrTemp.length; i++) {
+						cell = sheet.getRow(posiciones.getArrayHoraSabado().getFila()).getCell(posiciones.getArrayHoraSabado().getColumna()+i);
+						cell.setCellValue(Integer.parseInt(arrTemp[i]));
+					}
+					
+					
+					arrTemp = serv.getArrayHoraFestivo().split("@;@");
+					for (int i=0; i<arrTemp.length; i++) {
+						cell = sheet.getRow(posiciones.getArrayHoraFestivo().getFila()).getCell(posiciones.getArrayHoraFestivo().getColumna()+i);
+						cell.setCellValue(Integer.parseInt(arrTemp[i]));
+					}
+					
+					
+					arrTemp = serv.getArrayHoraNocturna().split("@;@");
+					for (int i=0; i<arrTemp.length; i++) {
+						cell = sheet.getRow(posiciones.getArrayHoraNocturna().getFila()).getCell(posiciones.getArrayHoraNocturna().getColumna()+i);
+						cell.setCellValue(Integer.parseInt(arrTemp[i]));
+					}
+					
+					
+					arrTemp = serv.getArrayHoraEspecialistaNormal().split("@;@");
+					for (int i=0; i<arrTemp.length; i++) {
+						cell = sheet.getRow(posiciones.getArrayHoraEspecialistaNormal().getFila()).getCell(posiciones.getArrayHoraEspecialistaNormal().getColumna()+i);
+						cell.setCellValue(Integer.parseInt(arrTemp[i]));
+					}
+					
+					
+					arrTemp = serv.getArrayHoraEspecialistaFestiva().split("@;@");
+					for (int i=0; i<arrTemp.length; i++) {
+						cell = sheet.getRow(posiciones.getArrayHoraEspecialistaFestivo().getFila()).getCell(posiciones.getArrayHoraEspecialistaFestivo().getColumna()+i);
+						cell.setCellValue(Integer.parseInt(arrTemp[i]));
+					}
+					
+					
+					arrTemp = serv.getArrayHoraEspecialistaNocturna().split("@;@");
+					for (int i=0; i<arrTemp.length; i++) {
+						cell = sheet.getRow(posiciones.getArrayHoraEspecialistaNocturna().getFila()).getCell(posiciones.getArrayHoraEspecialistaNocturna().getColumna()+i);
+						cell.setCellValue(Integer.parseInt(arrTemp[i]));
+					}
+					
+					
+					arrTemp = serv.getArrayHoraCoordinacion().split("@;@");
+					for (int i=0; i<arrTemp.length; i++) {
+						cell = sheet.getRow(posiciones.getArrayHoraCoordinacion().getFila()).getCell(posiciones.getArrayHoraCoordinacion().getColumna()+i);
+						cell.setCellValue(Integer.parseInt(arrTemp[i]));
+					}
+					
+					
+					arrTemp = serv.getArrayHoraAdministracion().split("@;@");
+					for (int i=0; i<arrTemp.length; i++) {
+						cell = sheet.getRow(posiciones.getArrayHoraAdministracion().getFila()).getCell(posiciones.getArrayHoraAdministracion().getColumna()+i);
+						cell.setCellValue(Integer.parseInt(arrTemp[i]));
+					}
+					
+					
+					arrTemp = serv.getArrayGastosLogisticos().split("@;@");
+					for (int i=0; i<arrTemp.length; i++) {
+						cell = sheet.getRow(posiciones.getArrayGastosLogisticos().getFila()).getCell(posiciones.getArrayGastosLogisticos().getColumna()+i);
+						cell.setCellValue(Integer.parseInt(arrTemp[i]));
+					}
+					
+					
+					arrTemp = serv.getArrayOtros1().split("@;@");
+					for (int i=0; i<arrTemp.length; i++) {
+						cell = sheet.getRow(posiciones.getArrayOtros1().getFila()).getCell(posiciones.getArrayOtros1().getColumna()+i);
+						cell.setCellValue(Integer.parseInt(arrTemp[i]));
+					}
+					
+					
+					
+					
+					// FORMACION PERSONAL 8
+					sheet = workbook.getSheetAt(8);
+					
+					cell = sheet.getRow(posiciones.getRealizadoPorPersonal().getFila()).getCell(posiciones.getRealizadoPorPersonal().getColumna());
+					cell.setCellValue(serv.getRealizadoPorPersonal());
+
+					cell = sheet.getRow(posiciones.getFechaPersonal().getFila()).getCell(posiciones.getFechaPersonal().getColumna());
+					cell.setCellValue(serv.getFechaPersonal());
+
+					cell = sheet.getRow(posiciones.getClientePersonal().getFila()).getCell(posiciones.getClientePersonal().getColumna());
+					cell.setCellValue(serv.getClientePersonal());
+
+					cell = sheet.getRow(posiciones.getPiezaPersonal().getFila()).getCell(posiciones.getPiezaPersonal().getColumna());
+					cell.setCellValue(serv.getPiezaPersonal());
+
+					cell = sheet.getRow(posiciones.getReferenciaPersonal().getFila()).getCell(posiciones.getReferenciaPersonal().getColumna());
+					cell.setCellValue(serv.getReferenciaPersonal());
+					
+					arrTemp = serv.getFirmasPersonal().split("@;@");
+					columna = 0;
+					fila = 0;
+					for (int i=0; i<arrTemp.length; i++) {
+						if (columna == 0) {
+							cell = sheet.getRow(posiciones.getFirmasPersonalNombres().getFila()+fila).getCell(posiciones.getFirmasPersonalNombres().getColumna());
+							cell.setCellValue(arrTemp[i]);
+						}
+						else {
+							cell = sheet.getRow(posiciones.getFirmasPersonalFechas().getFila()+fila).getCell(posiciones.getFirmasPersonalFechas().getColumna());
+							cell.setCellValue(arrTemp[i]);
+						}
+						columna++;
+						if (columna > 1) {
+							columna = 0;
+							fila++;
+						}
+					}
+					
+					
+					// GAMA DE RETRABAJOS 9
+					sheet = workbook.getSheetAt(9);
+					
+					cell = sheet.getRow(posiciones.getRealizadoPorRetrabajos().getFila()).getCell(posiciones.getRealizadoPorRetrabajos().getColumna());
+					cell.setCellValue(serv.getRealizadoPorRetrabajos());
+
+					cell = sheet.getRow(posiciones.getFechaRetrabajos().getFila()).getCell(posiciones.getFechaRetrabajos().getColumna());
+					cell.setCellValue(serv.getFechaRetrabajos());
+
+					cell = sheet.getRow(posiciones.getFechaLiberacionRetrabajos().getFila()).getCell(posiciones.getFechaLiberacionRetrabajos().getColumna());
+					cell.setCellValue(serv.getFechaLiberacionRetrabajos());
+
+					cell = sheet.getRow(posiciones.getNumReclamacionRetrabajos().getFila()).getCell(posiciones.getNumReclamacionRetrabajos().getColumna());
+					cell.setCellValue(serv.getNumReclamacionRetrabajos());
+
+					cell = sheet.getRow(posiciones.getFechaReclamacionRetrabajos().getFila()).getCell(posiciones.getFechaReclamacionRetrabajos().getColumna());
+					cell.setCellValue(serv.getFechaReclamacionRetrabajos());
+
+					cell = sheet.getRow(posiciones.getReferenciaPiezaRetrabajos().getFila()).getCell(posiciones.getReferenciaPiezaRetrabajos().getColumna());
+					cell.setCellValue(serv.getReferenciaPiezaRetrabajos());
+
+					cell = sheet.getRow(posiciones.getFechaComienzoRetrabajos().getFila()).getCell(posiciones.getFechaComienzoRetrabajos().getColumna());
+					cell.setCellValue(serv.getFechaComienzoRetrabajos());
+
+					cell = sheet.getRow(posiciones.getTiempoRetrabajos().getFila()).getCell(posiciones.getTiempoRetrabajos().getColumna());
+					cell.setCellValue(serv.getTiempoRetrabajos());
+
+					cell = sheet.getRow(posiciones.getClienteRetrabajos().getFila()).getCell(posiciones.getClienteRetrabajos().getColumna());
+					cell.setCellValue(serv.getClienteRetrabajos());
+					
+					arrTemp = serv.getFirmasRetrabajos().split("@;@");
+					columna = 0;
+					fila = 0;
+					for (int i=0; i<arrTemp.length; i++) {
+						if (columna == 0) {
+							cell = sheet.getRow(posiciones.getFirmasRetrabajosNombres().getFila()+fila).getCell(posiciones.getFirmasRetrabajosNombres().getColumna());
+							cell.setCellValue(arrTemp[i]);
+						}
+						else {
+							cell = sheet.getRow(posiciones.getFirmasRetrabajosFechas().getFila()+fila).getCell(posiciones.getFirmasRetrabajosFechas().getColumna());
+							cell.setCellValue(arrTemp[i]);
+						}
+						columna++;
+						if (columna > 1) {
+							columna = 0;
+							fila++;
+						}
+					}
+					
+					
+					
+					
 					
 					XSSFFormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
 					evaluator.evaluateAllFormulaCells(workbook);
@@ -1232,8 +1433,8 @@ public class VentanaNuevo2 extends JDialog {JTable tablaHeaders2;
 					
 					// INSTRUCCION DE TRABAJO 2
 					
-					// RECUENTO FINAL 5
-					// ESTIMACION DE HORAS Y COSTES 6
+					
+					
 					
 					
 					
@@ -1400,7 +1601,7 @@ public class VentanaNuevo2 extends JDialog {JTable tablaHeaders2;
 		for (int i=0; i<arrTemp.length; i++) {
 			horas.setValueAt(arrTemp[i], 3, i );
 		}
-		arrTemp = serv.getArrayHoraNoctuna().split("@;@");
+		arrTemp = serv.getArrayHoraNocturna().split("@;@");
 		for (int i=0; i<arrTemp.length; i++) {
 			horas.setValueAt(arrTemp[i], 4, i );
 		}
