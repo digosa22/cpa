@@ -41,10 +41,11 @@ import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import com.mysql.fabric.xmlrpc.base.Array;
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JDateChooserCellEditor;
 
-public class VentanaNuevo2 extends JDialog {JTable tablaHeaders2;
+public class VentanaNuevo2 extends JDialog {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -97,9 +98,11 @@ public class VentanaNuevo2 extends JDialog {JTable tablaHeaders2;
 	private JCheckBox trasvase;
 	private JCheckBox otrosPiezas;
 	private JTable trabajos;
+	private String [] arrayImagenes;
 	
 	
 	private JPanel informacion;
+	private JTable tablaHeaders2;
 	private JTable defectos;
 	private JTable piezas;
 	
@@ -396,6 +399,7 @@ public class VentanaNuevo2 extends JDialog {JTable tablaHeaders2;
 		,{"Prueba 3","Imágenes",true},{"Prueba 3","Imágenes",true},{"Prueba 3","Imágenes",true},{"Prueba 3","Imágenes",true},{"Prueba 3","Imágenes",true}};*/
 		
 		Object[][] data = new Object[12][3];
+		arrayImagenes = new String[12];
 		
 		String[] arr = serv.getAccionesIntruccion().split("@;@");
 		int row1 = 0;
@@ -403,6 +407,9 @@ public class VentanaNuevo2 extends JDialog {JTable tablaHeaders2;
 		for(int i=0; i<arr.length; i++) {
 			if (col1 == 0) {
 				data[row1][col1] = arr[i];
+			} else if(col1 == 1) {
+				data[row1][col1] = "Imágenes";
+				arrayImagenes[row1] = arr[i];
 			} else {
 				if (arr[i].equalsIgnoreCase("1")) {
 					data[row1][col1] = true;
@@ -416,9 +423,9 @@ public class VentanaNuevo2 extends JDialog {JTable tablaHeaders2;
 				row1++;
 			}
 		}
-		for (int i=0; i<data.length; i++) {
-			data[i][1] = "Imágenes";
-		}
+		/*for (int i=0; i<data.length; i++) {
+			
+		}*/
 		
 		
 		TableModel model = new DefaultTableModel(data, columnNames);
@@ -975,15 +982,6 @@ public class VentanaNuevo2 extends JDialog {JTable tablaHeaders2;
 					
 					XSSFWorkbook workbook = new XSSFWorkbook(file);
 
-					
-					
-					
-					
-					
-					
-					
-					
-					
 					XSSFSheet sheet = null;
 					XSSFCell cell = null;
 					Posiciones posiciones = new Posiciones();
@@ -1132,16 +1130,73 @@ public class VentanaNuevo2 extends JDialog {JTable tablaHeaders2;
 						cell = sheet.getRow(posiciones.getInformacionResultadosOtros().getFila()).getCell(posiciones.getInformacionResultadosOtros().getColumna());
 					cell.setCellValue("X");
 					
+					Utilidades ut = new Utilidades();
+					ut.insertarImagen(workbook, sheet, serv.getImagenOrdenDePedido(), posiciones.getImagenOrdenDePedido(), 0, 0, 0);					
+					
+					// INSTRUCCION DE TRABAJO 2
+					
+					sheet = workbook.getSheetAt(2);
+					
+					String operario = "";
+					
+					if (serv.isOperarioA1())
+						operario += "; A1";
+					if (serv.isOperarioA2())
+						operario += "; A2";
+					if (serv.isOperarioA3())
+						operario += "; A3";
+					if (serv.isOperarioA4())
+						operario += "; A4";
+					if (serv.isOperarioA5())
+						operario += "; A5";
+					if (serv.isOperarioA6())
+						operario += "; A6";
+					if (serv.isOperarioA7())
+						operario += "; A7";
+					if (operario.startsWith("; "))
+						operario = operario.substring(2);
+					
+					cell = sheet.getRow(posiciones.getOperario().getFila()).getCell(posiciones.getOperario().getColumna());
+					cell.setCellValue(operario);
 					
 					
+					String[] arrTemp = serv.getAccionesIntruccion().split("@;@");
+					int fila = 0;
+					int columna = 0;
+					String[] imagenes;
+					for (int i=0; i<arrTemp.length; i++) {
+						if (columna == 0) {
+							cell = sheet.getRow(posiciones.getAccionesInstruccionDescripcionInicial().getFila()+fila).getCell(posiciones.getAccionesInstruccionDescripcionInicial().getColumna());
+							cell.setCellValue(arrTemp[i]);
+						} else if (columna == 1) {
+							imagenes = arrTemp[i].split("#;#");
+							ut.insertarImagen(workbook, sheet, imagenes[0], posiciones.getAccionesInstruccionOtros1Inicial(), 0, 0, fila);
+							ut.insertarImagen(workbook, sheet, imagenes[1], posiciones.getAccionesInstruccionOtros2Inicial(), 0, 0, fila);
+						} else {
+							cell = sheet.getRow(posiciones.getAccionesInstruccionAplicaInicial().getFila()+fila).getCell(posiciones.getAccionesInstruccionAplicaInicial().getColumna());
+							if (arrTemp[i].equalsIgnoreCase("0")) {
+								cell = sheet.getRow(posiciones.getAccionesInstruccionNoAplicaInicial().getFila()+fila).getCell(posiciones.getAccionesInstruccionNoAplicaInicial().getColumna());
+							}
+							cell.setCellValue("X");
+						}
+						
+						columna++;
+						if (columna > 2) {
+							fila = fila + 3;
+							if (fila == 33) {
+								fila++;
+							}
+							columna = 0;
+						}
+					}
 					
 					// INFORMACION DE RESULTADOS 3
 					
 					sheet = workbook.getSheetAt(3);
 					
-					String[] arrTemp = serv.getTablaDefectos().split("@;@");
-					int fila = 0;
-					int columna = 0;
+					arrTemp = serv.getTablaDefectos().split("@;@");
+					fila = 0;
+					columna = 0;
 					int contador = 0;
 					boolean esDefecto = true;
 					for (int i=0; i<arrTemp.length; i++) {
@@ -1372,6 +1427,7 @@ public class VentanaNuevo2 extends JDialog {JTable tablaHeaders2;
 						}
 					}
 					
+					ut.insertarImagen(workbook, sheet, serv.getImagenPersonal(), posiciones.getImagenPersonal(), 0, 0, 0);	
 					
 					// GAMA DE RETRABAJOS 9
 					sheet = workbook.getSheetAt(9);
@@ -1422,23 +1478,12 @@ public class VentanaNuevo2 extends JDialog {JTable tablaHeaders2;
 						}
 					}
 					
-					
+					ut.insertarImagen(workbook, sheet, serv.getImagenRetrabajos(), posiciones.getImagenRetrabajos(), 0, 0, 0);	
 					
 					
 					
 					XSSFFormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
 					evaluator.evaluateAllFormulaCells(workbook);
-					
-					
-					
-					// INSTRUCCION DE TRABAJO 2
-					
-					
-					
-					
-					
-					
-					
 					
 					
 					file.close();
@@ -1479,7 +1524,194 @@ public class VentanaNuevo2 extends JDialog {JTable tablaHeaders2;
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				Llamadas ll = new Llamadas();
+				Calendar cal = Calendar.getInstance();
+				int res = 0;
+				if (semanal.isSelected())
+					res = 1;
+				else if (mensual.isSelected())
+					res = 2;
+				else if (otros.isSelected())
+					res = 3;
 				
+				String arrayHoraNormal = "";
+				for(int i = 0; i < 30; i++) {
+					arrayHoraNormal += "@;@" + horas.getValueAt(0, i);
+				}
+				
+				arrayHoraNormal = arrayHoraNormal.substring(3);
+				
+				String arrayHoraExtra= "";
+				for(int i = 0; i < 30; i++) {
+					arrayHoraExtra += "@;@" + horas.getValueAt(1, i);
+				}
+				
+				arrayHoraExtra = arrayHoraExtra.substring(3);
+				String arrayHoraSabado = "";
+				for(int i = 0; i < 30; i++) {
+					arrayHoraSabado += "@;@" + horas.getValueAt(2, i);
+				}
+				
+				arrayHoraSabado = arrayHoraSabado.substring(3);
+				String arrayHoraFestivo = "";
+				for(int i = 0; i < 30; i++) {
+					arrayHoraFestivo += "@;@" + horas.getValueAt(3, i);
+				}
+				
+				arrayHoraFestivo = arrayHoraFestivo.substring(3);
+				String arrayHoraNocturna = "";
+				for(int i = 0; i < 30; i++) {
+					arrayHoraNocturna += "@;@" + horas.getValueAt(4, i);
+				}
+				
+				arrayHoraNocturna = arrayHoraNocturna.substring(3);
+				
+				String arrayHoraEspecialistaNormal = "";
+				for(int i = 0; i < 30; i++) {
+					arrayHoraEspecialistaNormal += "@;@" + horas.getValueAt(5, i);
+				}
+				
+				arrayHoraEspecialistaNormal = arrayHoraEspecialistaNormal.substring(3);
+				String arrayHoraEspecialistaExtra = "";
+				for(int i = 0; i < 30; i++) {
+					arrayHoraEspecialistaExtra += "@;@" + horas.getValueAt(6, i);
+				}
+				
+				arrayHoraEspecialistaExtra = arrayHoraEspecialistaExtra.substring(3);
+				String arrayHoraEspecialistaSabado = "";
+				for(int i = 0; i < 30; i++) {
+					arrayHoraEspecialistaSabado += "@;@" + horas.getValueAt(7, i);
+				}
+				
+				arrayHoraEspecialistaSabado = arrayHoraEspecialistaSabado.substring(3);
+				String arrayHoraEspecialistaFestiva = "";
+				for(int i = 0; i < 30; i++) {
+					arrayHoraEspecialistaFestiva += "@;@" + horas.getValueAt(8, i);
+				}
+				
+				arrayHoraEspecialistaFestiva = arrayHoraEspecialistaFestiva.substring(3);
+				String arrayHoraEspecialistaNocturna = "";
+				for(int i = 0; i < 30; i++) {
+					arrayHoraEspecialistaNocturna += "@;@" + horas.getValueAt(9, i);
+				}
+				
+				arrayHoraEspecialistaNocturna = arrayHoraEspecialistaNocturna.substring(3);
+				
+				String arrayHoraCoordinacion = "";
+				for(int i = 0; i < 30; i++) {
+					arrayHoraCoordinacion += "@;@" + horas.getValueAt(10, i);
+				}
+				
+				arrayHoraCoordinacion = arrayHoraCoordinacion.substring(3);
+				String arrayHoraAdministracion = "";
+				for(int i = 0; i < 30; i++) {
+					arrayHoraAdministracion += "@;@" + horas.getValueAt(11, i);
+				}
+				
+				arrayHoraAdministracion = arrayHoraAdministracion.substring(3);
+				String arrayGastosLogisticos = "";
+				for(int i = 0; i < 30; i++) {
+					arrayGastosLogisticos += "@;@" + horas.getValueAt(12, i);
+				}
+				
+				arrayGastosLogisticos = arrayGastosLogisticos.substring(3);
+				String arrayOtros1 = "";
+				for(int i = 0; i < 30; i++) {
+					arrayOtros1 += "@;@" + horas.getValueAt(13, i);
+				}
+				
+				arrayOtros1 = arrayOtros1.substring(3);
+				String arrayOtros2 = "";
+				for(int i = 0; i < 30; i++) {
+					arrayOtros2 += "@;@" + horas.getValueAt(14, i);
+				}
+				
+				arrayOtros2 = arrayOtros2.substring(3);
+				
+				String firmasRetrabajos = "";
+				String firmasPersonal = "";
+				SimpleDateFormat sdf2 = new SimpleDateFormat("dd-MMM-YYYY");
+				
+				for (int i = 0; i < arrayFechasRetrabajos.size(); i++) {
+					firmasRetrabajos += "@;@" + arrayNombresRetrabajos.get(i).getText() + "@;@";
+					if (arrayFechasRetrabajos.get(i).getDate() != null) {
+						firmasRetrabajos += sdf2.format(arrayFechasRetrabajos.get(i).getDate());
+					}
+					firmasPersonal += "@;@" + arrayNombresPersonal.get(i).getText() + "@;@";
+					if (arrayFechasPersonal.get(i).getDate() != null) {
+						firmasPersonal += sdf2.format(arrayFechasPersonal.get(i).getDate());
+					}
+				}
+				
+				firmasRetrabajos = firmasRetrabajos.substring(3);
+				firmasPersonal = firmasPersonal.substring(3);
+				
+				String piezasOK = "";
+				String piezasRecuperadas = "";
+				
+				// UNIR LOS FOR
+				for(int i = 0; i < 30; i++) {
+					piezasOK += "@;@" + piezas.getValueAt(0, i);
+					piezasRecuperadas += "@;@" + piezas.getValueAt(1, i);
+				}
+				
+				piezasOK = piezasOK.substring(3);
+				piezasRecuperadas = piezasRecuperadas.substring(3);
+				
+				String recuentoFinal = "";
+				
+				for (int i = 0; i < recuento.getRowCount() ; i++) {
+					for (int j = 0; j < recuento.getColumnCount(); j++) {
+						recuentoFinal += "@;@" + recuento.getValueAt(i, j);
+					}
+				}
+				
+				recuentoFinal = recuentoFinal.substring(3);
+				
+				String tablaDefectos = "";
+				
+				for (int i = 0; i < tablaHeaders2.getRowCount() ; i++) {
+					for (int j = 0; j < defectos.getColumnCount(); j++) {
+						if (j == 0) {
+							tablaDefectos += "@;@" + tablaHeaders2.getValueAt(i, j);
+						}
+						tablaDefectos += "@;@" + defectos.getValueAt(i, j);
+					}
+				}
+				
+				tablaDefectos = tablaDefectos.substring(3);
+				
+				String accionesIntruccion = "";
+				
+				for (int i = 0; i < trabajos.getRowCount() ; i++) {
+					for (int j = 0; j < trabajos.getColumnCount(); j++) {
+						
+						if ( j == 0) {
+							accionesIntruccion += "@;@" + trabajos.getValueAt(i, j);
+						} else if (j == 1) {
+							accionesIntruccion += "@;@" + arrayImagenes[i];
+						} else {
+							if ((boolean) trabajos.getValueAt(i, j))
+								accionesIntruccion += "@;@1";
+							else
+								accionesIntruccion += "@;@0";
+								
+						}
+					}
+				}
+				
+				accionesIntruccion = accionesIntruccion.substring(3);
+				
+				Servicio servi = new Servicio("aeiou","a pelo", "mierda", "numAccion", cal.getTime(), nombrePieza.getText(), referencias.getText(), numChasis1.getText(), numChasis2.getText(), numChasis3.getText(), numChasis4.getText(),
+						responsable.getText(), piezasVerde.isSelected(), piezasBlanco.isSelected(), piezasOtros.isSelected(), piezasRojo.isSelected(), contenedorVerde.isSelected(), contenedorRojo.isSelected(), recomPersonaContacto.getText(),
+						recomDepartamento.getText(), recomTelefono.getText(), recomEmail.getText(), recomFechaSolicitud.getDate(), descripcionServicio.getText(), calzado.isSelected(), gafas.isSelected(), chaleco.isSelected(), tapones.isSelected(),
+						guantes.isSelected(), res, "img/cpa.jpg", operarioA1.isSelected(), operarioA2.isSelected(), operarioA3.isSelected(), operarioA4.isSelected(), operarioA5.isSelected(), operarioA6.isSelected(), operarioA7.isSelected(),
+						peticionMaterial.isSelected(), referenciasPiezas.isSelected(), seleccion.isSelected(), retrabajo.isSelected(), trasvase.isSelected(), otrosPiezas.isSelected(), accionesIntruccion, tablaDefectos, piezasOK, piezasRecuperadas,
+						recuentoFinal, arrayHoraNormal, arrayHoraExtra, arrayHoraSabado, arrayHoraFestivo, arrayHoraNocturna, arrayHoraEspecialistaNormal, arrayHoraEspecialistaExtra, arrayHoraEspecialistaSabado, arrayHoraEspecialistaFestiva, 
+						arrayHoraEspecialistaNocturna, arrayHoraCoordinacion, arrayHoraAdministracion, arrayGastosLogisticos, arrayOtros1, arrayOtros2, realizadoRetrabajos.getText(), fechaRetrabajos.getDate(), fechaLiberacion.getDate(), 
+						numReclamacion.getText(), fechaReclamacion.getDate(), referenciaRetrabajos.getText(), fechaComienzo.getDate(), tiempo.getText(), clienteRetrabajos.getText(), firmasRetrabajos, "img/prueba.jpg", realizadoFormado.getText(), 
+						fechaFormado.getDate(), clienteFormado.getText(), piezaFormado.getText(), referenciaFormado.getText(), firmasPersonal, "img/prueba.jpg");
+				ll.introducirServicio(servi);
 			}
 		});
 		
@@ -1490,7 +1722,7 @@ public class VentanaNuevo2 extends JDialog {JTable tablaHeaders2;
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				System.out.println(arrayFechasRetrabajos.get(4).getDate());
 			}
 		});
 		
@@ -1663,7 +1895,8 @@ public class VentanaNuevo2 extends JDialog {JTable tablaHeaders2;
 			if(column == 0) {
 				arrayNombresRetrabajos.get(row).setText(arrTemp[i]);
 			} else {
-				arrayFechasRetrabajos.get(row).setDate(new Date(arrTemp[i]));
+				if (!arrTemp[i].equals(""))
+					arrayFechasRetrabajos.get(row).setDate(new Date(arrTemp[i]));
 			}
 			column++;
 			if (column > 1) {
@@ -1685,7 +1918,8 @@ public class VentanaNuevo2 extends JDialog {JTable tablaHeaders2;
 			if(column == 0) {
 				arrayNombresPersonal.get(row).setText(arrTemp[i]);
 			} else {
-				arrayFechasPersonal.get(row).setDate(new Date(arrTemp[i]));
+				if (!arrTemp[i].equals(""))
+					arrayFechasPersonal.get(row).setDate(new Date(arrTemp[i]));
 			}
 			column++;
 			if (column > 1) {

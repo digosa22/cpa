@@ -68,23 +68,19 @@ public class Posiciones {
 	private Posicion trasvaseInstruccionNoAplica = new Posicion(8,20); // I21
 	private Posicion otrosInstruccionAplica = new Posicion(7,21); // H22
 	private Posicion otrosInstruccionNoAplica = new Posicion(8,21); // I22
-	private Posicion accionesInstruccionDescripcion1 = new Posicion(1,22); // B23
-	private Posicion accionesInstruccionOtros11 = new Posicion(3,22); // D23
-	private Posicion accionesInstruccionOtros12 = new Posicion(5,22); // F23
-	private Posicion accionesInstruccionAplica1 = new Posicion(7,22); // H23
-	private Posicion accionesInstruccionNoAplica1 = new Posicion(8,22); // I23
-	private Posicion accionesInstruccionDescripcion2 = new Posicion(1,25); // B26
-	private Posicion accionesInstruccionOtros21 = new Posicion(3,25); // D26
-	private Posicion accionesInstruccionOtros22 = new Posicion(5,25); // F26
-	private Posicion accionesInstruccionAplica2 = new Posicion(7,25); // H26
-	private Posicion accionesInstruccionNoAplica2 = new Posicion(8,25); // I26
-	private Posicion accionesInstruccionDescripcion3 = new Posicion(1,28); // B29
-	private Posicion accionesInstruccionOtros31 = new Posicion(3,28); // D29
-	private Posicion accionesInstruccionOtros32 = new Posicion(5,28); // F29
-	private Posicion accionesInstruccionAplica3 = new Posicion(7,28); // H29
-	private Posicion accionesInstruccionNoAplica3 = new Posicion(8,28); // I29
+	
+	private Posicion accionesInstruccionDescripcionInicial = new Posicion(1,22); // B23
+	private Posicion accionesInstruccionOtros1Inicial = new Posicion(3,22); // D23
+	private Posicion accionesInstruccionOtros2Inicial = new Posicion(5,22); // F23
+	private Posicion accionesInstruccionAplicaInicial = new Posicion(7,22); // H23
+	private Posicion accionesInstruccionNoAplicaInicial = new Posicion(8,22); // I23
 	
 	
+	private Posicion accionesInstruccionDescripcion12 = new Posicion(1,56); // B57
+	private Posicion accionesInstruccionOtros121 = new Posicion(3,56); // D57
+	private Posicion accionesInstruccionOtro122 = new Posicion(5,56); // F57
+	private Posicion accionesInstruccionAplica12 = new Posicion(7,56); // H57
+	private Posicion accionesInstruccionNoAplica12 = new Posicion(8,56); // I57
 	
 	// INFORMACION DE RESULTADOS
 	private Posicion defecto1Nombre = new Posicion(1,2); // B3
@@ -384,64 +380,44 @@ public class Posiciones {
 		return otrosInstruccionNoAplica;
 	}
 
-	public Posicion getAccionesInstruccionDescripcion1() {
-		return accionesInstruccionDescripcion1;
+	public Posicion getAccionesInstruccionDescripcionInicial() {
+		return accionesInstruccionDescripcionInicial;
 	}
 
-	public Posicion getAccionesInstruccionOtros11() {
-		return accionesInstruccionOtros11;
+	public Posicion getAccionesInstruccionOtros1Inicial() {
+		return accionesInstruccionOtros1Inicial;
 	}
 
-	public Posicion getAccionesInstruccionOtros12() {
-		return accionesInstruccionOtros12;
+	public Posicion getAccionesInstruccionOtros2Inicial() {
+		return accionesInstruccionOtros2Inicial;
 	}
 
-	public Posicion getAccionesInstruccionAplica1() {
-		return accionesInstruccionAplica1;
+	public Posicion getAccionesInstruccionAplicaInicial() {
+		return accionesInstruccionAplicaInicial;
 	}
 
-	public Posicion getAccionesInstruccionNoAplica1() {
-		return accionesInstruccionNoAplica1;
+	public Posicion getAccionesInstruccionNoAplicaInicial() {
+		return accionesInstruccionNoAplicaInicial;
 	}
 
-	public Posicion getAccionesInstruccionDescripcion2() {
-		return accionesInstruccionDescripcion2;
+	public Posicion getAccionesInstruccionDescripcion12() {
+		return accionesInstruccionDescripcion12;
 	}
 
-	public Posicion getAccionesInstruccionOtros21() {
-		return accionesInstruccionOtros21;
+	public Posicion getAccionesInstruccionOtros121() {
+		return accionesInstruccionOtros121;
 	}
 
-	public Posicion getAccionesInstruccionOtros22() {
-		return accionesInstruccionOtros22;
+	public Posicion getAccionesInstruccionOtro122() {
+		return accionesInstruccionOtro122;
 	}
 
-	public Posicion getAccionesInstruccionAplica2() {
-		return accionesInstruccionAplica2;
+	public Posicion getAccionesInstruccionAplica12() {
+		return accionesInstruccionAplica12;
 	}
 
-	public Posicion getAccionesInstruccionNoAplica2() {
-		return accionesInstruccionNoAplica2;
-	}
-
-	public Posicion getAccionesInstruccionDescripcion3() {
-		return accionesInstruccionDescripcion3;
-	}
-
-	public Posicion getAccionesInstruccionOtros31() {
-		return accionesInstruccionOtros31;
-	}
-
-	public Posicion getAccionesInstruccionOtros32() {
-		return accionesInstruccionOtros32;
-	}
-
-	public Posicion getAccionesInstruccionAplica3() {
-		return accionesInstruccionAplica3;
-	}
-
-	public Posicion getAccionesInstruccionNoAplica3() {
-		return accionesInstruccionNoAplica3;
+	public Posicion getAccionesInstruccionNoAplica12() {
+		return accionesInstruccionNoAplica12;
 	}
 
 	public Posicion getDefecto1Nombre() {
