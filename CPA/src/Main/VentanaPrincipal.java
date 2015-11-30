@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -28,7 +29,7 @@ public class VentanaPrincipal extends JFrame {
 	private static final long serialVersionUID = 1L;
 	
 	private JPanel panel;
-	private ArrayList<String> array;
+	private List<String> array;
 	private DefaultListModel<String> listModel;
 	private String stringTemporal;
 	
@@ -38,6 +39,7 @@ public class VentanaPrincipal extends JFrame {
 	
 	private JTextField busquedaField;
 	
+	private Llamadas llamadas = new Llamadas();
 	
 	private JLabel jlbPicture;
 	
@@ -74,11 +76,7 @@ public class VentanaPrincipal extends JFrame {
 		busquedaField.setBounds(20, 70, 170, 25);
 		panel.add(busquedaField);
 		
-		array = new ArrayList<String>();
-		array.add("B21536-15");
-		array.add("A654198-15");
-		array.add("C6548-15");
-		array.add("B65149-15");
+		array = llamadas.recuperarListaServiciosEnLinea();
 		
 		listModel = new DefaultListModel<String>();
 		for (int i=0; i<array.size(); i++) {
@@ -131,15 +129,17 @@ public class VentanaPrincipal extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String[] clientes = { "Mercedes", "Michelin", "SMC", "Ireguatek" };
+//				String[] clientes = { "Mercedes", "Michelin", "SMC", "Ireguatek" };
+				ArrayList<Cliente> arrCli = llamadas.recuperarClientes(); 
+				Cliente[] clientes = arrCli.toArray(new Cliente[arrCli.size()]);
 				String[] personal = { "Amagoia", "Mikel", "Miguel Ángel", "Javier", "Sustituto 1", "Sustituto 2" };
-				String cliente = (String) JOptionPane.showInputDialog(venInventario, "Selecciona el cliente", "Selecciona el cliente", 
+				Cliente cliente = (Cliente) JOptionPane.showInputDialog(venInventario, "Selecciona el cliente", "Selecciona el cliente", 
 						JOptionPane.QUESTION_MESSAGE, null, clientes, clientes[0]);
 				if (cliente != null) {
 					String persona = (String) JOptionPane.showInputDialog(venInventario, "Identifícate", "Identifícate", 
 							JOptionPane.QUESTION_MESSAGE, null, personal, personal[0]); 
 					if (persona != null) {
-						new VentanaPestanasAMostrar(venInventario, cliente, persona).setVisible(true);;
+						new VentanaPestanasAMostrar(venInventario, cliente, persona, llamadas).setVisible(true);;
 					}
 				}
 			}
@@ -152,6 +152,26 @@ public class VentanaPrincipal extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				if (list.isSelectionEmpty()) {
+					System.out.println("elige algo cabron");
+				}
+				else {
+					int reply = JOptionPane.showConfirmDialog(null, "¿Deseas borrar el servicio seleccionado?", "Borrar", JOptionPane.YES_NO_OPTION);
+					if (reply == JOptionPane.YES_OPTION) {
+						if (llamadas.borrarServicio(list.getSelectedValue())) {
+							list.clearSelection();
+							listModel.removeAllElements();
+							array = llamadas.recuperarListaServiciosEnLinea();
+							for (int i=0; i<array.size(); i++) {
+								listModel.addElement(array.get(i));
+							}
+							System.out.println("borrado");
+						}
+						else {
+							System.out.println("mal borrado");
+						}
+					}
+				}
 			}
 		});
 		

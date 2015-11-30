@@ -45,7 +45,7 @@ import com.mysql.fabric.xmlrpc.base.Array;
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JDateChooserCellEditor;
 
-public class VentanaNuevo2 extends JDialog {
+public class VentanaNuevo3 extends JDialog {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -151,7 +151,7 @@ public class VentanaNuevo2 extends JDialog {
 	private JLabel tituloLabel;
 	private JButton cambiarCliente;
 	
-	public VentanaNuevo2(VentanaPrincipal venInventario, boolean anadirRetrabajos, boolean anadirFormacion, Servicio serv) {
+	public VentanaNuevo3(VentanaPrincipal venInventario, boolean anadirRetrabajos, boolean anadirFormacion, Servicio serv) {
 		
 		super(venInventario, true);
 		

@@ -117,6 +117,10 @@ public class Servicio {
 	private String firmasPersonal;
 	private String imagenPersonal;
 	
+	//PESTAÑAS AÑADIR
+	private boolean retrabajos;
+	private boolean formacion;
+	
 	
 	// CONSTRUCTOR
 	public Servicio(String nifCliente, String nomCliente, String personaCPA, String numAccion, Date fechaInicio,
@@ -140,7 +144,7 @@ public class Servicio {
 			String numReclamacionRetrabajos, Date fechaReclamacionRetrabajos, String referenciaPiezaRetrabajos,
 			Date fechaComienzoRetrabajos, String tiempoRetrabajos, String clienteRetrabajos, String firmasRetrabajos,
 			String imagenRetrabajos, String realizadoPorPersonal, Date fechaPersonal, String clientePersonal,
-			String piezaPersonal, String referenciaPersonal, String firmasPersonal, String imagenPersonal) {
+			String piezaPersonal, String referenciaPersonal, String firmasPersonal, String imagenPersonal, boolean retrabajos, boolean formacion) {
 		super();
 		this.nifCliente = nifCliente;
 		this.nomCliente = nomCliente;
@@ -224,6 +228,8 @@ public class Servicio {
 		this.referenciaPersonal = referenciaPersonal;
 		this.firmasPersonal = firmasPersonal;
 		this.imagenPersonal = imagenPersonal;
+		this.retrabajos = retrabajos;
+		this.formacion = formacion;
 	}
 	public String getNifCliente() {
 		return nifCliente;
@@ -716,6 +722,21 @@ public class Servicio {
 	}
 	public void setImagenPersonal(String imagenPersonal) {
 		this.imagenPersonal = imagenPersonal;
+	}
+	public boolean isRetrabajos() {
+		return retrabajos;
+	}
+	public void setRetrabajos(boolean retrabajos) {
+		this.retrabajos = retrabajos;
+	}
+	public boolean isFormacion() {
+		return formacion;
+	}
+	public void setFormacion(boolean formacion) {
+		this.formacion = formacion;
+	}
+	public void setArrayHoraEspecialistaSabado(String arrayHoraEspecialistaSabado) {
+		this.arrayHoraEspecialistaSabado = arrayHoraEspecialistaSabado;
 	}
 	
 }

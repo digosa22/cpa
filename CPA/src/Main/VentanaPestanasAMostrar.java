@@ -19,7 +19,7 @@ public class VentanaPestanasAMostrar extends JDialog {
 	private JCheckBox mostrarRetrabajos;
 	private JCheckBox mostrarFormacion;
 	
-	public VentanaPestanasAMostrar(VentanaPrincipal venInventario, String cliente, String persona) {
+	public VentanaPestanasAMostrar(VentanaPrincipal venInventario, Cliente cliente, String persona, Llamadas llamadas) {
 		
 		super(venInventario, true);
 		
@@ -50,7 +50,12 @@ public class VentanaPestanasAMostrar extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				new VentanaNuevo(venInventario, mostrarRetrabajos.isSelected(), mostrarFormacion.isSelected(), cliente, persona).setVisible(true);
+//TODO				new VentanaNuevo(venInventario, mostrarRetrabajos.isSelected(), mostrarFormacion.isSelected(), cliente, persona).setVisible(true);
+				
+				
+//				Servicio serv = ll.recuperarServicio("numAccion");
+				String numAccion = "A667788";
+				new VentanaNuevo(venInventario, mostrarRetrabajos.isSelected(), mostrarFormacion.isSelected(), cliente, persona, numAccion, llamadas).setVisible(true);
 			}
 		});
 		
