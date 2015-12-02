@@ -13,6 +13,7 @@ import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
 
+
 class ClientsTableButtonRenderer extends JButton implements TableCellRenderer
   {
     public ClientsTableButtonRenderer()
@@ -36,9 +37,14 @@ class ClientsTableButtonRenderer extends JButton implements TableCellRenderer
     private int row, col;
     private JTable table;
 
-    public ClientsTableRenderer(JCheckBox checkBox)
+    private String[] imgs;
+    
+    public ClientsTableRenderer(JCheckBox checkBox, String[] imgs)
     {
       super(checkBox);
+      
+      this.imgs = imgs;
+      
       button = new JButton();
       button.setOpaque(true);
       button.addActionListener(new ActionListener()
@@ -66,7 +72,7 @@ class ClientsTableButtonRenderer extends JButton implements TableCellRenderer
     {
       if (clicked)
       {
-        JOptionPane.showMessageDialog(button, "Click en la fila: "+row);
+        JOptionPane.showMessageDialog(button, "Click en la fila: "+imgs[row]);
       }
       clicked = false;
       return new String(label);

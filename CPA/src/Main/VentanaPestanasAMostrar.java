@@ -52,10 +52,7 @@ public class VentanaPestanasAMostrar extends JDialog {
 				dispose();
 //TODO				new VentanaNuevo(venInventario, mostrarRetrabajos.isSelected(), mostrarFormacion.isSelected(), cliente, persona).setVisible(true);
 				
-				
-//				Servicio serv = ll.recuperarServicio("numAccion");
-				String numAccion = "A667788";
-				new VentanaNuevo(venInventario, mostrarRetrabajos.isSelected(), mostrarFormacion.isSelected(), cliente, persona, numAccion, llamadas).setVisible(true);
+				new VentanaNuevo(venInventario, mostrarRetrabajos.isSelected(), mostrarFormacion.isSelected(), cliente, persona, llamadas.generarNumAccion(cliente.getTipo()), llamadas).setVisible(true);
 			}
 		});
 		

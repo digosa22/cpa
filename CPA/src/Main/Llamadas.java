@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class Llamadas {
@@ -57,7 +58,7 @@ public class Llamadas {
 					.prepareStatement("SELECT * FROM servicios_en_linea WHERE num_accion='" + num_accion + "'");
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				servicio = new Servicio(rs.getString("nif_cliente"), rs.getString("nom_cliente"), rs.getString("persona_cpa"),
+				servicio = new Servicio(rs.getInt("nif_cliente"), rs.getString("nom_cliente"), rs.getString("persona_cpa"),
 						rs.getString("num_accion"), rs.getDate("fecha_inicio"), rs.getString("nombre_pieza"), rs.getString("referencias"),
 						rs.getString("num_chasis_1"), rs.getString("num_chasis_2"), rs.getString("num_chasis_3"),rs.getString("num_chasis_4"),
 						rs.getString("responsable_cpa"), rs.getBoolean("piezas_verde"), rs.getBoolean("piezas_blanco"), rs.getBoolean("piezas_otros"),
@@ -140,7 +141,7 @@ public class Llamadas {
 							+ "?,?,?,?"
 							+ ")");
 
-			preparedStatement.setString(1, servicio.getNifCliente());
+			preparedStatement.setInt(1, servicio.getNifCliente());
 			preparedStatement.setString(2, servicio.getNomCliente());
 			preparedStatement.setString(3, servicio.getPersonaCPA());
 			preparedStatement.setString(4, servicio.getNumAccion());
@@ -353,7 +354,7 @@ public class Llamadas {
 							+ ",?,?,?,?,?,?,?,?,?,?"
 							+ "?,?)");
 
-			preparedStatement.setString(1, servicio.getNifCliente());
+			preparedStatement.setInt(1, servicio.getNifCliente());
 			preparedStatement.setString(2, servicio.getNomCliente());
 			preparedStatement.setString(3, servicio.getPersonaCPA());
 			preparedStatement.setString(4, servicio.getNumAccion());
@@ -695,7 +696,7 @@ public class Llamadas {
 			Cliente cliente = new Cliente();
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				cliente = new Cliente(rs.getString("nif"), rs.getString("empresa"), rs.getString("tipo_num_accion"));
+				cliente = new Cliente(rs.getInt("id"), rs.getString("empresa"), rs.getString("tipo_num_accion"));
 				clientes.add(cliente);
 			}
 			rs.close();
@@ -706,6 +707,75 @@ public class Llamadas {
 			e.printStackTrace();
 		}
 		return clientes;
+	}
+	
+	public String generarNumAccion(String tipo) {
+
+		Database database = new Database();
+		String numero = "";
+		try {
+			Connection connection = database.Get_Connection();
+			PreparedStatement ps = connection
+					.prepareStatement("SELECT * FROM generar_num_accion WHERE  tipo='" + tipo +"'");
+			ResultSet rs = ps.executeQuery();
+			Statement statement = null;
+			if (rs.next()) {
+				
+				int anyo = rs.getInt("anyo");
+				int num = rs.getInt("num");
+				Calendar cal = Calendar.getInstance();
+				if (anyo == cal.get(Calendar.YEAR)) {
+					
+					anyo = cal.get(Calendar.YEAR);
+					String year = anyo + "";
+					year = year.substring(2);
+					
+					String longitud = num + "";					
+					if(longitud.length() == 1) {
+						numero = tipo + "000"+ longitud+ "-" + year;
+					} else if(longitud.length() == 2) {
+						numero = tipo + "00"+ longitud+ "-" + year;
+					} else if(longitud.length() == 3) {
+						numero = tipo + "0"+ longitud+ "-" + year;
+					} else {
+						numero = tipo + ""+ longitud+ "-" + year;
+					}
+					
+					statement = connection.createStatement();
+					
+					num++;
+
+					statement
+					.executeUpdate("UPDATE generar_num_accion SET num='"
+							+ num
+							+ "' WHERE tipo = '" + tipo + "'");
+					
+				} else {
+					
+					anyo = cal.get(Calendar.YEAR);
+					String year = anyo + "";
+					year = year.substring(2);
+					
+					numero = tipo + "0001-" + year;
+					
+					statement = connection.createStatement();
+
+					statement
+					.executeUpdate("UPDATE generar_num_accion SET anyo='"
+							+ anyo
+							+ "',num='2' WHERE tipo = '" + tipo + "'");
+				}
+				
+			}
+			statement.close();
+			rs.close();
+			ps.close();
+			connection.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return numero;
 	}
 
 }

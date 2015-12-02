@@ -135,10 +135,12 @@ public class VentanaNuevo extends JDialog {
 	private JLabel clienteLabel2;
 	private JLabel tituloLabel;
 	private JButton cambiarCliente;
+	private Cliente cliente;
+	private String numAccion;
 
-	public VentanaNuevo(VentanaPrincipal venInventario, boolean anadirRetrabajos, boolean anadirFormacion, Cliente cliente, String persona, String numAccion, Llamadas llamadas) {
+	public VentanaNuevo(VentanaPrincipal ventanaPrincipal, boolean anadirRetrabajos, boolean anadirFormacion, Cliente cli, String persona, String numA, Llamadas llamadas) {
 
-		super(venInventario, true);
+		super(ventanaPrincipal, true);
 
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -155,7 +157,8 @@ public class VentanaNuevo extends JDialog {
 
 		tablaHeaders2 = new JTable();
 
-
+		cliente = cli;
+		numAccion = numA;
 
 		//TODO PESTAÑA ORDEN DE PEDIDO
 		ordenDePedido = new JPanel();
@@ -335,6 +338,7 @@ public class VentanaNuevo extends JDialog {
 		diaria = new JRadioButton("Diaria");
 		diaria.setBounds(20, 25, 55, 20);
 		panelInformacionResultados.add(diaria);
+		diaria.setSelected(true);
 		semanal = new JRadioButton("Semanal");
 		semanal.setBounds(75, 25, 70, 20);
 		panelInformacionResultados.add(semanal);
@@ -406,9 +410,6 @@ public class VentanaNuevo extends JDialog {
 				row1++;
 			}
 		}
-		/*for (int i=0; i<data.length; i++) {
-
-		}*/
 
 
 		TableModel model = new DefaultTableModel(data, columnNames);
@@ -430,7 +431,7 @@ public class VentanaNuevo extends JDialog {
 			}
 		};
 		trabajos.getColumnModel().getColumn(1).setCellRenderer(new ClientsTableButtonRenderer());
-		trabajos.getColumnModel().getColumn(1).setCellEditor(new ClientsTableRenderer(new JCheckBox()));
+		trabajos.getColumnModel().getColumn(1).setCellEditor(new ClientsTableRenderer(new JCheckBox(), arrayImagenes));
 		trabajos.getTableHeader().setReorderingAllowed(false);
 		trabajos.setRowSelectionAllowed(false);
 		JScrollPane scrollTrabajos = new JScrollPane();
@@ -949,6 +950,31 @@ public class VentanaNuevo extends JDialog {
 		jlbPicture.setBounds(760, 5, 240, 110);
 		panel.add(jlbPicture);
 
+		cambiarCliente.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				ArrayList<Cliente> arrCli = llamadas.recuperarClientes(); 
+				Cliente[] clientes = arrCli.toArray(new Cliente[arrCli.size()]);
+				Cliente clienteNuevo = (Cliente) JOptionPane.showInputDialog(ventanaPrincipal, "Nuevo cliente", "Selecciona el cliente", 
+						JOptionPane.QUESTION_MESSAGE, null, clientes, clientes[0]);
+				if (clienteNuevo != null) {
+					if(!cliente.getTipo().equalsIgnoreCase(clienteNuevo.getTipo())) {
+						cliente = clienteNuevo;
+						clienteLabel2.setText("<html><h4>"+cliente+"</h4></html>");
+						numAccion = llamadas.generarNumAccion(cliente.getTipo());
+						numAccionLabel2.setText("<html><h4>"+numAccion+"</h4></html>");
+					} else {
+						cliente = clienteNuevo;
+						clienteLabel2.setText("<html><h4>"+cliente+"</h4></html>");
+					}
+					
+				}
+				
+			}
+		});
+		
 		JButton guardar = new JButton("Guardar y salir");
 		guardar.setBounds(840, 440, 140, 20);
 		panel.add(guardar);
@@ -1112,7 +1138,7 @@ public class VentanaNuevo extends JDialog {
 								numReclamacion.getText(), fechaReclamacion.getDate(), referenciaRetrabajos.getText(), fechaComienzo.getDate(), tiempo.getText(), clienteRetrabajos.getText(), firmasRetrabajos, "img/prueba.jpg", realizadoFormado.getText(), 
 								fechaFormado.getDate(), clienteFormado.getText(), piezaFormado.getText(), referenciaFormado.getText(), firmasPersonal, "img/prueba.jpg", anadirRetrabajos, anadirFormacion);
 					} else if (anadirFormacion) {
-						servi = new Servicio("aeiou","a pelo", "mierda", "numAccion", cal.getTime(), nombrePieza.getText(), referencias.getText(), numChasis1.getText(), numChasis2.getText(), numChasis3.getText(), numChasis4.getText(),
+						servi = new Servicio(cliente.getNif(),cliente.getNombre(), persona, numAccion, cal.getTime(), nombrePieza.getText(), referencias.getText(), numChasis1.getText(), numChasis2.getText(), numChasis3.getText(), numChasis4.getText(),
 								responsable.getText(), piezasVerde.isSelected(), piezasBlanco.isSelected(), piezasOtros.isSelected(), piezasRojo.isSelected(), contenedorVerde.isSelected(), contenedorRojo.isSelected(), recomPersonaContacto.getText(),
 								recomDepartamento.getText(), recomTelefono.getText(), recomEmail.getText(), recomFechaSolicitud.getDate(), descripcionServicio.getText(), calzado.isSelected(), gafas.isSelected(), chaleco.isSelected(), tapones.isSelected(),
 								guantes.isSelected(), res, "img/cpa.jpg", operarioA1.isSelected(), operarioA2.isSelected(), operarioA3.isSelected(), operarioA4.isSelected(), operarioA5.isSelected(), operarioA6.isSelected(), operarioA7.isSelected(),
@@ -1122,7 +1148,7 @@ public class VentanaNuevo extends JDialog {
 								null, null, null, null, null, null, null, null, realizadoFormado.getText(), 
 								fechaFormado.getDate(), clienteFormado.getText(), piezaFormado.getText(), referenciaFormado.getText(), firmasPersonal, "img/prueba.jpg", anadirRetrabajos, anadirFormacion);
 					} else if (anadirRetrabajos) {
-						servi = new Servicio("aeiou","a pelo", "mierda", "numAccion", cal.getTime(), nombrePieza.getText(), referencias.getText(), numChasis1.getText(), numChasis2.getText(), numChasis3.getText(), numChasis4.getText(),
+						servi = new Servicio(cliente.getNif(),cliente.getNombre(), persona, numAccion, cal.getTime(), nombrePieza.getText(), referencias.getText(), numChasis1.getText(), numChasis2.getText(), numChasis3.getText(), numChasis4.getText(),
 								responsable.getText(), piezasVerde.isSelected(), piezasBlanco.isSelected(), piezasOtros.isSelected(), piezasRojo.isSelected(), contenedorVerde.isSelected(), contenedorRojo.isSelected(), recomPersonaContacto.getText(),
 								recomDepartamento.getText(), recomTelefono.getText(), recomEmail.getText(), recomFechaSolicitud.getDate(), descripcionServicio.getText(), calzado.isSelected(), gafas.isSelected(), chaleco.isSelected(), tapones.isSelected(),
 								guantes.isSelected(), res, "img/cpa.jpg", operarioA1.isSelected(), operarioA2.isSelected(), operarioA3.isSelected(), operarioA4.isSelected(), operarioA5.isSelected(), operarioA6.isSelected(), operarioA7.isSelected(),
@@ -1132,7 +1158,7 @@ public class VentanaNuevo extends JDialog {
 								numReclamacion.getText(), fechaReclamacion.getDate(), referenciaRetrabajos.getText(), fechaComienzo.getDate(), tiempo.getText(), clienteRetrabajos.getText(), firmasRetrabajos, "img/prueba.jpg", null, 
 								null, null, null, null, null, null, anadirRetrabajos, anadirFormacion);
 					} else {
-						servi = new Servicio("aeiou","a pelo", "mierda", "numAccion", cal.getTime(), nombrePieza.getText(), referencias.getText(), numChasis1.getText(), numChasis2.getText(), numChasis3.getText(), numChasis4.getText(),
+						servi = new Servicio(cliente.getNif(),cliente.getNombre(), persona, numAccion, cal.getTime(), nombrePieza.getText(), referencias.getText(), numChasis1.getText(), numChasis2.getText(), numChasis3.getText(), numChasis4.getText(),
 								responsable.getText(), piezasVerde.isSelected(), piezasBlanco.isSelected(), piezasOtros.isSelected(), piezasRojo.isSelected(), contenedorVerde.isSelected(), contenedorRojo.isSelected(), recomPersonaContacto.getText(),
 								recomDepartamento.getText(), recomTelefono.getText(), recomEmail.getText(), recomFechaSolicitud.getDate(), descripcionServicio.getText(), calzado.isSelected(), gafas.isSelected(), chaleco.isSelected(), tapones.isSelected(),
 								guantes.isSelected(), res, "img/cpa.jpg", operarioA1.isSelected(), operarioA2.isSelected(), operarioA3.isSelected(), operarioA4.isSelected(), operarioA5.isSelected(), operarioA6.isSelected(), operarioA7.isSelected(),
@@ -1143,7 +1169,7 @@ public class VentanaNuevo extends JDialog {
 					}
 
 					llamadas.introducirServicio(servi);
-
+					ventanaPrincipal.refrescarListaServicios();
 					dispose();
 				}
 			}
@@ -1156,7 +1182,10 @@ public class VentanaNuevo extends JDialog {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
+				int reply = JOptionPane.showConfirmDialog(null, "¿Deseas guardar los cambios antes de salir?", "Salir", JOptionPane.YES_NO_OPTION);
+				if (reply == JOptionPane.YES_OPTION) {
+					// TODO PREGUNTAR SI DESEA GUARDAR, no guardar y cancelar
+				}
 			}
 		});
 
@@ -1167,13 +1196,13 @@ public class VentanaNuevo extends JDialog {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
+				
 			}
 		});
 
 		this.getContentPane().add(panel);
 		this.setSize(1000, 560);
-		this.setTitle("ERP CPA - Nueva factura");
+		this.setTitle("ERP CPA - Nuevo servicio");
 		this.setResizable(false);
 		this.setLocation((getToolkit().getScreenSize().width - this.getBounds().width) / 2,
 				(getToolkit().getScreenSize().height - this.getBounds().height) / 2);

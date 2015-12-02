@@ -447,7 +447,7 @@ public class VentanaNuevo2 extends JDialog {
             }
         };
 		trabajos.getColumnModel().getColumn(1).setCellRenderer(new ClientsTableButtonRenderer());
-		trabajos.getColumnModel().getColumn(1).setCellEditor(new ClientsTableRenderer(new JCheckBox()));
+		trabajos.getColumnModel().getColumn(1).setCellEditor(new ClientsTableRenderer(new JCheckBox(), arrayImagenes));
 		trabajos.getTableHeader().setReorderingAllowed(false);
 		trabajos.setRowSelectionAllowed(false);
 		JScrollPane scrollTrabajos = new JScrollPane();
@@ -1674,7 +1674,7 @@ public class VentanaNuevo2 extends JDialog {
 				Servicio servi = null;
 				
 				if (anadirFormacion && anadirRetrabajos) {
-					servi = new Servicio("aeiou","a pelo", "mierda", "numAccion", cal.getTime(), nombrePieza.getText(), referencias.getText(), numChasis1.getText(), numChasis2.getText(), numChasis3.getText(), numChasis4.getText(),
+					servi = new Servicio(1,"a pelo", "mierda", "numAccion", cal.getTime(), nombrePieza.getText(), referencias.getText(), numChasis1.getText(), numChasis2.getText(), numChasis3.getText(), numChasis4.getText(),
 							responsable.getText(), piezasVerde.isSelected(), piezasBlanco.isSelected(), piezasOtros.isSelected(), piezasRojo.isSelected(), contenedorVerde.isSelected(), contenedorRojo.isSelected(), recomPersonaContacto.getText(),
 							recomDepartamento.getText(), recomTelefono.getText(), recomEmail.getText(), recomFechaSolicitud.getDate(), descripcionServicio.getText(), calzado.isSelected(), gafas.isSelected(), chaleco.isSelected(), tapones.isSelected(),
 							guantes.isSelected(), res, "img/cpa.jpg", operarioA1.isSelected(), operarioA2.isSelected(), operarioA3.isSelected(), operarioA4.isSelected(), operarioA5.isSelected(), operarioA6.isSelected(), operarioA7.isSelected(),
@@ -1684,7 +1684,7 @@ public class VentanaNuevo2 extends JDialog {
 							numReclamacion.getText(), fechaReclamacion.getDate(), referenciaRetrabajos.getText(), fechaComienzo.getDate(), tiempo.getText(), clienteRetrabajos.getText(), firmasRetrabajos, "img/prueba.jpg", realizadoFormado.getText(), 
 							fechaFormado.getDate(), clienteFormado.getText(), piezaFormado.getText(), referenciaFormado.getText(), firmasPersonal, "img/prueba.jpg", anadirRetrabajos, anadirFormacion);
 				} else if (anadirFormacion) {
-					servi = new Servicio("aeiou","a pelo", "mierda", "numAccion", cal.getTime(), nombrePieza.getText(), referencias.getText(), numChasis1.getText(), numChasis2.getText(), numChasis3.getText(), numChasis4.getText(),
+					servi = new Servicio(1,"a pelo", "mierda", "numAccion", cal.getTime(), nombrePieza.getText(), referencias.getText(), numChasis1.getText(), numChasis2.getText(), numChasis3.getText(), numChasis4.getText(),
 							responsable.getText(), piezasVerde.isSelected(), piezasBlanco.isSelected(), piezasOtros.isSelected(), piezasRojo.isSelected(), contenedorVerde.isSelected(), contenedorRojo.isSelected(), recomPersonaContacto.getText(),
 							recomDepartamento.getText(), recomTelefono.getText(), recomEmail.getText(), recomFechaSolicitud.getDate(), descripcionServicio.getText(), calzado.isSelected(), gafas.isSelected(), chaleco.isSelected(), tapones.isSelected(),
 							guantes.isSelected(), res, "img/cpa.jpg", operarioA1.isSelected(), operarioA2.isSelected(), operarioA3.isSelected(), operarioA4.isSelected(), operarioA5.isSelected(), operarioA6.isSelected(), operarioA7.isSelected(),
@@ -1694,7 +1694,7 @@ public class VentanaNuevo2 extends JDialog {
 							null, null, null, null, null, null, null, null, realizadoFormado.getText(), 
 							fechaFormado.getDate(), clienteFormado.getText(), piezaFormado.getText(), referenciaFormado.getText(), firmasPersonal, "img/prueba.jpg", anadirRetrabajos, anadirFormacion);
 				} else if (anadirRetrabajos) {
-					servi = new Servicio("aeiou","a pelo", "mierda", "numAccion", cal.getTime(), nombrePieza.getText(), referencias.getText(), numChasis1.getText(), numChasis2.getText(), numChasis3.getText(), numChasis4.getText(),
+					servi = new Servicio(1, "a pelo", "mierda", "numAccion", cal.getTime(), nombrePieza.getText(), referencias.getText(), numChasis1.getText(), numChasis2.getText(), numChasis3.getText(), numChasis4.getText(),
 							responsable.getText(), piezasVerde.isSelected(), piezasBlanco.isSelected(), piezasOtros.isSelected(), piezasRojo.isSelected(), contenedorVerde.isSelected(), contenedorRojo.isSelected(), recomPersonaContacto.getText(),
 							recomDepartamento.getText(), recomTelefono.getText(), recomEmail.getText(), recomFechaSolicitud.getDate(), descripcionServicio.getText(), calzado.isSelected(), gafas.isSelected(), chaleco.isSelected(), tapones.isSelected(),
 							guantes.isSelected(), res, "img/cpa.jpg", operarioA1.isSelected(), operarioA2.isSelected(), operarioA3.isSelected(), operarioA4.isSelected(), operarioA5.isSelected(), operarioA6.isSelected(), operarioA7.isSelected(),
@@ -1704,7 +1704,7 @@ public class VentanaNuevo2 extends JDialog {
 							numReclamacion.getText(), fechaReclamacion.getDate(), referenciaRetrabajos.getText(), fechaComienzo.getDate(), tiempo.getText(), clienteRetrabajos.getText(), firmasRetrabajos, "img/prueba.jpg", null, 
 							null, null, null, null, null, null, anadirRetrabajos, anadirFormacion);
 				} else {
-					servi = new Servicio("aeiou","a pelo", "mierda", "numAccion", cal.getTime(), nombrePieza.getText(), referencias.getText(), numChasis1.getText(), numChasis2.getText(), numChasis3.getText(), numChasis4.getText(),
+					servi = new Servicio(1 ,"a pelo", "mierda", "numAccion", cal.getTime(), nombrePieza.getText(), referencias.getText(), numChasis1.getText(), numChasis2.getText(), numChasis3.getText(), numChasis4.getText(),
 							responsable.getText(), piezasVerde.isSelected(), piezasBlanco.isSelected(), piezasOtros.isSelected(), piezasRojo.isSelected(), contenedorVerde.isSelected(), contenedorRojo.isSelected(), recomPersonaContacto.getText(),
 							recomDepartamento.getText(), recomTelefono.getText(), recomEmail.getText(), recomFechaSolicitud.getDate(), descripcionServicio.getText(), calzado.isSelected(), gafas.isSelected(), chaleco.isSelected(), tapones.isSelected(),
 							guantes.isSelected(), res, "img/cpa.jpg", operarioA1.isSelected(), operarioA2.isSelected(), operarioA3.isSelected(), operarioA4.isSelected(), operarioA5.isSelected(), operarioA6.isSelected(), operarioA7.isSelected(),

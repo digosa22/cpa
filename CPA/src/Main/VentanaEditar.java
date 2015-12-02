@@ -3,10 +3,10 @@ package Main;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -23,18 +24,16 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import com.toedter.calendar.JDateChooser;
-import com.toedter.calendar.JDateChooserCellEditor;
 
-public class VentanaNuevocopia extends JDialog {
-	
+public class VentanaEditar extends JDialog {
+
 	private static final long serialVersionUID = 1L;
-	
+
 	private JPanel panel;
-	
+
 	private JPanel ordenDePedido;
 	private JButton confirmacionValidacion;
 	private JTextField nombrePieza;
@@ -65,8 +64,8 @@ public class VentanaNuevocopia extends JDialog {
 	private JRadioButton semanal;
 	private JRadioButton mensual;
 	private JRadioButton otros;
-	
-	
+
+
 	private JPanel instruccionDeTrabajo;
 	private JCheckBox operarioA1;
 	private JCheckBox operarioA2;
@@ -82,21 +81,23 @@ public class VentanaNuevocopia extends JDialog {
 	private JCheckBox trasvase;
 	private JCheckBox otrosPiezas;
 	private JTable trabajos;
-	
-	
+	private String [] arrayImagenes;
+
+
 	private JPanel informacion;
 	private JTable defectos;
+	private JTable tablaHeaders2;
 	private JTable piezas;
-	
-	
+
+
 	private JPanel recuentoFinal;
 	private JTable recuento;
-	
-	
+
+
 	private JPanel estimacionHorasCostes;
 	private JTable horas;
-	
-	
+
+
 	private JPanel gamaRetrabajos;
 	private JButton confirmacionGamaRetrabajos;
 	private JTextField realizadoRetrabajos;
@@ -110,8 +111,8 @@ public class VentanaNuevocopia extends JDialog {
 	private JTextField clienteRetrabajos;
 	private ArrayList<JDateChooser> arrayFechasRetrabajos;
 	private ArrayList<JTextField> arrayNombresRetrabajos;
-	
-	
+
+
 	private JPanel formacionPersonal;
 	private JButton confirmacionFormacionPersonal;
 	private JTextField realizadoFormado;
@@ -121,7 +122,7 @@ public class VentanaNuevocopia extends JDialog {
 	private JDateChooser fechaFormado;
 	private ArrayList<JDateChooser> arrayFechasPersonal;
 	private ArrayList<JTextField> arrayNombresPersonal;
-	
+
 	private JLabel fechaLabel;
 	private JLabel numAccionLabel;
 	private JLabel personalCPALabel;
@@ -132,26 +133,42 @@ public class VentanaNuevocopia extends JDialog {
 	private JLabel clienteLabel2;
 	private JLabel tituloLabel;
 	private JButton cambiarCliente;
-	
-	public VentanaNuevocopia(VentanaPrincipal venInventario, boolean anadirRetrabajos, boolean anadirFormacion, String cliente, String persona) {
-		
-		super(venInventario, true);
-		
+	private Cliente cliente;
+	private String numAccion;
+	private String numAccionViejo;
+
+	public VentanaEditar(VentanaPrincipal ventanaPrincipal, Servicio servicio, Llamadas llamadas) {
+
+		super(ventanaPrincipal, true);
+
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		}
 		catch (Exception e) {
 		}
-		
+
 		panel = new JPanel();
 		panel.setLayout(null);
-		
+
 		JTabbedPane panelDePestanas = new JTabbedPane(JTabbedPane.TOP);
 		panelDePestanas.setBounds(20, 100, 800, 420);
 		panel.add(panelDePestanas);
 
-		
-		
+		tablaHeaders2 = new JTable();
+
+		ArrayList<Cliente> clientes = llamadas.recuperarClientes(); 
+		boolean encontrado = false;
+		for (int i = 0; i < clientes.size()&&!encontrado; i++) {
+			if (clientes.get(i).getNif() == servicio.getNifCliente())
+			{
+				cliente = clientes.get(i);
+				encontrado = true;
+			}
+		}
+
+		numAccion = servicio.getNumAccion();
+		numAccionViejo = servicio.getNumAccion();
+
 		//TODO PESTAÑA ORDEN DE PEDIDO
 		ordenDePedido = new JPanel();
 		panelDePestanas.addTab("Orden de pedido", null, ordenDePedido, null);
@@ -159,15 +176,15 @@ public class VentanaNuevocopia extends JDialog {
 		confirmacionValidacion = new JButton("Añadir imagen");
 		confirmacionValidacion.setBounds(40, 20, 100, 20);
 		ordenDePedido.add(confirmacionValidacion);
-		
+
 		confirmacionValidacion.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+
 			}
 		});
-		
+
 		JPanel panelGenerales = new JPanel();
 		panelGenerales.setBorder(BorderFactory.createTitledBorder("Datos generales"));
 		panelGenerales.setBounds(10, 50, 450, 160);
@@ -350,9 +367,9 @@ public class VentanaNuevocopia extends JDialog {
 		JLabel labelVersionOrdenPedido = new JLabel("<html><h5>PC-01-FOR-04 REV.01</h5></html>");
 		labelVersionOrdenPedido.setBounds(660, 5, 140, 25);
 		ordenDePedido.add(labelVersionOrdenPedido);
-		
-		
-		
+
+
+
 		//TODO PESTAÑA INSTRUCCION DE TRABAJO
 		instruccionDeTrabajo = new JPanel();
 		panelDePestanas.addTab("Instrucción de trabajo", null, instruccionDeTrabajo, null);
@@ -367,31 +384,56 @@ public class VentanaNuevocopia extends JDialog {
 		panelControl.setBounds(10, 180, 200, 200);
 		panelControl.setLayout(null);
 		instruccionDeTrabajo.add(panelControl);
-		
+
 		String[] columnNames = { "Descripción", "Otros", "Aplica"};
-		Object[][] data = {{"Prueba 1","Imágenes",false},{"Prueba 2","Imágenes",true},{"Prueba 3","Imágenes",true}
-		,{"Prueba 3","Imágenes",true},{"Prueba 3","Imágenes",true},{"Prueba 3","Imágenes",true},{"Prueba 3","Imágenes",true}
-		,{"Prueba 3","Imágenes",true},{"Prueba 3","Imágenes",true},{"Prueba 3","Imágenes",true},{"Prueba 3","Imágenes",true},{"Prueba 3","Imágenes",true}};
+
+		Object[][] data = new Object[12][3];
+		arrayImagenes = new String[12];
+
+		String[] arr = servicio.getAccionesIntruccion().split("@;@");
+		int row1 = 0;
+		int col1 = 0;
+		for(int i=0; i<arr.length; i++) {
+			if (col1 == 0) {
+				data[row1][col1] = arr[i];
+			} else if(col1 == 1) {
+				data[row1][col1] = "Imágenes";
+				arrayImagenes[row1] = arr[i];
+			} else {
+				if (arr[i].equalsIgnoreCase("1")) {
+					data[row1][col1] = true;
+				} else {
+					data[row1][col1] = false;
+				}
+			}
+			col1++;
+			if (col1 > 2) {
+				col1 = 0;
+				row1++;
+			}
+		}
+
+
 		TableModel model = new DefaultTableModel(data, columnNames);
 		trabajos = new JTable(model) {
 
-            private static final long serialVersionUID = 1L;
-            @Override
-            public Class<?> getColumnClass(int column) {
-                switch (column) {
-                    case 0:
-                        return String.class;
-                    case 1:
-                        return String.class;
-                    case 2:
-                        return Boolean.class;
-                    default:
-                        return String.class;
-                }
-            }
-        };
+			private static final long serialVersionUID = 1L;
+			@Override
+			public Class<?> getColumnClass(int column) {
+				switch (column) {
+				case 0:
+					return String.class;
+				case 1:
+					return String.class;
+				case 2:
+					return Boolean.class;
+				default:
+					return String.class;
+				}
+			}
+		};
 		trabajos.getColumnModel().getColumn(1).setCellRenderer(new ClientsTableButtonRenderer());
-		trabajos.getColumnModel().getColumn(1).setCellEditor(new ClientsTableRenderer(new JCheckBox()));
+		trabajos.getColumnModel().getColumn(1).setCellEditor(new ClientsTableRenderer(new JCheckBox(), arrayImagenes));
 		trabajos.getTableHeader().setReorderingAllowed(false);
 		trabajos.setRowSelectionAllowed(false);
 		JScrollPane scrollTrabajos = new JScrollPane();
@@ -467,22 +509,23 @@ public class VentanaNuevocopia extends JDialog {
 		otrosPiezas = new JCheckBox();
 		otrosPiezas.setBounds(150, 170, 30, 20);
 		panelControl.add(otrosPiezas);
-		
-		
-		
+
+
+
 		//TODO PESTAÑA INFORMACION
 		informacion = new JPanel();
 		panelDePestanas.addTab("Información", null, informacion, null);
 		informacion.setLayout(null);
 		JTable tablaHeaders = new JTable();
-		DefaultTableModel modelo1 = (DefaultTableModel) tablaHeaders.getModel();
+		DefaultTableModel modelo1 = (DefaultTableModel) tablaHeaders2.getModel();
 		modelo1.addColumn("Tipo de defectos");
 		String[] filaVacia = new String[1];
+		filaVacia[0] = "";
 		for (int i=0; i<6; i++) {
 			modelo1.addRow(filaVacia);
 		}
-		tablaHeaders.getColumnModel().getColumn(0).setPreferredWidth(120);
-		tablaHeaders.getColumnModel().getColumn(0).setResizable(false);
+		tablaHeaders2.getColumnModel().getColumn(0).setPreferredWidth(120);
+		tablaHeaders2.getColumnModel().getColumn(0).setResizable(false);
 		Calendar c = Calendar.getInstance();
 		defectos = new JTable();
 		DefaultTableModel modeloDefectos = (DefaultTableModel) defectos.getModel();
@@ -492,20 +535,21 @@ public class VentanaNuevocopia extends JDialog {
 			c.add(Calendar.DATE, 1);
 		}
 		filaVacia = new String[30];
-		for (int i=0; i<6; i++) {
-			modeloDefectos.addRow(filaVacia);
-		}
 		for (int i=0; i<30; i++) {
 			defectos.getColumnModel().getColumn(i).setPreferredWidth(30);
 			defectos.getColumnModel().getColumn(i).setResizable(false);
+			filaVacia[i] = "";
 		}
-		
+		for (int i=0; i<6; i++) {
+			modeloDefectos.addRow(filaVacia);
+		}
+
 		defectos.setRowSelectionAllowed(false);
 		JScrollPane scrollDefectos = new JScrollPane(defectos, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		defectos.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		defectos.getTableHeader().setReorderingAllowed(false);
-		tablaHeaders.getTableHeader().setReorderingAllowed(false);
-		JScrollPane scroll1 = new JScrollPane(tablaHeaders);
+		tablaHeaders2.getTableHeader().setReorderingAllowed(false);
+		JScrollPane scroll1 = new JScrollPane(tablaHeaders2);
 		scroll1.setBounds(10, 90, 120, 125);
 		informacion.add(scroll1);
 		scrollDefectos.setBounds(128, 90, 660, 145);
@@ -514,9 +558,9 @@ public class VentanaNuevocopia extends JDialog {
 			private static final long serialVersionUID = 1L;
 
 			@Override
-		    public boolean isCellEditable(int row, int column) {
-		    	   return false;
-		    }
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
 		};
 		tablaHeaders = new JTable(modelo1);
 		modelo1.addColumn("Piezas");
@@ -536,14 +580,15 @@ public class VentanaNuevocopia extends JDialog {
 			c.add(Calendar.DATE, 1);
 		}
 		filaVacia = new String[30];
-		for (int i=0; i<2; i++) {
-			modeloPiezas.addRow(filaVacia);
-		}
 		for (int i=0; i<30; i++) {
 			piezas.getColumnModel().getColumn(i).setPreferredWidth(30);
 			piezas.getColumnModel().getColumn(i).setResizable(false);
+			filaVacia[i] = "";
 		}
-		
+		for (int i=0; i<2; i++) {
+			modeloPiezas.addRow(filaVacia);
+		}
+
 		piezas.setRowSelectionAllowed(false);
 		JScrollPane scrollPiezas = new JScrollPane(piezas, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		piezas.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -560,8 +605,8 @@ public class VentanaNuevocopia extends JDialog {
 		JLabel labelVersionInformacion = new JLabel("<html><h5>PC-01-FOR-06 REV.01</h5></html>");
 		labelVersionInformacion.setBounds(660, 5, 140, 25);
 		informacion.add(labelVersionInformacion);
-		
-		
+
+
 		//TODO PESTAÑA RECUENTO FINAL
 		recuentoFinal = new JPanel();
 		panelDePestanas.addTab("Recuento final", null, recuentoFinal, null);
@@ -599,8 +644,8 @@ public class VentanaNuevocopia extends JDialog {
 		JLabel labelVersionRecuentoFinal = new JLabel("<html><h5>PC-01-FOR-08 REV.01</h5></html>");
 		labelVersionRecuentoFinal.setBounds(660, 5, 140, 25);
 		recuentoFinal.add(labelVersionRecuentoFinal);
-		
-		
+
+
 		//TODO PESTAÑA ESTIMACION DE HORAS Y COSTES
 		estimacionHorasCostes = new JPanel();
 		panelDePestanas.addTab("Estimación de horas y costes", null, estimacionHorasCostes, null);
@@ -609,23 +654,23 @@ public class VentanaNuevocopia extends JDialog {
 			private static final long serialVersionUID = 1L;
 
 			@Override
-		    public boolean isCellEditable(int row, int column) {
-		    	   return false;
-		    }
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
 		};
 		tablaHeaders = new JTable(modelo1);
 		modelo1.addColumn("Tipo Hora");
 		filaVacia = new String[1];
 		String[] tiposHora = new String[] {"Hora Normal","Hora extra","Hora sábados","Hora festivos","Hora Nocturna",
-				"H. Especialista Normal","H. Especialista Festiva","H. Especial. Nocturna","Hora de Coordinación",
-				"H. de Administración","Gastos logisticos","Otros 1","Otros 2"};
+				"H. Especialista Normal", "H. Especialista Extra", "H. Especialista Sabado", "H. Especialista Festiva",
+				"H. Especial. Nocturna","Hora de Coordinación", "H. de Administración","Gastos logisticos","Otros 1","Otros 2"};
 		for (int i=0; i<tiposHora.length; i++) {
 			modelo1.addRow(filaVacia);
 			modelo1.setValueAt(tiposHora[i], i, 0);
 		}
 		tablaHeaders.getColumnModel().getColumn(0).setPreferredWidth(120);
 		tablaHeaders.getColumnModel().getColumn(0).setResizable(false);
-		
+
 		horas = new JTable();
 		DefaultTableModel modeloHoras = (DefaultTableModel) horas.getModel();
 		formateador = new SimpleDateFormat("dd");
@@ -635,23 +680,28 @@ public class VentanaNuevocopia extends JDialog {
 			c.add(Calendar.DATE, 1);
 		}
 		filaVacia = new String[30];
-		for (int i=0; i<tiposHora.length; i++) {
-			modeloHoras.addRow(filaVacia);
-		}
+
 		for (int i=0; i<30; i++) {
 			horas.getColumnModel().getColumn(i).setPreferredWidth(30);
 			horas.getColumnModel().getColumn(i).setResizable(false);
+			filaVacia[i] = "";
 		}
-		
+		for (int i=0; i<tiposHora.length; i++) {
+			modeloHoras.addRow(filaVacia);
+		}
+
 		horas.setRowSelectionAllowed(false);
 		JScrollPane scrollHoras = new JScrollPane(horas, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		horas.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		horas.getTableHeader().setReorderingAllowed(false);
+		
+		horas.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
+		
 		tablaHeaders.getTableHeader().setReorderingAllowed(false);
 		scroll1 = new JScrollPane(tablaHeaders);
-		scroll1.setBounds(10, 90, 120, 235);
+		scroll1.setBounds(10, 90, 120, 267);
 		estimacionHorasCostes.add(scroll1);
-		scrollHoras.setBounds(128, 90, 660, 255);
+		scrollHoras.setBounds(128, 90, 660, 290);
 		estimacionHorasCostes.add(scrollHoras);
 		JLabel labelEstimacionHoras = new JLabel("<html><h2>TIEMPO INVERTIDO Y COSTES</h2></html>");
 		labelEstimacionHoras.setBounds(280, 40, 300, 25);
@@ -659,24 +709,24 @@ public class VentanaNuevocopia extends JDialog {
 		JLabel labelVersionEstimacionHoras = new JLabel("<html><h5>PC-01-FOR-09 REV.01</h5></html>");
 		labelVersionEstimacionHoras.setBounds(660, 5, 140, 25);
 		estimacionHorasCostes.add(labelVersionEstimacionHoras);
-		
-		
-		
+
+
+
 		//TODO PESTAÑA GAMA RETRABAJOS
-		if (anadirRetrabajos) {
+		if (servicio.isRetrabajos()) {
 			gamaRetrabajos = new JPanel();
 			panelDePestanas.addTab("Gama de retrabajos", null, gamaRetrabajos, null);
 			gamaRetrabajos.setLayout(null);
-			
+
 			arrayFechasRetrabajos = new ArrayList<>();
 			arrayNombresRetrabajos = new ArrayList<>();
-			
+
 			JPanel panelFirmasRetrabajos = new JPanel();
 			panelFirmasRetrabajos.setBorder(BorderFactory.createTitledBorder("Firmas"));
 			panelFirmasRetrabajos.setBounds(450, 90, 250, 290);
 			panelFirmasRetrabajos.setLayout(null);
 			gamaRetrabajos.add(panelFirmasRetrabajos);
-			
+
 			for (int i=0; i<11; i++) {
 				arrayNombresRetrabajos.add(new JTextField());
 				arrayFechasRetrabajos.add(new JDateChooser());
@@ -685,14 +735,14 @@ public class VentanaNuevocopia extends JDialog {
 				panelFirmasRetrabajos.add(arrayNombresRetrabajos.get(i));
 				panelFirmasRetrabajos.add(arrayFechasRetrabajos.get(i));
 			}
-			
+
 			JLabel label1 = new JLabel("Nombre persona");
 			label1.setBounds(25, 20, 150, 20);
 			panelFirmasRetrabajos.add(label1);
 			JLabel label2 = new JLabel("Fecha");
 			label2.setBounds(145, 20, 80, 20);
 			panelFirmasRetrabajos.add(label2);
-						
+
 			JLabel labelGamaRetrabajos = new JLabel("<html><h2>GAMA RETRABAJOS<h2></html>");
 			labelGamaRetrabajos.setBounds(420, 25, 300, 25);
 			gamaRetrabajos.add(labelGamaRetrabajos);
@@ -702,15 +752,15 @@ public class VentanaNuevocopia extends JDialog {
 			confirmacionGamaRetrabajos = new JButton("Añadir imagen");
 			confirmacionGamaRetrabajos.setBounds(650, 50, 100, 20);
 			gamaRetrabajos.add(confirmacionGamaRetrabajos);
-			
+
 			confirmacionGamaRetrabajos.addActionListener(new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					
+
 				}
 			});
-			
+
 			JPanel panelDatosRetrabajo = new JPanel();
 			panelDatosRetrabajo.setBorder(BorderFactory.createTitledBorder("Datos generales"));
 			panelDatosRetrabajo.setBounds(10, 40, 400, 340);
@@ -771,24 +821,24 @@ public class VentanaNuevocopia extends JDialog {
 			clienteRetrabajos.setBounds(130, 310, 230, 20);
 			panelDatosRetrabajo.add(clienteRetrabajos);
 		}
-		
-		
-		
+
+
+
 		//TODO PESTAÑA FORMACION DE PERSONAL
-		if (anadirFormacion) {
+		if (servicio.isFormacion()) {
 			formacionPersonal = new JPanel();
 			panelDePestanas.addTab("Formación de personal", null, formacionPersonal, null);
 			formacionPersonal.setLayout(null);
-			
+
 			arrayFechasPersonal = new ArrayList<>();
 			arrayNombresPersonal = new ArrayList<>();
-			
+
 			JPanel panelFirmasPersonal = new JPanel();
 			panelFirmasPersonal.setBorder(BorderFactory.createTitledBorder("Firmas"));
 			panelFirmasPersonal.setBounds(450, 90, 250, 290);
 			panelFirmasPersonal.setLayout(null);
 			formacionPersonal.add(panelFirmasPersonal);
-			
+
 			for (int i=0; i<11; i++) {
 				arrayNombresPersonal.add(new JTextField());
 				arrayFechasPersonal.add(new JDateChooser());
@@ -797,14 +847,14 @@ public class VentanaNuevocopia extends JDialog {
 				panelFirmasPersonal.add(arrayNombresPersonal.get(i));
 				panelFirmasPersonal.add(arrayFechasPersonal.get(i));
 			}
-			
+
 			JLabel label3 = new JLabel("Nombre persona");
 			label3.setBounds(25, 20, 150, 20);
 			panelFirmasPersonal.add(label3);
 			JLabel label4 = new JLabel("Fecha");
 			label4.setBounds(145, 20, 80, 20);
 			panelFirmasPersonal.add(label4);		
-			
+
 			JLabel labelPersonalFormado = new JLabel("<html><h2>REGISTRO PERSONAL FORMADO<h2></html>");
 			labelPersonalFormado.setBounds(280, 50, 300, 25);
 			formacionPersonal.add(labelPersonalFormado);
@@ -814,15 +864,15 @@ public class VentanaNuevocopia extends JDialog {
 			confirmacionFormacionPersonal = new JButton("Añadir imagen");
 			confirmacionFormacionPersonal.setBounds(650, 50, 100, 20);
 			formacionPersonal.add(confirmacionFormacionPersonal);
-			
+
 			confirmacionFormacionPersonal.addActionListener(new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					
+
 				}
 			});
-			
+
 			JPanel panelDatosPersonalFormado = new JPanel();
 			panelDatosPersonalFormado.setBorder(BorderFactory.createTitledBorder("Datos generales"));
 			panelDatosPersonalFormado.setBounds(10, 110, 400, 270);
@@ -859,14 +909,14 @@ public class VentanaNuevocopia extends JDialog {
 			referenciaFormado.setBounds(130, 210, 230, 20);
 			panelDatosPersonalFormado.add(referenciaFormado);
 		}
-		
-		
-		
+
+
+
 		//TODO EL RESTO DE LA VENTANA
 		tituloLabel = new JLabel("<html><h1>ORDEN DE PEDIDO</h1></html>");
 		tituloLabel.setBounds(285, 15, 250, 25);
 		panel.add(tituloLabel);
-		
+
 		clienteLabel = new JLabel("<html><h5>Cliente:</h5></html>");
 		clienteLabel.setBounds(70, 50, 100, 25);
 		panel.add(clienteLabel);
@@ -876,74 +926,531 @@ public class VentanaNuevocopia extends JDialog {
 		clienteLabel2 = new JLabel("<html><h4>"+cliente+"</h4></html>");
 		clienteLabel2.setBounds(90, 70, 300, 25);
 		panel.add(clienteLabel2);
-		
+
 		fechaLabel = new JLabel("<html><h5>Fecha:</h5></html>");
 		fechaLabel.setBounds(840, 245, 100, 25);
 		panel.add(fechaLabel);
-		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");
-		fechaLabel2 = new JLabel("<html><h4>"+sdf.format(cal.getTime())+"</h4></html>");
+		fechaLabel2 = new JLabel("<html><h4>"+sdf.format(servicio.getFechaInicio())+"</h4></html>");
 		fechaLabel2.setBounds(860, 265, 120, 25);
 		panel.add(fechaLabel2);
-		
+
 		personalCPALabel = new JLabel("<html><h5>Persona CPA:</h5></html>");
 		personalCPALabel.setBounds(530, 50, 100, 25);
 		panel.add(personalCPALabel);
-		personalCPALabel2 = new JLabel("<html><h4>"+persona+"</h4></html>");
+		personalCPALabel2 = new JLabel("<html><h4>"+servicio.getPersonaCPA()+"</h4></html>");
 		personalCPALabel2.setBounds(550, 70, 120, 25);
 		panel.add(personalCPALabel2);
-		
+
 		numAccionLabel = new JLabel("<html><h5>Nº Acción:</h5></html>");
 		numAccionLabel.setBounds(840, 175, 100, 25);
 		panel.add(numAccionLabel);
-		numAccionLabel2 = new JLabel("<html><h4>A23-0839-15</h4></html>");
+		numAccionLabel2 = new JLabel("<html><h4>"+numAccion+"</h4></html>");
 		numAccionLabel2.setBounds(860, 195, 120, 25);
 		panel.add(numAccionLabel2);
-		
+
 		JLabel jlbPicture = new JLabel(new ImageIcon("img/cpa.jpg"));
 		jlbPicture.setPreferredSize(new Dimension(240, 110));
 		jlbPicture.setBounds(760, 5, 240, 110);
 		panel.add(jlbPicture);
-		
+
+		cambiarCliente.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				ArrayList<Cliente> arrCli = llamadas.recuperarClientes(); 
+				Cliente[] clientes = arrCli.toArray(new Cliente[arrCli.size()]);
+				Cliente clienteNuevo = (Cliente) JOptionPane.showInputDialog(ventanaPrincipal, "Nuevo cliente", "Selecciona el cliente", 
+						JOptionPane.QUESTION_MESSAGE, null, clientes, clientes[0]);
+				if (clienteNuevo != null) {
+					if(!cliente.getTipo().equalsIgnoreCase(clienteNuevo.getTipo())) {
+						cliente = clienteNuevo;
+						clienteLabel2.setText("<html><h4>"+cliente+"</h4></html>");
+						numAccion = llamadas.generarNumAccion(cliente.getTipo());
+						numAccionLabel2.setText("<html><h4>"+numAccion+"</h4></html>");
+					} else {
+						cliente = clienteNuevo;
+						clienteLabel2.setText("<html><h4>"+cliente+"</h4></html>");
+					}
+
+				}
+
+			}
+		});
+
 		JButton guardar = new JButton("Guardar y salir");
 		guardar.setBounds(840, 440, 140, 20);
 		panel.add(guardar);
 		guardar.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				int reply = JOptionPane.showConfirmDialog(null, "¿Deseas guardar el servicio y cerrar la ventana?", "Guardar y salir", JOptionPane.YES_NO_OPTION);
+				if (reply == JOptionPane.YES_OPTION) {
+					int res = 0;
+					if (semanal.isSelected())
+						res = 1;
+					else if (mensual.isSelected())
+						res = 2;
+					else if (otros.isSelected())
+						res = 3;
+
+					String piezasOK = "";
+					String piezasRecuperadas = "";
+					String arrayHoraNormal = "";
+					String arrayHoraExtra= "";
+					String arrayHoraSabado = "";
+					String arrayHoraFestivo = "";
+					String arrayHoraNocturna = "";
+					String arrayHoraEspecialistaNormal = "";
+					String arrayHoraEspecialistaExtra = "";
+					String arrayHoraEspecialistaSabado = "";
+					String arrayHoraEspecialistaFestiva = "";
+					String arrayHoraEspecialistaNocturna = "";
+					String arrayHoraCoordinacion = "";
+					String arrayHoraAdministracion = "";
+					String arrayGastosLogisticos = "";
+					String arrayOtros1 = "";
+					String arrayOtros2 = "";
+
+					for(int i = 0; i < 30; i++) {
+						piezasOK += "@;@" + piezas.getValueAt(0, i);
+						piezasRecuperadas += "@;@" + piezas.getValueAt(1, i);
+
+						arrayHoraNormal += "@;@" + horas.getValueAt(0, i);
+						arrayHoraExtra += "@;@" + horas.getValueAt(1, i);
+						arrayHoraSabado += "@;@" + horas.getValueAt(2, i);
+						arrayHoraFestivo += "@;@" + horas.getValueAt(3, i);
+						arrayHoraNocturna += "@;@" + horas.getValueAt(4, i);
+						arrayHoraEspecialistaNormal += "@;@" + horas.getValueAt(5, i);
+						arrayHoraEspecialistaExtra += "@;@" + horas.getValueAt(6, i);
+						arrayHoraEspecialistaSabado += "@;@" + horas.getValueAt(7, i);
+						arrayHoraEspecialistaFestiva += "@;@" + horas.getValueAt(8, i);
+						arrayHoraEspecialistaNocturna += "@;@" + horas.getValueAt(9, i);
+						arrayHoraCoordinacion += "@;@" + horas.getValueAt(10, i);
+						arrayHoraAdministracion += "@;@" + horas.getValueAt(11, i);
+						arrayGastosLogisticos += "@;@" + horas.getValueAt(12, i);
+						arrayOtros1 += "@;@" + horas.getValueAt(13, i);
+						arrayOtros2 += "@;@" + horas.getValueAt(14, i);
+					}
+
+					arrayHoraNormal = arrayHoraNormal.substring(3);
+					arrayHoraExtra = arrayHoraExtra.substring(3);
+					arrayHoraSabado = arrayHoraSabado.substring(3);				
+					arrayHoraFestivo = arrayHoraFestivo.substring(3);
+					arrayHoraNocturna = arrayHoraNocturna.substring(3);
+					arrayHoraEspecialistaNormal = arrayHoraEspecialistaNormal.substring(3);
+					arrayHoraEspecialistaExtra = arrayHoraEspecialistaExtra.substring(3);
+					arrayHoraEspecialistaSabado = arrayHoraEspecialistaSabado.substring(3);				
+					arrayHoraEspecialistaFestiva = arrayHoraEspecialistaFestiva.substring(3);
+					arrayHoraEspecialistaNocturna = arrayHoraEspecialistaNocturna.substring(3);
+					arrayHoraCoordinacion = arrayHoraCoordinacion.substring(3);
+					arrayHoraAdministracion = arrayHoraAdministracion.substring(3);
+					arrayGastosLogisticos = arrayGastosLogisticos.substring(3);				
+					arrayOtros1 = arrayOtros1.substring(3);
+					arrayOtros2 = arrayOtros2.substring(3);
+					piezasOK = piezasOK.substring(3);
+					piezasRecuperadas = piezasRecuperadas.substring(3);			
+
+					String recuentoFinal = "";
+
+					for (int i = 0; i < recuento.getRowCount() ; i++) {
+						for (int j = 0; j < recuento.getColumnCount(); j++) {
+							recuentoFinal += "@;@" + recuento.getValueAt(i, j);
+						}
+					}
+
+					recuentoFinal = recuentoFinal.substring(3);
+
+					String tablaDefectos = "";
+
+					for (int i = 0; i < tablaHeaders2.getRowCount() ; i++) {
+						for (int j = 0; j < defectos.getColumnCount(); j++) {
+							if (j == 0) {
+								tablaDefectos += "@;@" + tablaHeaders2.getValueAt(i, j);
+							}
+							tablaDefectos += "@;@" + defectos.getValueAt(i, j);
+						}
+					}
+
+					tablaDefectos = tablaDefectos.substring(3);
+
+					String accionesIntruccion = "";
+
+					for (int i = 0; i < trabajos.getRowCount() ; i++) {
+						for (int j = 0; j < trabajos.getColumnCount(); j++) {
+
+							if ( j == 0) {
+								accionesIntruccion += "@;@" + trabajos.getValueAt(i, j);
+							} else if (j == 1) {
+								accionesIntruccion += "@;@" + arrayImagenes[i];
+							} else {
+								if ((boolean) trabajos.getValueAt(i, j))
+									accionesIntruccion += "@;@1";
+								else
+									accionesIntruccion += "@;@0";
+
+							}
+						}
+					}
+
+
+
+					String firmasRetrabajos = "";
+					String firmasPersonal = "";
+					SimpleDateFormat sdf2 = new SimpleDateFormat("dd-MMM-YYYY");
+
+					if (servicio.isRetrabajos()) {
+
+						for (int i = 0; i < arrayFechasRetrabajos.size(); i++) {
+							firmasRetrabajos += "@;@" + arrayNombresRetrabajos.get(i).getText() + "@;@";
+							if (arrayFechasRetrabajos.get(i).getDate() != null) {
+								firmasRetrabajos += sdf2.format(arrayFechasRetrabajos.get(i).getDate());
+							}
+						}
+
+						firmasRetrabajos = firmasRetrabajos.substring(3);
+					}
+
+					if (servicio.isFormacion()) {
+
+						for (int i = 0; i < arrayFechasPersonal.size(); i++) {
+							firmasPersonal += "@;@" + arrayNombresPersonal.get(i).getText() + "@;@";
+							if (arrayFechasPersonal.get(i).getDate() != null) {
+								firmasPersonal += sdf2.format(arrayFechasPersonal.get(i).getDate());
+							}
+						}
+
+						firmasPersonal = firmasPersonal.substring(3);
+					}
+
+
+					accionesIntruccion = accionesIntruccion.substring(3);
+
+					Servicio servi = null;
+
+					if (servicio.isFormacion() && servicio.isRetrabajos()) {
+						servi = new Servicio(cliente.getNif(),cliente.getNombre(), servicio.getPersonaCPA(), numAccion, servicio.getFechaInicio(), nombrePieza.getText(), referencias.getText(), numChasis1.getText(), numChasis2.getText(), numChasis3.getText(), numChasis4.getText(),
+								responsable.getText(), piezasVerde.isSelected(), piezasBlanco.isSelected(), piezasOtros.isSelected(), piezasRojo.isSelected(), contenedorVerde.isSelected(), contenedorRojo.isSelected(), recomPersonaContacto.getText(),
+								recomDepartamento.getText(), recomTelefono.getText(), recomEmail.getText(), recomFechaSolicitud.getDate(), descripcionServicio.getText(), calzado.isSelected(), gafas.isSelected(), chaleco.isSelected(), tapones.isSelected(),
+								guantes.isSelected(), res, "img/cpa.jpg", operarioA1.isSelected(), operarioA2.isSelected(), operarioA3.isSelected(), operarioA4.isSelected(), operarioA5.isSelected(), operarioA6.isSelected(), operarioA7.isSelected(),
+								peticionMaterial.isSelected(), referenciasPiezas.isSelected(), seleccion.isSelected(), retrabajo.isSelected(), trasvase.isSelected(), otrosPiezas.isSelected(), accionesIntruccion, tablaDefectos, piezasOK, piezasRecuperadas,
+								recuentoFinal, arrayHoraNormal, arrayHoraExtra, arrayHoraSabado, arrayHoraFestivo, arrayHoraNocturna, arrayHoraEspecialistaNormal, arrayHoraEspecialistaExtra, arrayHoraEspecialistaSabado, arrayHoraEspecialistaFestiva, 
+								arrayHoraEspecialistaNocturna, arrayHoraCoordinacion, arrayHoraAdministracion, arrayGastosLogisticos, arrayOtros1, arrayOtros2, realizadoRetrabajos.getText(), fechaRetrabajos.getDate(), fechaLiberacion.getDate(), 
+								numReclamacion.getText(), fechaReclamacion.getDate(), referenciaRetrabajos.getText(), fechaComienzo.getDate(), tiempo.getText(), clienteRetrabajos.getText(), firmasRetrabajos, "img/prueba.jpg", realizadoFormado.getText(), 
+								fechaFormado.getDate(), clienteFormado.getText(), piezaFormado.getText(), referenciaFormado.getText(), firmasPersonal, "img/prueba.jpg", servicio.isRetrabajos(), servicio.isFormacion());
+					} else if (servicio.isFormacion()) {
+						servi = new Servicio(cliente.getNif(),cliente.getNombre(), servicio.getPersonaCPA(), numAccion, servicio.getFechaInicio(), nombrePieza.getText(), referencias.getText(), numChasis1.getText(), numChasis2.getText(), numChasis3.getText(), numChasis4.getText(),
+								responsable.getText(), piezasVerde.isSelected(), piezasBlanco.isSelected(), piezasOtros.isSelected(), piezasRojo.isSelected(), contenedorVerde.isSelected(), contenedorRojo.isSelected(), recomPersonaContacto.getText(),
+								recomDepartamento.getText(), recomTelefono.getText(), recomEmail.getText(), recomFechaSolicitud.getDate(), descripcionServicio.getText(), calzado.isSelected(), gafas.isSelected(), chaleco.isSelected(), tapones.isSelected(),
+								guantes.isSelected(), res, "img/cpa.jpg", operarioA1.isSelected(), operarioA2.isSelected(), operarioA3.isSelected(), operarioA4.isSelected(), operarioA5.isSelected(), operarioA6.isSelected(), operarioA7.isSelected(),
+								peticionMaterial.isSelected(), referenciasPiezas.isSelected(), seleccion.isSelected(), retrabajo.isSelected(), trasvase.isSelected(), otrosPiezas.isSelected(), accionesIntruccion, tablaDefectos, piezasOK, piezasRecuperadas,
+								recuentoFinal, arrayHoraNormal, arrayHoraExtra, arrayHoraSabado, arrayHoraFestivo, arrayHoraNocturna, arrayHoraEspecialistaNormal, arrayHoraEspecialistaExtra, arrayHoraEspecialistaSabado, arrayHoraEspecialistaFestiva, 
+								arrayHoraEspecialistaNocturna, arrayHoraCoordinacion, arrayHoraAdministracion, arrayGastosLogisticos, arrayOtros1, arrayOtros2, null, null, null, 
+								null, null, null, null, null, null, null, null, realizadoFormado.getText(), 
+								fechaFormado.getDate(), clienteFormado.getText(), piezaFormado.getText(), referenciaFormado.getText(), firmasPersonal, "img/prueba.jpg", servicio.isRetrabajos(), servicio.isFormacion());
+					} else if (servicio.isRetrabajos()) {
+						servi = new Servicio(cliente.getNif(),cliente.getNombre(), servicio.getPersonaCPA(), numAccion, servicio.getFechaInicio(), nombrePieza.getText(), referencias.getText(), numChasis1.getText(), numChasis2.getText(), numChasis3.getText(), numChasis4.getText(),
+								responsable.getText(), piezasVerde.isSelected(), piezasBlanco.isSelected(), piezasOtros.isSelected(), piezasRojo.isSelected(), contenedorVerde.isSelected(), contenedorRojo.isSelected(), recomPersonaContacto.getText(),
+								recomDepartamento.getText(), recomTelefono.getText(), recomEmail.getText(), recomFechaSolicitud.getDate(), descripcionServicio.getText(), calzado.isSelected(), gafas.isSelected(), chaleco.isSelected(), tapones.isSelected(),
+								guantes.isSelected(), res, "img/cpa.jpg", operarioA1.isSelected(), operarioA2.isSelected(), operarioA3.isSelected(), operarioA4.isSelected(), operarioA5.isSelected(), operarioA6.isSelected(), operarioA7.isSelected(),
+								peticionMaterial.isSelected(), referenciasPiezas.isSelected(), seleccion.isSelected(), retrabajo.isSelected(), trasvase.isSelected(), otrosPiezas.isSelected(), accionesIntruccion, tablaDefectos, piezasOK, piezasRecuperadas,
+								recuentoFinal, arrayHoraNormal, arrayHoraExtra, arrayHoraSabado, arrayHoraFestivo, arrayHoraNocturna, arrayHoraEspecialistaNormal, arrayHoraEspecialistaExtra, arrayHoraEspecialistaSabado, arrayHoraEspecialistaFestiva, 
+								arrayHoraEspecialistaNocturna, arrayHoraCoordinacion, arrayHoraAdministracion, arrayGastosLogisticos, arrayOtros1, arrayOtros2, realizadoRetrabajos.getText(), fechaRetrabajos.getDate(), fechaLiberacion.getDate(), 
+								numReclamacion.getText(), fechaReclamacion.getDate(), referenciaRetrabajos.getText(), fechaComienzo.getDate(), tiempo.getText(), clienteRetrabajos.getText(), firmasRetrabajos, "img/prueba.jpg", null, 
+								null, null, null, null, null, null, servicio.isRetrabajos(), servicio.isFormacion());
+					} else {
+						servi = new Servicio(cliente.getNif(),cliente.getNombre(), servicio.getPersonaCPA(), numAccion, servicio.getFechaInicio(), nombrePieza.getText(), referencias.getText(), numChasis1.getText(), numChasis2.getText(), numChasis3.getText(), numChasis4.getText(),
+								responsable.getText(), piezasVerde.isSelected(), piezasBlanco.isSelected(), piezasOtros.isSelected(), piezasRojo.isSelected(), contenedorVerde.isSelected(), contenedorRojo.isSelected(), recomPersonaContacto.getText(),
+								recomDepartamento.getText(), recomTelefono.getText(), recomEmail.getText(), recomFechaSolicitud.getDate(), descripcionServicio.getText(), calzado.isSelected(), gafas.isSelected(), chaleco.isSelected(), tapones.isSelected(),
+								guantes.isSelected(), res, "img/cpa.jpg", operarioA1.isSelected(), operarioA2.isSelected(), operarioA3.isSelected(), operarioA4.isSelected(), operarioA5.isSelected(), operarioA6.isSelected(), operarioA7.isSelected(),
+								peticionMaterial.isSelected(), referenciasPiezas.isSelected(), seleccion.isSelected(), retrabajo.isSelected(), trasvase.isSelected(), otrosPiezas.isSelected(), accionesIntruccion, tablaDefectos, piezasOK, piezasRecuperadas,
+								recuentoFinal, arrayHoraNormal, arrayHoraExtra, arrayHoraSabado, arrayHoraFestivo, arrayHoraNocturna, arrayHoraEspecialistaNormal, arrayHoraEspecialistaExtra, arrayHoraEspecialistaSabado, arrayHoraEspecialistaFestiva, 
+								arrayHoraEspecialistaNocturna, arrayHoraCoordinacion, arrayHoraAdministracion, arrayGastosLogisticos, arrayOtros1, arrayOtros2, null, null, null, 
+								null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, servicio.isRetrabajos(), servicio.isFormacion());
+					}
+
+					llamadas.introducirServicio(servi);
+
+					if (numAccionViejo != numAccion) {
+						llamadas.borrarServicio(numAccionViejo);
+					}
+
+					ventanaPrincipal.refrescarListaServicios();
+					dispose();
+				}
 			}
 		});
-		
+
 		JButton cancelar = new JButton("Cancelar");
 		cancelar.setBounds(840, 480, 140, 20);
 		panel.add(cancelar);
 		cancelar.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				int reply = JOptionPane.showConfirmDialog(null, "¿Deseas guardar los cambios antes de salir?", "Salir", JOptionPane.YES_NO_OPTION);
+				if (reply == JOptionPane.YES_OPTION) {
+					// TODO PREGUNTAR SI DESEA GUARDAR, no guardar y cancelar
+				}
 			}
 		});
-		
+
 		JButton guardarYGenerar = new JButton("Generar factura");
 		guardarYGenerar.setBounds(840, 400, 140, 20);
 		panel.add(guardarYGenerar);
 		guardarYGenerar.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				//arrayImagenes[2] = "molero#;#diego";
 				
-			}
+				if (horas.isEditing()) {
+					System.out.println("Editando");
+				} else 
+					System.out.println("NOOOOOO");
+				}
 		});
-		
+
+
+
+		nombrePieza.setText(servicio.getNombrePieza());
+		referencias.setText(servicio.getReferencias());
+		numChasis1.setText(servicio.getNumChasis1());
+		numChasis2.setText(servicio.getNumChasis2());
+		numChasis3.setText(servicio.getNumChasis3());
+		numChasis4.setText(servicio.getNumChasis4());
+		responsable.setText(servicio.getResponsableCPA());
+		piezasVerde.setSelected(servicio.isPiezasVerde());
+		piezasBlanco.setSelected(servicio.isPiezasBlanco());
+		piezasOtros.setSelected(servicio.isPiezasOtros());
+		piezasRojo.setSelected(servicio.isPiezasRojo());
+		contenedorVerde.setSelected(servicio.isContenedorVerde());
+		contenedorRojo.setSelected(servicio.isContenedorRojo());
+		recomPersonaContacto.setText(servicio.getPersonaRecomendador());
+		recomDepartamento.setText(servicio.getDepartamentoRecomendador());
+		recomTelefono.setText(servicio.getTelefonoRecomendador());
+		recomEmail.setText(servicio.getEmailRecomendador());
+		recomFechaSolicitud.setDate(servicio.getFechaSolicitudRecomendador());
+		descripcionServicio.setText(servicio.getDescripcionInstruccionDelServicio());
+		calzado.setSelected(servicio.isSeguridadCalzado());
+		gafas.setSelected(servicio.isSeguridadGafas());
+		chaleco.setSelected(servicio.isSeguridadChaleco());
+		guantes.setSelected(servicio.isSeguridadGuantes());
+		tapones.setSelected(servicio.isSeguridadTapones());
+		if (servicio.getInformacionResultados() == 0) {
+			diaria.setSelected(true);
+		}
+		if (servicio.getInformacionResultados() == 1) {
+			semanal.setSelected(true);
+		}
+		if (servicio.getInformacionResultados() == 2) {
+			mensual.setSelected(true);
+		}
+		if (servicio.getInformacionResultados() == 3) {
+			otros.setSelected(true);
+		}
+
+
+		operarioA1.setSelected(servicio.isOperarioA1());
+		operarioA2.setSelected(servicio.isOperarioA2());
+		operarioA3.setSelected(servicio.isOperarioA3());
+		operarioA4.setSelected(servicio.isOperarioA4());
+		operarioA5.setSelected(servicio.isOperarioA5());
+		operarioA6.setSelected(servicio.isOperarioA6());
+		operarioA7.setSelected(servicio.isOperarioA7());
+
+		peticionMaterial.setSelected(servicio.isPeticionMaterialInstruccion());
+		referenciasPiezas.setSelected(servicio.isReferenciasCorrectasInstruccion());
+		seleccion.setSelected(servicio.isSeleccionPiezasInstruccion());
+		retrabajo.setSelected(servicio.isRetrabajoPiezasInstruccion());
+		trasvase.setSelected(servicio.isTrasvaseInstruccion());
+		otrosPiezas.setSelected(servicio.isOtrosInstruccion());
+
+		String[] arrTemp = servicio.getRecuentoFinal().split("@;@");
+		int row = 0;
+		int column = 0;
+		for (int i=0; i<arrTemp.length; i++) {
+			recuento.setValueAt(arrTemp[i], row, column);
+			column++;
+			if (column > 6) {
+				column = 0;
+				row++;
+			}
+		}
+
+		arrTemp = servicio.getTablaDefectos().split("@;@");
+		row = 0;
+		column = 0;
+		for (int i=0; i<arrTemp.length; i++) {
+			if (column == 0) {
+				tablaHeaders2.setValueAt(arrTemp[i], row, column);
+			} else {
+				defectos.setValueAt(arrTemp[i], row, column-1);
+			}
+			column++;
+			if (column > 30) {
+				column = 0;
+				row++;
+			}
+		}
+
+		arrTemp = servicio.getPiezasOK().split("@;@");
+		for (int i=0; i<arrTemp.length; i++) {
+			piezas.setValueAt(arrTemp[i], 0, i);
+		}
+
+		arrTemp = servicio.getPiezasRecuperadas().split("@;@");
+		for (int i=0; i<arrTemp.length; i++) {
+			piezas.setValueAt(arrTemp[i], 1, i);
+		}
+
+		arrTemp = servicio.getArrayHoraNormal().split("@;@");
+		for (int i=0; i<arrTemp.length; i++) {
+			horas.setValueAt(arrTemp[i], 0, i );
+		}
+
+		arrTemp = servicio.getArrayHoraExtra().split("@;@");
+		for (int i=0; i<arrTemp.length; i++) {
+			horas.setValueAt(arrTemp[i], 1, i );
+		}
+		arrTemp = servicio.getArrayHoraSabado().split("@;@");
+		for (int i=0; i<arrTemp.length; i++) {
+			horas.setValueAt(arrTemp[i], 2, i );
+		}
+		arrTemp = servicio.getArrayHoraFestivo().split("@;@");
+		for (int i=0; i<arrTemp.length; i++) {
+			horas.setValueAt(arrTemp[i], 3, i );
+		}
+		arrTemp = servicio.getArrayHoraNocturna().split("@;@");
+		for (int i=0; i<arrTemp.length; i++) {
+			horas.setValueAt(arrTemp[i], 4, i );
+		}
+		arrTemp = servicio.getArrayHoraEspecialistaNormal().split("@;@");
+		for (int i=0; i<arrTemp.length; i++) {
+			horas.setValueAt(arrTemp[i], 5, i );
+		}
+		arrTemp = servicio.getArrayHoraEspecialistaExtra().split("@;@");
+		for (int i=0; i<arrTemp.length; i++) {
+			horas.setValueAt(arrTemp[i], 6, i );
+		}
+		arrTemp = servicio.getArrayHoraEspecialistaSabado().split("@;@");
+		for (int i=0; i<arrTemp.length; i++) {
+			horas.setValueAt(arrTemp[i], 7, i );
+		}
+		arrTemp = servicio.getArrayHoraEspecialistaFestiva().split("@;@");
+		for (int i=0; i<arrTemp.length; i++) {
+			horas.setValueAt(arrTemp[i], 8, i );
+		}
+		arrTemp = servicio.getArrayHoraEspecialistaNocturna().split("@;@");
+		for (int i=0; i<arrTemp.length; i++) {
+			horas.setValueAt(arrTemp[i], 9, i );
+		}
+		arrTemp = servicio.getArrayHoraCoordinacion().split("@;@");
+		for (int i=0; i<arrTemp.length; i++) {
+			horas.setValueAt(arrTemp[i], 10, i );
+		}
+		arrTemp = servicio.getArrayHoraAdministracion().split("@;@");
+		for (int i=0; i<arrTemp.length; i++) {
+			horas.setValueAt(arrTemp[i], 11, i );
+		}
+		arrTemp = servicio.getArrayGastosLogisticos().split("@;@");
+		for (int i=0; i<arrTemp.length; i++) {
+			horas.setValueAt(arrTemp[i], 12, i );
+		}
+		arrTemp = servicio.getArrayOtros1().split("@;@");
+		for (int i=0; i<arrTemp.length; i++) {
+			horas.setValueAt(arrTemp[i], 13, i );
+		}
+		arrTemp = servicio.getArrayOtros2().split("@;@");
+		for (int i=0; i<arrTemp.length; i++) {
+			horas.setValueAt(arrTemp[i], 14, i );
+		}
+
+		if (servicio.isRetrabajos()) {
+
+			realizadoRetrabajos.setText(servicio.getRealizadoPorRetrabajos());
+			fechaRetrabajos.setDate(servicio.getFechaRetrabajos());
+			fechaLiberacion.setDate(servicio.getFechaLiberacionRetrabajos());
+			numReclamacion.setText(servicio.getNumReclamacionRetrabajos());
+			fechaReclamacion.setDate(servicio.getFechaReclamacionRetrabajos());
+			referenciaRetrabajos.setText(servicio.getReferenciaPiezaRetrabajos());
+			fechaComienzo.setDate(servicio.getFechaComienzoRetrabajos());
+			tiempo.setText(servicio.getTiempoRetrabajos());
+			clienteRetrabajos.setText(servicio.getClienteRetrabajos());
+
+			arrTemp = servicio.getFirmasRetrabajos().split("@;@");
+			row = 0;
+			column = 0;
+
+			SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
+
+			for (int i=0; i<arrTemp.length; i++) {
+				if(column == 0) {
+					arrayNombresRetrabajos.get(row).setText(arrTemp[i]);
+				} else {
+					if (!arrTemp[i].equals("")) {
+
+						try {
+							arrayFechasRetrabajos.get(row).setDate(formatter.parse(arrTemp[i]));
+						} catch (ParseException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+
+					}
+
+
+				}
+				column++;
+				if (column > 1) {
+					column = 0;
+					row++;
+				}
+			}
+		}
+
+		if (servicio.isFormacion()) {
+			realizadoFormado.setText(servicio.getRealizadoPorPersonal());
+			fechaFormado.setDate(servicio.getFechaPersonal());
+			clienteFormado.setText(servicio.getClientePersonal());
+			piezaFormado.setText(servicio.getPiezaPersonal());
+			referenciaFormado.setText(servicio.getReferenciaPersonal());
+
+			arrTemp = servicio.getFirmasPersonal().split("@;@");
+			row = 0;
+			column = 0;
+
+			SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
+
+			for (int i=0; i<arrTemp.length; i++) {
+				if(column == 0) {
+					arrayNombresPersonal.get(row).setText(arrTemp[i]);
+				} else {
+					if (!arrTemp[i].equals(""))
+						try {
+							arrayFechasPersonal.get(row).setDate(formatter.parse(arrTemp[i]));
+						} catch (ParseException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+				}
+				column++;
+				if (column > 1) {
+					column = 0;
+					row++;
+				}
+			}
+		}
+
 		this.getContentPane().add(panel);
 		this.setSize(1000, 560);
-		this.setTitle("ERP CPA - Nueva factura");
+		this.setTitle("ERP CPA - Editar servicio");
 		this.setResizable(false);
 		this.setLocation((getToolkit().getScreenSize().width - this.getBounds().width) / 2,
 				(getToolkit().getScreenSize().height - this.getBounds().height) / 2);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	}
 }
+

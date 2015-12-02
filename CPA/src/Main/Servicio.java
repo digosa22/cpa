@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class Servicio {
 
 	// GENERICOS
-	private String nifCliente;
+	private int nifCliente;
 	private String nomCliente;
 	private String personaCPA;
 	private String numAccion;
@@ -123,7 +123,7 @@ public class Servicio {
 	
 	
 	// CONSTRUCTOR
-	public Servicio(String nifCliente, String nomCliente, String personaCPA, String numAccion, Date fechaInicio,
+	public Servicio(int nifCliente, String nomCliente, String personaCPA, String numAccion, Date fechaInicio,
 			String nombrePieza, String referencias, String numChasis1, String numChasis2, String numChasis3,
 			String numChasis4, String responsableCPA, boolean piezasVerde, boolean piezasBlanco, boolean piezasOtros,
 			boolean piezasRojo, boolean contenedorVerde, boolean contenedorRojo, String personaRecomendador,
@@ -231,10 +231,10 @@ public class Servicio {
 		this.retrabajos = retrabajos;
 		this.formacion = formacion;
 	}
-	public String getNifCliente() {
+	public int getNifCliente() {
 		return nifCliente;
 	}
-	public void setNifCliente(String nifCliente) {
+	public void setNifCliente(int nifCliente) {
 		this.nifCliente = nifCliente;
 	}
 	public String getNomCliente() {

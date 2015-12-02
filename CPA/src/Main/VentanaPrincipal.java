@@ -33,7 +33,7 @@ public class VentanaPrincipal extends JFrame {
 	private DefaultListModel<String> listModel;
 	private String stringTemporal;
 	
-	private VentanaPrincipal venInventario;
+	private VentanaPrincipal ventanaPrincipal;
 	
 	private JList<String> list;
 	
@@ -45,7 +45,7 @@ public class VentanaPrincipal extends JFrame {
 	
 	public VentanaPrincipal() {
 		
-		venInventario = this;
+		ventanaPrincipal = this;
 		
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -54,7 +54,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		
 		
-		venInventario.setIconImage(new ImageIcon("img/cpaLogo.jpg").getImage());
+		ventanaPrincipal.setIconImage(new ImageIcon("img/cpaLogo.jpg").getImage());
 		
 		panel = new JPanel();
 		panel.setLayout(null);
@@ -129,17 +129,16 @@ public class VentanaPrincipal extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-//				String[] clientes = { "Mercedes", "Michelin", "SMC", "Ireguatek" };
 				ArrayList<Cliente> arrCli = llamadas.recuperarClientes(); 
 				Cliente[] clientes = arrCli.toArray(new Cliente[arrCli.size()]);
 				String[] personal = { "Amagoia", "Mikel", "Miguel Ángel", "Javier", "Sustituto 1", "Sustituto 2" };
-				Cliente cliente = (Cliente) JOptionPane.showInputDialog(venInventario, "Selecciona el cliente", "Selecciona el cliente", 
+				Cliente cliente = (Cliente) JOptionPane.showInputDialog(ventanaPrincipal, "Selecciona el cliente", "Selecciona el cliente", 
 						JOptionPane.QUESTION_MESSAGE, null, clientes, clientes[0]);
 				if (cliente != null) {
-					String persona = (String) JOptionPane.showInputDialog(venInventario, "Identifícate", "Identifícate", 
+					String persona = (String) JOptionPane.showInputDialog(ventanaPrincipal, "Identifícate", "Identifícate", 
 							JOptionPane.QUESTION_MESSAGE, null, personal, personal[0]); 
 					if (persona != null) {
-						new VentanaPestanasAMostrar(venInventario, cliente, persona, llamadas).setVisible(true);;
+						new VentanaPestanasAMostrar(ventanaPrincipal, cliente, persona, llamadas).setVisible(true);;
 					}
 				}
 			}
@@ -153,9 +152,8 @@ public class VentanaPrincipal extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (list.isSelectionEmpty()) {
-					System.out.println("elige algo cabron");
-				}
-				else {
+					System.out.println("elige algo cabron"); //TODO
+				} else {
 					int reply = JOptionPane.showConfirmDialog(null, "¿Deseas borrar el servicio seleccionado?", "Borrar", JOptionPane.YES_NO_OPTION);
 					if (reply == JOptionPane.YES_OPTION) {
 						if (llamadas.borrarServicio(list.getSelectedValue())) {
@@ -165,10 +163,9 @@ public class VentanaPrincipal extends JFrame {
 							for (int i=0; i<array.size(); i++) {
 								listModel.addElement(array.get(i));
 							}
-							System.out.println("borrado");
 						}
 						else {
-							System.out.println("mal borrado");
+							System.out.println("mal borrado"); //TODO
 						}
 					}
 				}
@@ -183,6 +180,15 @@ public class VentanaPrincipal extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
+				if (list.isSelectionEmpty()) {
+					System.out.println("elige algo cabron"); //TODO
+				} else {
+					
+					new VentanaEditar(ventanaPrincipal, llamadas.recuperarServicio(list.getSelectedValue()), llamadas).setVisible(true);;
+					
+					
+				}
+				
 			}
 		});
 		
@@ -193,7 +199,7 @@ public class VentanaPrincipal extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new VentanaCorreo(venInventario).setVisible(true);
+				new VentanaCorreo(ventanaPrincipal).setVisible(true);
 			}
 		});
 		
@@ -204,6 +210,15 @@ public class VentanaPrincipal extends JFrame {
 		this.setLocation((getToolkit().getScreenSize().width - this.getBounds().width) / 2,
 				(getToolkit().getScreenSize().height - this.getBounds().height) / 2);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+	}
+	
+	public void refrescarListaServicios() {
+		list.clearSelection();
+		listModel.removeAllElements();
+		array = llamadas.recuperarListaServiciosEnLinea();
+		for (int i=0; i<array.size(); i++) {
+			listModel.addElement(array.get(i));
+		}
 	}
 	
 }
