@@ -3,6 +3,8 @@ package Main;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -135,12 +137,18 @@ public class VentanaNuevo extends JDialog {
 	private JLabel clienteLabel2;
 	private JLabel tituloLabel;
 	private JButton cambiarCliente;
+
+	private VentanaPrincipal ventanaPrincipal;
+	private boolean anadirRetrabajos;
+	private boolean anadirFormacion;
+	private String persona;
+	private Llamadas llamadas;
 	private Cliente cliente;
 	private String numAccion;
 
-	public VentanaNuevo(VentanaPrincipal ventanaPrincipal, boolean anadirRetrabajos, boolean anadirFormacion, Cliente cli, String persona, String numA, Llamadas llamadas) {
+	public VentanaNuevo(VentanaPrincipal ventPrin, boolean anadirRetra, boolean anadirForma, Cliente cli, String pers, String numA, Llamadas llam) {
 
-		super(ventanaPrincipal, true);
+		super(ventPrin, true);
 
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -159,6 +167,11 @@ public class VentanaNuevo extends JDialog {
 
 		cliente = cli;
 		numAccion = numA;
+		ventanaPrincipal = ventPrin;
+		llamadas = llam;
+		anadirRetrabajos = anadirRetra;
+		anadirFormacion = anadirForma;
+		persona = pers;
 
 		//TODO PESTAÑA ORDEN DE PEDIDO
 		ordenDePedido = new JPanel();
@@ -431,7 +444,7 @@ public class VentanaNuevo extends JDialog {
 			}
 		};
 		trabajos.getColumnModel().getColumn(1).setCellRenderer(new ClientsTableButtonRenderer());
-		trabajos.getColumnModel().getColumn(1).setCellEditor(new ClientsTableRenderer(new JCheckBox(), arrayImagenes));
+		trabajos.getColumnModel().getColumn(1).setCellEditor(new ClientsTableRenderer(new JCheckBox(), arrayImagenes, this, 0));
 		trabajos.getTableHeader().setReorderingAllowed(false);
 		trabajos.setRowSelectionAllowed(false);
 		JScrollPane scrollTrabajos = new JScrollPane();
@@ -525,16 +538,27 @@ public class VentanaNuevo extends JDialog {
 		tablaHeaders2.getColumnModel().getColumn(0).setPreferredWidth(120);
 		tablaHeaders2.getColumnModel().getColumn(0).setResizable(false);
 		Calendar c = Calendar.getInstance();
-		defectos = new JTable();
+		defectos = new JTable() {
+
+			private static final long serialVersionUID = 1L;
+			@Override
+			public Class<?> getColumnClass(int column) {
+				switch (column) {
+				default:
+					return Integer.class;
+				}
+			}
+		};
+		defectos.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
 		DefaultTableModel modeloDefectos = (DefaultTableModel) defectos.getModel();
-		SimpleDateFormat formateador = new SimpleDateFormat("dd");
+		SimpleDateFormat formateador = new SimpleDateFormat("dd-MMM");
 		for (int i=0; i<30; i++) {
 			modeloDefectos.addColumn(formateador.format(c.getTime()));
 			c.add(Calendar.DATE, 1);
 		}
 		filaVacia = new String[30];
 		for (int i=0; i<30; i++) {
-			defectos.getColumnModel().getColumn(i).setPreferredWidth(30);
+			defectos.getColumnModel().getColumn(i).setPreferredWidth(40);
 			defectos.getColumnModel().getColumn(i).setResizable(false);
 			filaVacia[i] = "";
 		}
@@ -542,11 +566,16 @@ public class VentanaNuevo extends JDialog {
 			modeloDefectos.addRow(filaVacia);
 		}
 
-		defectos.setRowSelectionAllowed(false);
 		JScrollPane scrollDefectos = new JScrollPane(defectos, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		defectos.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		defectos.getTableHeader().setReorderingAllowed(false);
+		defectos.setRowSelectionAllowed(false);
+		defectos.setCellSelectionEnabled(true);
+		new ExcelAdapter(defectos);
 		tablaHeaders2.getTableHeader().setReorderingAllowed(false);
+		tablaHeaders2.setCellSelectionEnabled(true);
+		tablaHeaders2.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
+		new ExcelAdapter(tablaHeaders2);
 		JScrollPane scroll1 = new JScrollPane(tablaHeaders2);
 		scroll1.setBounds(10, 90, 120, 125);
 		informacion.add(scroll1);
@@ -570,7 +599,18 @@ public class VentanaNuevo extends JDialog {
 		}
 		tablaHeaders.getColumnModel().getColumn(0).setPreferredWidth(120);
 		tablaHeaders.getColumnModel().getColumn(0).setResizable(false);
-		piezas = new JTable();
+		piezas = new JTable() {
+
+			private static final long serialVersionUID = 1L;
+			@Override
+			public Class<?> getColumnClass(int column) {
+				switch (column) {
+				default:
+					return Integer.class;
+				}
+			}
+		};
+		piezas.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
 		DefaultTableModel modeloPiezas = (DefaultTableModel) piezas.getModel();
 		c = Calendar.getInstance();
 		for (int i=0; i<30; i++) {
@@ -579,7 +619,7 @@ public class VentanaNuevo extends JDialog {
 		}
 		filaVacia = new String[30];
 		for (int i=0; i<30; i++) {
-			piezas.getColumnModel().getColumn(i).setPreferredWidth(30);
+			piezas.getColumnModel().getColumn(i).setPreferredWidth(40);
 			piezas.getColumnModel().getColumn(i).setResizable(false);
 			filaVacia[i] = "";
 		}
@@ -587,10 +627,12 @@ public class VentanaNuevo extends JDialog {
 			modeloPiezas.addRow(filaVacia);
 		}
 
-		piezas.setRowSelectionAllowed(false);
 		JScrollPane scrollPiezas = new JScrollPane(piezas, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		piezas.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		piezas.getTableHeader().setReorderingAllowed(false);
+		piezas.setRowSelectionAllowed(false);
+		piezas.setCellSelectionEnabled(true);
+		new ExcelAdapter(piezas);
 		tablaHeaders.getTableHeader().setReorderingAllowed(false);
 		JScrollPane scroll2 = new JScrollPane(tablaHeaders);
 		scroll2.setBounds(10, 290, 120, 60);
@@ -609,7 +651,32 @@ public class VentanaNuevo extends JDialog {
 		recuentoFinal = new JPanel();
 		panelDePestanas.addTab("Recuento final", null, recuentoFinal, null);
 		recuentoFinal.setLayout(null);
-		recuento = new JTable();
+		recuento = new JTable() {
+
+			private static final long serialVersionUID = 1L;
+			@Override
+			public Class<?> getColumnClass(int column) {
+				switch (column) {
+				case 0:
+					return String.class;
+				case 1:
+					return String.class;
+				case 2:
+					return String.class;
+				case 3:
+					return String.class;
+				case 4:
+					return Integer.class;
+				case 5:
+					return Integer.class;
+				case 6:
+					return Integer.class;
+				default:
+					return String.class;
+				}
+			}
+		};
+		recuento.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
 		DefaultTableModel modeloRecuento = (DefaultTableModel)recuento.getModel();
 		modeloRecuento.addColumn("Fecha");
 		modeloRecuento.addColumn("Nº Lote");
@@ -631,7 +698,7 @@ public class VentanaNuevo extends JDialog {
 		recuento.getTableHeader().setReorderingAllowed(false);
 		recuento.setRowSelectionAllowed(false);
 		recuento.setCellSelectionEnabled(true);
-		ExcelAdapter myAd = new ExcelAdapter(recuento);
+		new ExcelAdapter(recuento);
 		JScrollPane scrollRecuento = new JScrollPane();
 		scrollRecuento.setViewportView(recuento);
 		scrollRecuento.setBounds(150, 100, 550, 250);
@@ -652,9 +719,9 @@ public class VentanaNuevo extends JDialog {
 			private static final long serialVersionUID = 1L;
 
 			@Override
-		    public boolean isCellEditable(int row, int column) {
-		    	   return false;
-		    }
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
 		};
 		tablaHeaders = new JTable(modelo1);
 		modelo1.addColumn("Tipo Hora");
@@ -668,30 +735,43 @@ public class VentanaNuevo extends JDialog {
 		}
 		tablaHeaders.getColumnModel().getColumn(0).setPreferredWidth(120);
 		tablaHeaders.getColumnModel().getColumn(0).setResizable(false);
-		
-		horas = new JTable();
+
+		horas = new JTable() {
+
+			private static final long serialVersionUID = 1L;
+			@Override
+			public Class<?> getColumnClass(int column) {
+				switch (column) {
+				default:
+					return Integer.class;
+				}
+			}
+		};
+		horas.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
 		DefaultTableModel modeloHoras = (DefaultTableModel) horas.getModel();
-		formateador = new SimpleDateFormat("dd");
+		formateador = new SimpleDateFormat("dd-MMM");
 		c = Calendar.getInstance();
 		for (int i=0; i<30; i++) {
 			modeloHoras.addColumn(formateador.format(c.getTime()));
 			c.add(Calendar.DATE, 1);
 		}
 		filaVacia = new String[30];
-		
+
 		for (int i=0; i<30; i++) {
-			horas.getColumnModel().getColumn(i).setPreferredWidth(30);
+			horas.getColumnModel().getColumn(i).setPreferredWidth(40);
 			horas.getColumnModel().getColumn(i).setResizable(false);
 			filaVacia[i] = "";
 		}
 		for (int i=0; i<tiposHora.length; i++) {
 			modeloHoras.addRow(filaVacia);
 		}
-		
-		horas.setRowSelectionAllowed(false);
+
 		JScrollPane scrollHoras = new JScrollPane(horas, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		horas.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		horas.getTableHeader().setReorderingAllowed(false);
+		horas.setRowSelectionAllowed(false);
+		horas.setCellSelectionEnabled(true);
+		new ExcelAdapter(horas);
 		tablaHeaders.getTableHeader().setReorderingAllowed(false);
 		scroll1 = new JScrollPane(tablaHeaders);
 		scroll1.setBounds(10, 90, 120, 267);
@@ -951,10 +1031,10 @@ public class VentanaNuevo extends JDialog {
 		panel.add(jlbPicture);
 
 		cambiarCliente.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+
 				ArrayList<Cliente> arrCli = llamadas.recuperarClientes(); 
 				Cliente[] clientes = arrCli.toArray(new Cliente[arrCli.size()]);
 				Cliente clienteNuevo = (Cliente) JOptionPane.showInputDialog(ventanaPrincipal, "Nuevo cliente", "Selecciona el cliente", 
@@ -969,12 +1049,12 @@ public class VentanaNuevo extends JDialog {
 						cliente = clienteNuevo;
 						clienteLabel2.setText("<html><h4>"+cliente+"</h4></html>");
 					}
-					
+
 				}
-				
+
 			}
 		});
-		
+
 		JButton guardar = new JButton("Guardar y salir");
 		guardar.setBounds(840, 440, 140, 20);
 		panel.add(guardar);
@@ -984,207 +1064,26 @@ public class VentanaNuevo extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				int reply = JOptionPane.showConfirmDialog(null, "¿Deseas guardar el servicio y cerrar la ventana?", "Guardar y salir", JOptionPane.YES_NO_OPTION);
 				if (reply == JOptionPane.YES_OPTION) {
-					Calendar cal = Calendar.getInstance();
-					int res = 0;
-					if (semanal.isSelected())
-						res = 1;
-					else if (mensual.isSelected())
-						res = 2;
-					else if (otros.isSelected())
-						res = 3;
-
-					String piezasOK = "";
-					String piezasRecuperadas = "";
-					String arrayHoraNormal = "";
-					String arrayHoraExtra= "";
-					String arrayHoraSabado = "";
-					String arrayHoraFestivo = "";
-					String arrayHoraNocturna = "";
-					String arrayHoraEspecialistaNormal = "";
-					String arrayHoraEspecialistaExtra = "";
-					String arrayHoraEspecialistaSabado = "";
-					String arrayHoraEspecialistaFestiva = "";
-					String arrayHoraEspecialistaNocturna = "";
-					String arrayHoraCoordinacion = "";
-					String arrayHoraAdministracion = "";
-					String arrayGastosLogisticos = "";
-					String arrayOtros1 = "";
-					String arrayOtros2 = "";
-
-					for(int i = 0; i < 30; i++) {
-						piezasOK += "@;@" + piezas.getValueAt(0, i);
-						piezasRecuperadas += "@;@" + piezas.getValueAt(1, i);
-
-						arrayHoraNormal += "@;@" + horas.getValueAt(0, i);
-						arrayHoraExtra += "@;@" + horas.getValueAt(1, i);
-						arrayHoraSabado += "@;@" + horas.getValueAt(2, i);
-						arrayHoraFestivo += "@;@" + horas.getValueAt(3, i);
-						arrayHoraNocturna += "@;@" + horas.getValueAt(4, i);
-						arrayHoraEspecialistaNormal += "@;@" + horas.getValueAt(5, i);
-						arrayHoraEspecialistaExtra += "@;@" + horas.getValueAt(6, i);
-						arrayHoraEspecialistaSabado += "@;@" + horas.getValueAt(7, i);
-						arrayHoraEspecialistaFestiva += "@;@" + horas.getValueAt(8, i);
-						arrayHoraEspecialistaNocturna += "@;@" + horas.getValueAt(9, i);
-						arrayHoraCoordinacion += "@;@" + horas.getValueAt(10, i);
-						arrayHoraAdministracion += "@;@" + horas.getValueAt(11, i);
-						arrayGastosLogisticos += "@;@" + horas.getValueAt(12, i);
-						arrayOtros1 += "@;@" + horas.getValueAt(13, i);
-						arrayOtros2 += "@;@" + horas.getValueAt(14, i);
-					}
-
-					arrayHoraNormal = arrayHoraNormal.substring(3);
-					arrayHoraExtra = arrayHoraExtra.substring(3);
-					arrayHoraSabado = arrayHoraSabado.substring(3);				
-					arrayHoraFestivo = arrayHoraFestivo.substring(3);
-					arrayHoraNocturna = arrayHoraNocturna.substring(3);
-					arrayHoraEspecialistaNormal = arrayHoraEspecialistaNormal.substring(3);
-					arrayHoraEspecialistaExtra = arrayHoraEspecialistaExtra.substring(3);
-					arrayHoraEspecialistaSabado = arrayHoraEspecialistaSabado.substring(3);				
-					arrayHoraEspecialistaFestiva = arrayHoraEspecialistaFestiva.substring(3);
-					arrayHoraEspecialistaNocturna = arrayHoraEspecialistaNocturna.substring(3);
-					arrayHoraCoordinacion = arrayHoraCoordinacion.substring(3);
-					arrayHoraAdministracion = arrayHoraAdministracion.substring(3);
-					arrayGastosLogisticos = arrayGastosLogisticos.substring(3);				
-					arrayOtros1 = arrayOtros1.substring(3);
-					arrayOtros2 = arrayOtros2.substring(3);
-					piezasOK = piezasOK.substring(3);
-					piezasRecuperadas = piezasRecuperadas.substring(3);			
-
-					String recuentoFinal = "";
-
-					for (int i = 0; i < recuento.getRowCount() ; i++) {
-						for (int j = 0; j < recuento.getColumnCount(); j++) {
-							recuentoFinal += "@;@" + recuento.getValueAt(i, j);
-						}
-					}
-
-					recuentoFinal = recuentoFinal.substring(3);
-
-					String tablaDefectos = "";
-
-					for (int i = 0; i < tablaHeaders2.getRowCount() ; i++) {
-						for (int j = 0; j < defectos.getColumnCount(); j++) {
-							if (j == 0) {
-								tablaDefectos += "@;@" + tablaHeaders2.getValueAt(i, j);
-							}
-							tablaDefectos += "@;@" + defectos.getValueAt(i, j);
-						}
-					}
-
-					tablaDefectos = tablaDefectos.substring(3);
-
-					String accionesIntruccion = "";
-
-					for (int i = 0; i < trabajos.getRowCount() ; i++) {
-						for (int j = 0; j < trabajos.getColumnCount(); j++) {
-
-							if ( j == 0) {
-								accionesIntruccion += "@;@" + trabajos.getValueAt(i, j);
-							} else if (j == 1) {
-								accionesIntruccion += "@;@" + arrayImagenes[i];
-							} else {
-								if ((boolean) trabajos.getValueAt(i, j))
-									accionesIntruccion += "@;@1";
-								else
-									accionesIntruccion += "@;@0";
-
-							}
-						}
-					}
-
-
-
-					String firmasRetrabajos = "";
-					String firmasPersonal = "";
-					SimpleDateFormat sdf2 = new SimpleDateFormat("dd-MMM-YYYY");
-
-					if (anadirRetrabajos) {
-
-						for (int i = 0; i < arrayFechasRetrabajos.size(); i++) {
-							firmasRetrabajos += "@;@" + arrayNombresRetrabajos.get(i).getText() + "@;@";
-							if (arrayFechasRetrabajos.get(i).getDate() != null) {
-								firmasRetrabajos += sdf2.format(arrayFechasRetrabajos.get(i).getDate());
-							}
-						}
-
-						firmasRetrabajos = firmasRetrabajos.substring(3);
-					}
-
-					if (anadirFormacion) {
-
-						for (int i = 0; i < arrayFechasPersonal.size(); i++) {
-							firmasPersonal += "@;@" + arrayNombresPersonal.get(i).getText() + "@;@";
-							if (arrayFechasPersonal.get(i).getDate() != null) {
-								firmasPersonal += sdf2.format(arrayFechasPersonal.get(i).getDate());
-							}
-						}
-
-						firmasPersonal = firmasPersonal.substring(3);
-					}
-
-
-					accionesIntruccion = accionesIntruccion.substring(3);
-
-					Servicio servi = null;
-
-					if (anadirFormacion && anadirRetrabajos) {
-						servi = new Servicio(cliente.getNif(),cliente.getNombre(), persona, numAccion, cal.getTime(), nombrePieza.getText(), referencias.getText(), numChasis1.getText(), numChasis2.getText(), numChasis3.getText(), numChasis4.getText(),
-								responsable.getText(), piezasVerde.isSelected(), piezasBlanco.isSelected(), piezasOtros.isSelected(), piezasRojo.isSelected(), contenedorVerde.isSelected(), contenedorRojo.isSelected(), recomPersonaContacto.getText(),
-								recomDepartamento.getText(), recomTelefono.getText(), recomEmail.getText(), recomFechaSolicitud.getDate(), descripcionServicio.getText(), calzado.isSelected(), gafas.isSelected(), chaleco.isSelected(), tapones.isSelected(),
-								guantes.isSelected(), res, "img/cpa.jpg", operarioA1.isSelected(), operarioA2.isSelected(), operarioA3.isSelected(), operarioA4.isSelected(), operarioA5.isSelected(), operarioA6.isSelected(), operarioA7.isSelected(),
-								peticionMaterial.isSelected(), referenciasPiezas.isSelected(), seleccion.isSelected(), retrabajo.isSelected(), trasvase.isSelected(), otrosPiezas.isSelected(), accionesIntruccion, tablaDefectos, piezasOK, piezasRecuperadas,
-								recuentoFinal, arrayHoraNormal, arrayHoraExtra, arrayHoraSabado, arrayHoraFestivo, arrayHoraNocturna, arrayHoraEspecialistaNormal, arrayHoraEspecialistaExtra, arrayHoraEspecialistaSabado, arrayHoraEspecialistaFestiva, 
-								arrayHoraEspecialistaNocturna, arrayHoraCoordinacion, arrayHoraAdministracion, arrayGastosLogisticos, arrayOtros1, arrayOtros2, realizadoRetrabajos.getText(), fechaRetrabajos.getDate(), fechaLiberacion.getDate(), 
-								numReclamacion.getText(), fechaReclamacion.getDate(), referenciaRetrabajos.getText(), fechaComienzo.getDate(), tiempo.getText(), clienteRetrabajos.getText(), firmasRetrabajos, "img/prueba.jpg", realizadoFormado.getText(), 
-								fechaFormado.getDate(), clienteFormado.getText(), piezaFormado.getText(), referenciaFormado.getText(), firmasPersonal, "img/prueba.jpg", anadirRetrabajos, anadirFormacion);
-					} else if (anadirFormacion) {
-						servi = new Servicio(cliente.getNif(),cliente.getNombre(), persona, numAccion, cal.getTime(), nombrePieza.getText(), referencias.getText(), numChasis1.getText(), numChasis2.getText(), numChasis3.getText(), numChasis4.getText(),
-								responsable.getText(), piezasVerde.isSelected(), piezasBlanco.isSelected(), piezasOtros.isSelected(), piezasRojo.isSelected(), contenedorVerde.isSelected(), contenedorRojo.isSelected(), recomPersonaContacto.getText(),
-								recomDepartamento.getText(), recomTelefono.getText(), recomEmail.getText(), recomFechaSolicitud.getDate(), descripcionServicio.getText(), calzado.isSelected(), gafas.isSelected(), chaleco.isSelected(), tapones.isSelected(),
-								guantes.isSelected(), res, "img/cpa.jpg", operarioA1.isSelected(), operarioA2.isSelected(), operarioA3.isSelected(), operarioA4.isSelected(), operarioA5.isSelected(), operarioA6.isSelected(), operarioA7.isSelected(),
-								peticionMaterial.isSelected(), referenciasPiezas.isSelected(), seleccion.isSelected(), retrabajo.isSelected(), trasvase.isSelected(), otrosPiezas.isSelected(), accionesIntruccion, tablaDefectos, piezasOK, piezasRecuperadas,
-								recuentoFinal, arrayHoraNormal, arrayHoraExtra, arrayHoraSabado, arrayHoraFestivo, arrayHoraNocturna, arrayHoraEspecialistaNormal, arrayHoraEspecialistaExtra, arrayHoraEspecialistaSabado, arrayHoraEspecialistaFestiva, 
-								arrayHoraEspecialistaNocturna, arrayHoraCoordinacion, arrayHoraAdministracion, arrayGastosLogisticos, arrayOtros1, arrayOtros2, null, null, null, 
-								null, null, null, null, null, null, null, null, realizadoFormado.getText(), 
-								fechaFormado.getDate(), clienteFormado.getText(), piezaFormado.getText(), referenciaFormado.getText(), firmasPersonal, "img/prueba.jpg", anadirRetrabajos, anadirFormacion);
-					} else if (anadirRetrabajos) {
-						servi = new Servicio(cliente.getNif(),cliente.getNombre(), persona, numAccion, cal.getTime(), nombrePieza.getText(), referencias.getText(), numChasis1.getText(), numChasis2.getText(), numChasis3.getText(), numChasis4.getText(),
-								responsable.getText(), piezasVerde.isSelected(), piezasBlanco.isSelected(), piezasOtros.isSelected(), piezasRojo.isSelected(), contenedorVerde.isSelected(), contenedorRojo.isSelected(), recomPersonaContacto.getText(),
-								recomDepartamento.getText(), recomTelefono.getText(), recomEmail.getText(), recomFechaSolicitud.getDate(), descripcionServicio.getText(), calzado.isSelected(), gafas.isSelected(), chaleco.isSelected(), tapones.isSelected(),
-								guantes.isSelected(), res, "img/cpa.jpg", operarioA1.isSelected(), operarioA2.isSelected(), operarioA3.isSelected(), operarioA4.isSelected(), operarioA5.isSelected(), operarioA6.isSelected(), operarioA7.isSelected(),
-								peticionMaterial.isSelected(), referenciasPiezas.isSelected(), seleccion.isSelected(), retrabajo.isSelected(), trasvase.isSelected(), otrosPiezas.isSelected(), accionesIntruccion, tablaDefectos, piezasOK, piezasRecuperadas,
-								recuentoFinal, arrayHoraNormal, arrayHoraExtra, arrayHoraSabado, arrayHoraFestivo, arrayHoraNocturna, arrayHoraEspecialistaNormal, arrayHoraEspecialistaExtra, arrayHoraEspecialistaSabado, arrayHoraEspecialistaFestiva, 
-								arrayHoraEspecialistaNocturna, arrayHoraCoordinacion, arrayHoraAdministracion, arrayGastosLogisticos, arrayOtros1, arrayOtros2, realizadoRetrabajos.getText(), fechaRetrabajos.getDate(), fechaLiberacion.getDate(), 
-								numReclamacion.getText(), fechaReclamacion.getDate(), referenciaRetrabajos.getText(), fechaComienzo.getDate(), tiempo.getText(), clienteRetrabajos.getText(), firmasRetrabajos, "img/prueba.jpg", null, 
-								null, null, null, null, null, null, anadirRetrabajos, anadirFormacion);
-					} else {
-						servi = new Servicio(cliente.getNif(),cliente.getNombre(), persona, numAccion, cal.getTime(), nombrePieza.getText(), referencias.getText(), numChasis1.getText(), numChasis2.getText(), numChasis3.getText(), numChasis4.getText(),
-								responsable.getText(), piezasVerde.isSelected(), piezasBlanco.isSelected(), piezasOtros.isSelected(), piezasRojo.isSelected(), contenedorVerde.isSelected(), contenedorRojo.isSelected(), recomPersonaContacto.getText(),
-								recomDepartamento.getText(), recomTelefono.getText(), recomEmail.getText(), recomFechaSolicitud.getDate(), descripcionServicio.getText(), calzado.isSelected(), gafas.isSelected(), chaleco.isSelected(), tapones.isSelected(),
-								guantes.isSelected(), res, "img/cpa.jpg", operarioA1.isSelected(), operarioA2.isSelected(), operarioA3.isSelected(), operarioA4.isSelected(), operarioA5.isSelected(), operarioA6.isSelected(), operarioA7.isSelected(),
-								peticionMaterial.isSelected(), referenciasPiezas.isSelected(), seleccion.isSelected(), retrabajo.isSelected(), trasvase.isSelected(), otrosPiezas.isSelected(), accionesIntruccion, tablaDefectos, piezasOK, piezasRecuperadas,
-								recuentoFinal, arrayHoraNormal, arrayHoraExtra, arrayHoraSabado, arrayHoraFestivo, arrayHoraNocturna, arrayHoraEspecialistaNormal, arrayHoraEspecialistaExtra, arrayHoraEspecialistaSabado, arrayHoraEspecialistaFestiva, 
-								arrayHoraEspecialistaNocturna, arrayHoraCoordinacion, arrayHoraAdministracion, arrayGastosLogisticos, arrayOtros1, arrayOtros2, null, null, null, 
-								null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, anadirRetrabajos, anadirFormacion);
-					}
-
-					llamadas.introducirServicio(servi);
-					ventanaPrincipal.refrescarListaServicios();
-					dispose();
+					guardarYSalir();
 				}
 			}
 		});
 
-		JButton cancelar = new JButton("Cancelar");
+		JButton cancelar = new JButton("Salir");
 		cancelar.setBounds(840, 480, 140, 20);
 		panel.add(cancelar);
 		cancelar.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int reply = JOptionPane.showConfirmDialog(null, "¿Deseas guardar los cambios antes de salir?", "Salir", JOptionPane.YES_NO_OPTION);
-				if (reply == JOptionPane.YES_OPTION) {
-					// TODO PREGUNTAR SI DESEA GUARDAR, no guardar y cancelar
+				int seleccion = JOptionPane.showOptionDialog(
+						null,"¿Deseas guardar los cambios antes de salir?", "Salir",JOptionPane.YES_NO_CANCEL_OPTION,
+						JOptionPane.QUESTION_MESSAGE, null, new Object[] { "Guardar", "No guardar", "Cancelar" }, "Guardar");
+				if (seleccion == 0) {
+					guardarYSalir();
+				}
+				else if (seleccion == 1) {
+					dispose();
 				}
 			}
 		});
@@ -1196,7 +1095,47 @@ public class VentanaNuevo extends JDialog {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				System.out.println(arrayImagenes[0]);
+			}
+		});
+
+		this.addWindowListener(new WindowListener() {
+
+			@Override
+			public void windowOpened(WindowEvent e) {
+			}
+
+			@Override
+			public void windowIconified(WindowEvent e) {
+			}
+
+			@Override
+			public void windowDeiconified(WindowEvent e) {
+			}
+
+			@Override
+			public void windowDeactivated(WindowEvent e) {
+			}
+
+			@Override
+			public void windowClosing(WindowEvent e) {
+				int seleccion = JOptionPane.showOptionDialog(
+						null,"¿Deseas guardar los cambios antes de salir?", "Salir",JOptionPane.YES_NO_CANCEL_OPTION,
+						JOptionPane.QUESTION_MESSAGE, null, new Object[] { "Guardar", "No guardar", "Cancelar" }, "Guardar");
+				if (seleccion == 0) {
+					guardarYSalir();
+				}
+				else if (seleccion == 1) {
+					dispose();
+				}
+			}
+
+			@Override
+			public void windowClosed(WindowEvent e) {
+			}
+
+			@Override
+			public void windowActivated(WindowEvent e) {
 			}
 		});
 
@@ -1206,6 +1145,200 @@ public class VentanaNuevo extends JDialog {
 		this.setResizable(false);
 		this.setLocation((getToolkit().getScreenSize().width - this.getBounds().width) / 2,
 				(getToolkit().getScreenSize().height - this.getBounds().height) / 2);
-		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+	}
+
+	public void guardarYSalir() {
+		Calendar cal = Calendar.getInstance();
+		int res = 0;
+		if (semanal.isSelected())
+			res = 1;
+		else if (mensual.isSelected())
+			res = 2;
+		else if (otros.isSelected())
+			res = 3;
+
+		String piezasOK = "";
+		String piezasRecuperadas = "";
+		String arrayHoraNormal = "";
+		String arrayHoraExtra= "";
+		String arrayHoraSabado = "";
+		String arrayHoraFestivo = "";
+		String arrayHoraNocturna = "";
+		String arrayHoraEspecialistaNormal = "";
+		String arrayHoraEspecialistaExtra = "";
+		String arrayHoraEspecialistaSabado = "";
+		String arrayHoraEspecialistaFestiva = "";
+		String arrayHoraEspecialistaNocturna = "";
+		String arrayHoraCoordinacion = "";
+		String arrayHoraAdministracion = "";
+		String arrayGastosLogisticos = "";
+		String arrayOtros1 = "";
+		String arrayOtros2 = "";
+
+		for(int i = 0; i < 30; i++) {
+			piezasOK += "@;@" + piezas.getValueAt(0, i);
+			piezasRecuperadas += "@;@" + piezas.getValueAt(1, i);
+
+			arrayHoraNormal += "@;@" + horas.getValueAt(0, i);
+			arrayHoraExtra += "@;@" + horas.getValueAt(1, i);
+			arrayHoraSabado += "@;@" + horas.getValueAt(2, i);
+			arrayHoraFestivo += "@;@" + horas.getValueAt(3, i);
+			arrayHoraNocturna += "@;@" + horas.getValueAt(4, i);
+			arrayHoraEspecialistaNormal += "@;@" + horas.getValueAt(5, i);
+			arrayHoraEspecialistaExtra += "@;@" + horas.getValueAt(6, i);
+			arrayHoraEspecialistaSabado += "@;@" + horas.getValueAt(7, i);
+			arrayHoraEspecialistaFestiva += "@;@" + horas.getValueAt(8, i);
+			arrayHoraEspecialistaNocturna += "@;@" + horas.getValueAt(9, i);
+			arrayHoraCoordinacion += "@;@" + horas.getValueAt(10, i);
+			arrayHoraAdministracion += "@;@" + horas.getValueAt(11, i);
+			arrayGastosLogisticos += "@;@" + horas.getValueAt(12, i);
+			arrayOtros1 += "@;@" + horas.getValueAt(13, i);
+			arrayOtros2 += "@;@" + horas.getValueAt(14, i);
+		}
+
+		arrayHoraNormal = arrayHoraNormal.substring(3);
+		arrayHoraExtra = arrayHoraExtra.substring(3);
+		arrayHoraSabado = arrayHoraSabado.substring(3);				
+		arrayHoraFestivo = arrayHoraFestivo.substring(3);
+		arrayHoraNocturna = arrayHoraNocturna.substring(3);
+		arrayHoraEspecialistaNormal = arrayHoraEspecialistaNormal.substring(3);
+		arrayHoraEspecialistaExtra = arrayHoraEspecialistaExtra.substring(3);
+		arrayHoraEspecialistaSabado = arrayHoraEspecialistaSabado.substring(3);				
+		arrayHoraEspecialistaFestiva = arrayHoraEspecialistaFestiva.substring(3);
+		arrayHoraEspecialistaNocturna = arrayHoraEspecialistaNocturna.substring(3);
+		arrayHoraCoordinacion = arrayHoraCoordinacion.substring(3);
+		arrayHoraAdministracion = arrayHoraAdministracion.substring(3);
+		arrayGastosLogisticos = arrayGastosLogisticos.substring(3);				
+		arrayOtros1 = arrayOtros1.substring(3);
+		arrayOtros2 = arrayOtros2.substring(3);
+		piezasOK = piezasOK.substring(3);
+		piezasRecuperadas = piezasRecuperadas.substring(3);			
+
+		String recuentoFinal = "";
+
+		for (int i = 0; i < recuento.getRowCount() ; i++) {
+			for (int j = 0; j < recuento.getColumnCount(); j++) {
+				recuentoFinal += "@;@" + recuento.getValueAt(i, j);
+			}
+		}
+
+		recuentoFinal = recuentoFinal.substring(3);
+
+		String tablaDefectos = "";
+
+		for (int i = 0; i < tablaHeaders2.getRowCount() ; i++) {
+			for (int j = 0; j < defectos.getColumnCount(); j++) {
+				if (j == 0) {
+					tablaDefectos += "@;@" + tablaHeaders2.getValueAt(i, j);
+				}
+				tablaDefectos += "@;@" + defectos.getValueAt(i, j);
+			}
+		}
+
+		tablaDefectos = tablaDefectos.substring(3);
+
+		String accionesIntruccion = "";
+
+		for (int i = 0; i < trabajos.getRowCount() ; i++) {
+			for (int j = 0; j < trabajos.getColumnCount(); j++) {
+
+				if ( j == 0) {
+					accionesIntruccion += "@;@" + trabajos.getValueAt(i, j);
+				} else if (j == 1) {
+					accionesIntruccion += "@;@" + arrayImagenes[i];
+				} else {
+					if ((boolean) trabajos.getValueAt(i, j))
+						accionesIntruccion += "@;@1";
+					else
+						accionesIntruccion += "@;@0";
+
+				}
+			}
+		}
+
+
+
+		String firmasRetrabajos = "";
+		String firmasPersonal = "";
+		SimpleDateFormat sdf2 = new SimpleDateFormat("dd-MMM-YYYY");
+
+		if (anadirRetrabajos) {
+
+			for (int i = 0; i < arrayFechasRetrabajos.size(); i++) {
+				firmasRetrabajos += "@;@" + arrayNombresRetrabajos.get(i).getText() + "@;@";
+				if (arrayFechasRetrabajos.get(i).getDate() != null) {
+					firmasRetrabajos += sdf2.format(arrayFechasRetrabajos.get(i).getDate());
+				}
+			}
+
+			firmasRetrabajos = firmasRetrabajos.substring(3);
+		}
+
+		if (anadirFormacion) {
+
+			for (int i = 0; i < arrayFechasPersonal.size(); i++) {
+				firmasPersonal += "@;@" + arrayNombresPersonal.get(i).getText() + "@;@";
+				if (arrayFechasPersonal.get(i).getDate() != null) {
+					firmasPersonal += sdf2.format(arrayFechasPersonal.get(i).getDate());
+				}
+			}
+
+			firmasPersonal = firmasPersonal.substring(3);
+		}
+
+
+		accionesIntruccion = accionesIntruccion.substring(3);
+
+		Servicio servi = null;
+
+		if (anadirFormacion && anadirRetrabajos) {
+			servi = new Servicio(cliente.getNif(),cliente.getNombre(), persona, numAccion, cal.getTime(), nombrePieza.getText(), referencias.getText(), numChasis1.getText(), numChasis2.getText(), numChasis3.getText(), numChasis4.getText(),
+					responsable.getText(), piezasVerde.isSelected(), piezasBlanco.isSelected(), piezasOtros.isSelected(), piezasRojo.isSelected(), contenedorVerde.isSelected(), contenedorRojo.isSelected(), recomPersonaContacto.getText(),
+					recomDepartamento.getText(), recomTelefono.getText(), recomEmail.getText(), recomFechaSolicitud.getDate(), descripcionServicio.getText(), calzado.isSelected(), gafas.isSelected(), chaleco.isSelected(), tapones.isSelected(),
+					guantes.isSelected(), res, "img/cpa.jpg", operarioA1.isSelected(), operarioA2.isSelected(), operarioA3.isSelected(), operarioA4.isSelected(), operarioA5.isSelected(), operarioA6.isSelected(), operarioA7.isSelected(),
+					peticionMaterial.isSelected(), referenciasPiezas.isSelected(), seleccion.isSelected(), retrabajo.isSelected(), trasvase.isSelected(), otrosPiezas.isSelected(), accionesIntruccion, tablaDefectos, piezasOK, piezasRecuperadas,
+					recuentoFinal, arrayHoraNormal, arrayHoraExtra, arrayHoraSabado, arrayHoraFestivo, arrayHoraNocturna, arrayHoraEspecialistaNormal, arrayHoraEspecialistaExtra, arrayHoraEspecialistaSabado, arrayHoraEspecialistaFestiva, 
+					arrayHoraEspecialistaNocturna, arrayHoraCoordinacion, arrayHoraAdministracion, arrayGastosLogisticos, arrayOtros1, arrayOtros2, realizadoRetrabajos.getText(), fechaRetrabajos.getDate(), fechaLiberacion.getDate(), 
+					numReclamacion.getText(), fechaReclamacion.getDate(), referenciaRetrabajos.getText(), fechaComienzo.getDate(), tiempo.getText(), clienteRetrabajos.getText(), firmasRetrabajos, "img/prueba.jpg", realizadoFormado.getText(), 
+					fechaFormado.getDate(), clienteFormado.getText(), piezaFormado.getText(), referenciaFormado.getText(), firmasPersonal, "img/prueba.jpg", anadirRetrabajos, anadirFormacion);
+		} else if (anadirFormacion) {
+			servi = new Servicio(cliente.getNif(),cliente.getNombre(), persona, numAccion, cal.getTime(), nombrePieza.getText(), referencias.getText(), numChasis1.getText(), numChasis2.getText(), numChasis3.getText(), numChasis4.getText(),
+					responsable.getText(), piezasVerde.isSelected(), piezasBlanco.isSelected(), piezasOtros.isSelected(), piezasRojo.isSelected(), contenedorVerde.isSelected(), contenedorRojo.isSelected(), recomPersonaContacto.getText(),
+					recomDepartamento.getText(), recomTelefono.getText(), recomEmail.getText(), recomFechaSolicitud.getDate(), descripcionServicio.getText(), calzado.isSelected(), gafas.isSelected(), chaleco.isSelected(), tapones.isSelected(),
+					guantes.isSelected(), res, "img/cpa.jpg", operarioA1.isSelected(), operarioA2.isSelected(), operarioA3.isSelected(), operarioA4.isSelected(), operarioA5.isSelected(), operarioA6.isSelected(), operarioA7.isSelected(),
+					peticionMaterial.isSelected(), referenciasPiezas.isSelected(), seleccion.isSelected(), retrabajo.isSelected(), trasvase.isSelected(), otrosPiezas.isSelected(), accionesIntruccion, tablaDefectos, piezasOK, piezasRecuperadas,
+					recuentoFinal, arrayHoraNormal, arrayHoraExtra, arrayHoraSabado, arrayHoraFestivo, arrayHoraNocturna, arrayHoraEspecialistaNormal, arrayHoraEspecialistaExtra, arrayHoraEspecialistaSabado, arrayHoraEspecialistaFestiva, 
+					arrayHoraEspecialistaNocturna, arrayHoraCoordinacion, arrayHoraAdministracion, arrayGastosLogisticos, arrayOtros1, arrayOtros2, null, null, null, 
+					null, null, null, null, null, null, null, null, realizadoFormado.getText(), 
+					fechaFormado.getDate(), clienteFormado.getText(), piezaFormado.getText(), referenciaFormado.getText(), firmasPersonal, "img/prueba.jpg", anadirRetrabajos, anadirFormacion);
+		} else if (anadirRetrabajos) {
+			servi = new Servicio(cliente.getNif(),cliente.getNombre(), persona, numAccion, cal.getTime(), nombrePieza.getText(), referencias.getText(), numChasis1.getText(), numChasis2.getText(), numChasis3.getText(), numChasis4.getText(),
+					responsable.getText(), piezasVerde.isSelected(), piezasBlanco.isSelected(), piezasOtros.isSelected(), piezasRojo.isSelected(), contenedorVerde.isSelected(), contenedorRojo.isSelected(), recomPersonaContacto.getText(),
+					recomDepartamento.getText(), recomTelefono.getText(), recomEmail.getText(), recomFechaSolicitud.getDate(), descripcionServicio.getText(), calzado.isSelected(), gafas.isSelected(), chaleco.isSelected(), tapones.isSelected(),
+					guantes.isSelected(), res, "img/cpa.jpg", operarioA1.isSelected(), operarioA2.isSelected(), operarioA3.isSelected(), operarioA4.isSelected(), operarioA5.isSelected(), operarioA6.isSelected(), operarioA7.isSelected(),
+					peticionMaterial.isSelected(), referenciasPiezas.isSelected(), seleccion.isSelected(), retrabajo.isSelected(), trasvase.isSelected(), otrosPiezas.isSelected(), accionesIntruccion, tablaDefectos, piezasOK, piezasRecuperadas,
+					recuentoFinal, arrayHoraNormal, arrayHoraExtra, arrayHoraSabado, arrayHoraFestivo, arrayHoraNocturna, arrayHoraEspecialistaNormal, arrayHoraEspecialistaExtra, arrayHoraEspecialistaSabado, arrayHoraEspecialistaFestiva, 
+					arrayHoraEspecialistaNocturna, arrayHoraCoordinacion, arrayHoraAdministracion, arrayGastosLogisticos, arrayOtros1, arrayOtros2, realizadoRetrabajos.getText(), fechaRetrabajos.getDate(), fechaLiberacion.getDate(), 
+					numReclamacion.getText(), fechaReclamacion.getDate(), referenciaRetrabajos.getText(), fechaComienzo.getDate(), tiempo.getText(), clienteRetrabajos.getText(), firmasRetrabajos, "img/prueba.jpg", null, 
+					null, null, null, null, null, null, anadirRetrabajos, anadirFormacion);
+		} else {
+			servi = new Servicio(cliente.getNif(),cliente.getNombre(), persona, numAccion, cal.getTime(), nombrePieza.getText(), referencias.getText(), numChasis1.getText(), numChasis2.getText(), numChasis3.getText(), numChasis4.getText(),
+					responsable.getText(), piezasVerde.isSelected(), piezasBlanco.isSelected(), piezasOtros.isSelected(), piezasRojo.isSelected(), contenedorVerde.isSelected(), contenedorRojo.isSelected(), recomPersonaContacto.getText(),
+					recomDepartamento.getText(), recomTelefono.getText(), recomEmail.getText(), recomFechaSolicitud.getDate(), descripcionServicio.getText(), calzado.isSelected(), gafas.isSelected(), chaleco.isSelected(), tapones.isSelected(),
+					guantes.isSelected(), res, "img/cpa.jpg", operarioA1.isSelected(), operarioA2.isSelected(), operarioA3.isSelected(), operarioA4.isSelected(), operarioA5.isSelected(), operarioA6.isSelected(), operarioA7.isSelected(),
+					peticionMaterial.isSelected(), referenciasPiezas.isSelected(), seleccion.isSelected(), retrabajo.isSelected(), trasvase.isSelected(), otrosPiezas.isSelected(), accionesIntruccion, tablaDefectos, piezasOK, piezasRecuperadas,
+					recuentoFinal, arrayHoraNormal, arrayHoraExtra, arrayHoraSabado, arrayHoraFestivo, arrayHoraNocturna, arrayHoraEspecialistaNormal, arrayHoraEspecialistaExtra, arrayHoraEspecialistaSabado, arrayHoraEspecialistaFestiva, 
+					arrayHoraEspecialistaNocturna, arrayHoraCoordinacion, arrayHoraAdministracion, arrayGastosLogisticos, arrayOtros1, arrayOtros2, null, null, null, 
+					null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, anadirRetrabajos, anadirFormacion);
+		}
+
+		llamadas.introducirServicio(servi);
+		ventanaPrincipal.refrescarListaServicios();
+		dispose();
+	}
+	
+	public void actualizarImagenesAccionesInstruccion(String imgs, int fila) {
+		arrayImagenes[fila] = imgs;
 	}
 }

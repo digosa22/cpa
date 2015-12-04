@@ -8,6 +8,8 @@ import java.awt.event.ActionListener;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.UIManager;
@@ -38,13 +40,16 @@ class ClientsTableButtonRenderer extends JButton implements TableCellRenderer
     private JTable table;
 
     private String[] imgs;
+    private JDialog padre;
+    private int accion;
     
-    public ClientsTableRenderer(JCheckBox checkBox, String[] imgs)
+    public ClientsTableRenderer(JCheckBox checkBox, String[] imgs, JDialog padre, int accion)
     {
       super(checkBox);
       
+      this.padre = padre;
       this.imgs = imgs;
-      
+      this.accion = accion;
       button = new JButton();
       button.setOpaque(true);
       button.addActionListener(new ActionListener()
@@ -72,7 +77,10 @@ class ClientsTableButtonRenderer extends JButton implements TableCellRenderer
     {
       if (clicked)
       {
-        JOptionPane.showMessageDialog(button, "Click en la fila: "+imgs[row]);
+//        JOptionPane.showMessageDialog(button, "Click en la fila: "+imgs[row]);
+//    	  imgs[row] = "http://cdn.revistagq.com/uploads/images/thumbs/201430/james_rodriguez_real_madrid_cristiano_ronaldo_7238_200x200.jpg#;#http://www.fotosdecamiones.com/wp-content/uploads/2015/07/camion-bordo.jpg";
+    	  
+    	  new VentanaImagenes(padre, imgs[row], row, table.getValueAt(row, 0).toString(), accion).setVisible(true);
       }
       clicked = false;
       return new String(label);

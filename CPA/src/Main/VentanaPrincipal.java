@@ -138,7 +138,7 @@ public class VentanaPrincipal extends JFrame {
 					String persona = (String) JOptionPane.showInputDialog(ventanaPrincipal, "Identifícate", "Identifícate", 
 							JOptionPane.QUESTION_MESSAGE, null, personal, personal[0]); 
 					if (persona != null) {
-						new VentanaPestanasAMostrar(ventanaPrincipal, cliente, persona, llamadas).setVisible(true);;
+						new VentanaPestanasAMostrar(ventanaPrincipal, cliente, persona, llamadas).setVisible(true);
 					}
 				}
 			}

@@ -49,9 +49,7 @@ public class VentanaPestanasAMostrar extends JDialog {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				dispose();
-//TODO				new VentanaNuevo(venInventario, mostrarRetrabajos.isSelected(), mostrarFormacion.isSelected(), cliente, persona).setVisible(true);
-				
+				dispose();				
 				new VentanaNuevo(venInventario, mostrarRetrabajos.isSelected(), mostrarFormacion.isSelected(), cliente, persona, llamadas.generarNumAccion(cliente.getTipo()), llamadas).setVisible(true);
 			}
 		});
