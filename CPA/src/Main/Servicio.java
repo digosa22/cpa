@@ -117,10 +117,12 @@ public class Servicio {
 	private String firmasPersonal;
 	private String imagenPersonal;
 	
-	//PESTAÑAS AÑADIR
+	// PESTAÑAS AÑADIR
 	private boolean retrabajos;
 	private boolean formacion;
 	
+	// NOMBRE CARPETA
+	private String nombreCarpeta;
 	
 	// CONSTRUCTOR
 	public Servicio(int nifCliente, String nomCliente, String personaCPA, String numAccion, Date fechaInicio,
@@ -144,7 +146,8 @@ public class Servicio {
 			String numReclamacionRetrabajos, Date fechaReclamacionRetrabajos, String referenciaPiezaRetrabajos,
 			Date fechaComienzoRetrabajos, String tiempoRetrabajos, String clienteRetrabajos, String firmasRetrabajos,
 			String imagenRetrabajos, String realizadoPorPersonal, Date fechaPersonal, String clientePersonal,
-			String piezaPersonal, String referenciaPersonal, String firmasPersonal, String imagenPersonal, boolean retrabajos, boolean formacion) {
+			String piezaPersonal, String referenciaPersonal, String firmasPersonal, String imagenPersonal, 
+			boolean retrabajos, boolean formacion, String nombreCarpeta) {
 		super();
 		this.nifCliente = nifCliente;
 		this.nomCliente = nomCliente;
@@ -230,6 +233,7 @@ public class Servicio {
 		this.imagenPersonal = imagenPersonal;
 		this.retrabajos = retrabajos;
 		this.formacion = formacion;
+		this.nombreCarpeta = nombreCarpeta;
 	}
 	public int getNifCliente() {
 		return nifCliente;
@@ -737,6 +741,12 @@ public class Servicio {
 	}
 	public void setArrayHoraEspecialistaSabado(String arrayHoraEspecialistaSabado) {
 		this.arrayHoraEspecialistaSabado = arrayHoraEspecialistaSabado;
+	}
+	public String getNombreCarpeta() {
+		return nombreCarpeta;
+	}
+	public void setNombreCarpeta(String nombreCarpeta) {
+		this.nombreCarpeta = nombreCarpeta;
 	}
 	
 }

@@ -84,7 +84,8 @@ public class Llamadas {
 						rs.getDate("fecha_comienzo_retrabajos"), rs.getString("tiempo_retrabajos"), rs.getString("clientes_retrabajos"),
 						rs.getString("firmas_retrabajos"), rs.getString("imagen_retrabajos"), rs.getString("realizado_por_personal"),
 						rs.getDate("fecha_personal"), rs.getString("cliente_personal"), rs.getString("pieza_personal"),
-						rs.getString("referencia_personal"), rs.getString("firmas_personal"), rs.getString("imagen_personal"), rs.getBoolean("retrabajos"), rs.getBoolean("formacion"));
+						rs.getString("referencia_personal"), rs.getString("firmas_personal"), rs.getString("imagen_personal"), 
+						rs.getBoolean("retrabajos"), rs.getBoolean("formacion"), rs.getString("nombre_carpeta"));
 			}
 			rs.close();
 			ps.close();
@@ -129,7 +130,7 @@ public class Llamadas {
 							+ " referencia_pieza_retrabajos, fecha_comienzo_retrabajos, tiempo_retrabajos,"
 							+ " clientes_retrabajos, firmas_retrabajos, imagen_retrabajos, realizado_por_personal,"
 							+ " fecha_personal, cliente_personal, pieza_personal, referencia_personal, firmas_personal,"
-							+ " imagen_personal, retrabajos, formacion"
+							+ " imagen_personal, retrabajos, formacion, nombre_carpeta"
 							+ ") VALUES(?,?,?,?,?,?,?,?,?,?,"
 							+ "?,?,?,?,?,?,?,?,?,?,"
 							+ "?,?,?,?,?,?,?,?,?,?,"
@@ -138,7 +139,7 @@ public class Llamadas {
 							+ "?,?,?,?,?,?,?,?,?,?,"
 							+ "?,?,?,?,?,?,?,?,?,?,"
 							+ "?,?,?,?,?,?,?,?,?,?,"
-							+ "?,?,?,?"
+							+ "?,?,?,?,?"
 							+ ")");
 
 			preparedStatement.setInt(1, servicio.getNifCliente());
@@ -295,7 +296,7 @@ public class Llamadas {
 			
 			preparedStatement.setBoolean(83, servicio.isRetrabajos());
 			preparedStatement.setBoolean(84, servicio.isFormacion());
-			
+			preparedStatement.setString(85, servicio.getNombreCarpeta());
 
 			preparedStatement.executeUpdate();
 			preparedStatement.close();
@@ -343,7 +344,7 @@ public class Llamadas {
 							+ " referencia_pieza_retrabajos, fecha_comienzo_retrabajos, tiempo_retrabajos,"
 							+ " clientes_retrabajos, firmas_retrabajos, imagen_retrabajos, realizado_por_personal,"
 							+ " fecha_personal, cliente_personal, pieza_personal, referencia_personal, firmas_personal,"
-							+ " imagen_personal"
+							+ " imagen_personal, retrabajos, formacion, nombre_carpeta"
 							+ ") VALUES(?,?,?,?,?,?,?,?,?,?"
 							+ ",?,?,?,?,?,?,?,?,?,?"
 							+ ",?,?,?,?,?,?,?,?,?,?"
@@ -352,7 +353,7 @@ public class Llamadas {
 							+ ",?,?,?,?,?,?,?,?,?,?"
 							+ ",?,?,?,?,?,?,?,?,?,?"
 							+ ",?,?,?,?,?,?,?,?,?,?"
-							+ "?,?)");
+							+ "?,?,?,?,?)");
 
 			preparedStatement.setInt(1, servicio.getNifCliente());
 			preparedStatement.setString(2, servicio.getNomCliente());
@@ -441,6 +442,11 @@ public class Llamadas {
 			preparedStatement.setString(80, servicio.getReferenciaPersonal());
 			preparedStatement.setString(81, servicio.getFirmasPersonal());
 			preparedStatement.setString(82, servicio.getImagenPersonal());
+			
+			preparedStatement.setBoolean(83, servicio.isRetrabajos());
+			preparedStatement.setBoolean(84, servicio.isFormacion());
+			preparedStatement.setString(85, servicio.getNombreCarpeta());
+			
 			preparedStatement.executeUpdate();
 			preparedStatement.close();
 			connection.close();
@@ -454,201 +460,201 @@ public class Llamadas {
 
 	}
 
-	public boolean actualizarServicio(Servicio servicio) {
-
-		Database database = new Database();
-		Connection connection;
-		try {
-			connection = database.Get_Connection();
-			Statement statement = connection.createStatement();
-
-			statement
-			.executeUpdate("UPDATE servicios_en_linea SET nif_cliente='"
-					+ servicio.getNifCliente()
-					+ "',nom_cliente='"
-					+ servicio.getNomCliente()
-					+ "',persona_cpa='"
-					+ servicio.getPersonaCPA()
-					+ "',fecha_inicio="
-					+ servicio.getFechaInicio()
-
-					+ ",nombre_pieza='"
-					+ servicio.getNombrePieza()
-					+ "',referencias='"
-					+ servicio.getReferencias()
-					+ "',num_chasis_1='"
-					+ servicio.getNumChasis1()
-					+ "',num_chasis_2='"
-					+ servicio.getNumChasis2()
-					+ "',num_chasis_3='"
-					+ servicio.getNumChasis3()
-					+ "',num_chasis_4='"
-					+ servicio.getNumChasis4()
-					+ "',responsable_cpa='"
-					+ servicio.getResponsableCPA()
-					+ "',piezas_verde='"
-					+ servicio.isPiezasVerde()
-					+ "',piezas_blanco='"
-					+ servicio.isPiezasBlanco()
-					+ "',piezas_otros='"
-					+ servicio.isPiezasOtros()
-					+ "',piezas_rojo='"
-					+ servicio.isPiezasRojo()
-					+ "',contenedor_verde='"
-					+ servicio.isContenedorVerde()
-					+ "',contenedor_rojo='"
-					+ servicio.isContenedorRojo()
-					+ "',persona_recomendador='"
-					+ servicio.getPersonaRecomendador()
-					+ "',departamento_recomendador='"
-					+ servicio.getDepartamentoRecomendador()
-					+ "',telefono_recomendador='"
-					+ servicio.getTelefonoRecomendador()
-					+ "',email_recomendador='"
-					+ servicio.getEmailRecomendador()
-					+ "',fecha_solicitud_recomendador="
-					+ servicio.getFechaSolicitudRecomendador()
-					+ ",descripcion_instruccion_del_servicio='"
-					+ servicio.getDescripcionInstruccionDelServicio()
-					+ "',seguridad_calzado='"
-					+ servicio.isSeguridadCalzado()
-					+ "',seguridad_gafas='"
-					+ servicio.isSeguridadGafas()
-					+ "',seguridad_chaleco='"
-					+ servicio.isSeguridadChaleco()
-					+ "',seguridad_tapones='"
-					+ servicio.isSeguridadTapones()
-					+ "',seguridad_guantes='"
-					+ servicio.isSeguridadGuantes()
-					+ "',informacion_resultados='"
-					+ servicio.getInformacionResultados()
-					+ "',imagen_orden_de_pedido='"
-					+ servicio.getImagenOrdenDePedido()
-
-					+ "',operario_a1='"
-					+ servicio.isOperarioA1()
-					+ "',operario_a2='"
-					+ servicio.isOperarioA2()
-					+ "',operario_a3='"
-					+ servicio.isOperarioA3()
-					+ "',operario_a4='"
-					+ servicio.isOperarioA4()
-					+ "',operario_a5='"
-					+ servicio.isOperarioA5()
-					+ "',operario_a6='"
-					+ servicio.isOperarioA6()
-					+ "',operario_a7='"
-					+ servicio.isOperarioA7()
-					+ "',peticion_material_instruccion='"
-					+ servicio.isPeticionMaterialInstruccion()
-					+ "',referencias_correctas_instruccion='"
-					+ servicio.isReferenciasCorrectasInstruccion()
-					+ "',seleccion_piezas_instruccion='"
-					+ servicio.isSeleccionPiezasInstruccion()
-					+ "',retrabajo_piezas_instruccion='"
-					+ servicio.isRetrabajoPiezasInstruccion()
-					+ "',trasvase_instruccion='"
-					+ servicio.isTrasvaseInstruccion()
-					+ "',otros_instruccion='"
-					+ servicio.isOtrosInstruccion()
-					+ "',acciones_instruccion='"
-					+ servicio.getAccionesIntruccion()
-
-					+ "',array_defectos='"
-					+ servicio.getTablaDefectos()
-					+ "',array_piezas_ok='"
-					+ servicio.getPiezasOK()
-					+ "',array_piezas_recuperadas='"
-					+ servicio.getPiezasRecuperadas()
-
-					+ "',recuento_final='"
-					+ servicio.getRecuentoFinal()
-
-					+ "',array_hora_normal='"
-					+ servicio.getArrayHoraNormal()
-					+ "',array_hora_extra='"
-					+ servicio.getArrayHoraExtra()
-					+ "',array_hora_sabado='"
-					+ servicio.getArrayHoraSabado()
-					+ "',array_hora_festivo='"
-					+ servicio.getArrayHoraFestivo()
-					+ "',array_hora_nocturna='"
-					+ servicio.getArrayHoraNocturna()
-
-					+ "',array_hora_especialista_normal='"
-					+ servicio.getArrayHoraEspecialistaNormal()
-					+ "',array_hora_especialista_extra='"
-					+ servicio.getArrayHoraEspecialistaExtra()
-					+ "',array_hora_especialista_sabado='"
-					+ servicio.getArrayHoraEspecialistaSabado()
-					+ "',array_hora_especialista_festivo='"
-					+ servicio.getArrayHoraEspecialistaFestiva()
-					+ "',array_hora_especialista_nocturna='"
-					+ servicio.getArrayHoraEspecialistaNocturna()
-
-					+ "',array_hora_coordinacion='"
-					+ servicio.getArrayHoraCoordinacion()
-					+ "',array_hora_administracion='"
-					+ servicio.getArrayHoraAdministracion()
-					+ "',array_gastos_logisticos='"
-					+ servicio.getArrayGastosLogisticos()
-					+ "',array_otros1='"
-					+ servicio.getArrayOtros1()
-					+ "',array_otros2='"
-					+ servicio.getArrayOtros2()
-
-					+ "',realizado_por_retrabajos='"
-					+ servicio.getRealizadoPorRetrabajos()
-					+ "',fecha_retrabajos="
-					+ servicio.getFechaRetrabajos()
-					+ ",fecha_liberacion_retrabajos="
-					+ servicio.getFechaLiberacionRetrabajos()
-					+ ",num_reclamacion_retrabajos='"
-					+ servicio.getNumReclamacionRetrabajos()
-					+ "',fecha_reclamacion_retrabajos="
-					+ servicio.getFechaReclamacionRetrabajos()
-					+ ",referencia_pieza_retrabajos='"
-					+ servicio.getReferenciaPiezaRetrabajos()
-					+ "',fecha_comienzo_retrabajos="
-					+ servicio.getFechaComienzoRetrabajos()
-					+ ",tiempo_retrabajos='"
-					+ servicio.getTiempoRetrabajos()
-					+ "',clientes_retrabajos='"
-					+ servicio.getClienteRetrabajos()
-					+ "',firmas_retrabajos='"
-					+ servicio.getFirmasRetrabajos()
-					+ "',imagen_retrabajos='"
-					+ servicio.getImagenRetrabajos()
-
-					+ "',realizado_por_personal='"
-					+ servicio.getRealizadoPorPersonal()
-					+ "',fecha_personal="
-					+ servicio.getFechaPersonal()
-					+ ",cliente_personal='"
-					+ servicio.getClientePersonal()
-					+ "',pieza_personal='"
-					+ servicio.getPiezaPersonal()
-					+ "',referencia_personal='"
-					+ servicio.getReferenciaPersonal()
-					+ "',firmas_personal='"
-					+ servicio.getFirmasPersonal()
-					+ "',imagen_personal='"
-					+ servicio.getImagenPersonal()
-
-
-					+ "' where num_accion='"
-					+ servicio.getNumAccion() + "'");
-			statement.close();
-			connection.close();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		}
-
-		return true;
-
-	}
+//	public boolean actualizarServicio(Servicio servicio) {
+//
+//		Database database = new Database();
+//		Connection connection;
+//		try {
+//			connection = database.Get_Connection();
+//			Statement statement = connection.createStatement();
+//
+//			statement
+//			.executeUpdate("UPDATE servicios_en_linea SET nif_cliente='"
+//					+ servicio.getNifCliente()
+//					+ "',nom_cliente='"
+//					+ servicio.getNomCliente()
+//					+ "',persona_cpa='"
+//					+ servicio.getPersonaCPA()
+//					+ "',fecha_inicio="
+//					+ servicio.getFechaInicio()
+//
+//					+ ",nombre_pieza='"
+//					+ servicio.getNombrePieza()
+//					+ "',referencias='"
+//					+ servicio.getReferencias()
+//					+ "',num_chasis_1='"
+//					+ servicio.getNumChasis1()
+//					+ "',num_chasis_2='"
+//					+ servicio.getNumChasis2()
+//					+ "',num_chasis_3='"
+//					+ servicio.getNumChasis3()
+//					+ "',num_chasis_4='"
+//					+ servicio.getNumChasis4()
+//					+ "',responsable_cpa='"
+//					+ servicio.getResponsableCPA()
+//					+ "',piezas_verde='"
+//					+ servicio.isPiezasVerde()
+//					+ "',piezas_blanco='"
+//					+ servicio.isPiezasBlanco()
+//					+ "',piezas_otros='"
+//					+ servicio.isPiezasOtros()
+//					+ "',piezas_rojo='"
+//					+ servicio.isPiezasRojo()
+//					+ "',contenedor_verde='"
+//					+ servicio.isContenedorVerde()
+//					+ "',contenedor_rojo='"
+//					+ servicio.isContenedorRojo()
+//					+ "',persona_recomendador='"
+//					+ servicio.getPersonaRecomendador()
+//					+ "',departamento_recomendador='"
+//					+ servicio.getDepartamentoRecomendador()
+//					+ "',telefono_recomendador='"
+//					+ servicio.getTelefonoRecomendador()
+//					+ "',email_recomendador='"
+//					+ servicio.getEmailRecomendador()
+//					+ "',fecha_solicitud_recomendador="
+//					+ servicio.getFechaSolicitudRecomendador()
+//					+ ",descripcion_instruccion_del_servicio='"
+//					+ servicio.getDescripcionInstruccionDelServicio()
+//					+ "',seguridad_calzado='"
+//					+ servicio.isSeguridadCalzado()
+//					+ "',seguridad_gafas='"
+//					+ servicio.isSeguridadGafas()
+//					+ "',seguridad_chaleco='"
+//					+ servicio.isSeguridadChaleco()
+//					+ "',seguridad_tapones='"
+//					+ servicio.isSeguridadTapones()
+//					+ "',seguridad_guantes='"
+//					+ servicio.isSeguridadGuantes()
+//					+ "',informacion_resultados='"
+//					+ servicio.getInformacionResultados()
+//					+ "',imagen_orden_de_pedido='"
+//					+ servicio.getImagenOrdenDePedido()
+//
+//					+ "',operario_a1='"
+//					+ servicio.isOperarioA1()
+//					+ "',operario_a2='"
+//					+ servicio.isOperarioA2()
+//					+ "',operario_a3='"
+//					+ servicio.isOperarioA3()
+//					+ "',operario_a4='"
+//					+ servicio.isOperarioA4()
+//					+ "',operario_a5='"
+//					+ servicio.isOperarioA5()
+//					+ "',operario_a6='"
+//					+ servicio.isOperarioA6()
+//					+ "',operario_a7='"
+//					+ servicio.isOperarioA7()
+//					+ "',peticion_material_instruccion='"
+//					+ servicio.isPeticionMaterialInstruccion()
+//					+ "',referencias_correctas_instruccion='"
+//					+ servicio.isReferenciasCorrectasInstruccion()
+//					+ "',seleccion_piezas_instruccion='"
+//					+ servicio.isSeleccionPiezasInstruccion()
+//					+ "',retrabajo_piezas_instruccion='"
+//					+ servicio.isRetrabajoPiezasInstruccion()
+//					+ "',trasvase_instruccion='"
+//					+ servicio.isTrasvaseInstruccion()
+//					+ "',otros_instruccion='"
+//					+ servicio.isOtrosInstruccion()
+//					+ "',acciones_instruccion='"
+//					+ servicio.getAccionesIntruccion()
+//
+//					+ "',array_defectos='"
+//					+ servicio.getTablaDefectos()
+//					+ "',array_piezas_ok='"
+//					+ servicio.getPiezasOK()
+//					+ "',array_piezas_recuperadas='"
+//					+ servicio.getPiezasRecuperadas()
+//
+//					+ "',recuento_final='"
+//					+ servicio.getRecuentoFinal()
+//
+//					+ "',array_hora_normal='"
+//					+ servicio.getArrayHoraNormal()
+//					+ "',array_hora_extra='"
+//					+ servicio.getArrayHoraExtra()
+//					+ "',array_hora_sabado='"
+//					+ servicio.getArrayHoraSabado()
+//					+ "',array_hora_festivo='"
+//					+ servicio.getArrayHoraFestivo()
+//					+ "',array_hora_nocturna='"
+//					+ servicio.getArrayHoraNocturna()
+//
+//					+ "',array_hora_especialista_normal='"
+//					+ servicio.getArrayHoraEspecialistaNormal()
+//					+ "',array_hora_especialista_extra='"
+//					+ servicio.getArrayHoraEspecialistaExtra()
+//					+ "',array_hora_especialista_sabado='"
+//					+ servicio.getArrayHoraEspecialistaSabado()
+//					+ "',array_hora_especialista_festivo='"
+//					+ servicio.getArrayHoraEspecialistaFestiva()
+//					+ "',array_hora_especialista_nocturna='"
+//					+ servicio.getArrayHoraEspecialistaNocturna()
+//
+//					+ "',array_hora_coordinacion='"
+//					+ servicio.getArrayHoraCoordinacion()
+//					+ "',array_hora_administracion='"
+//					+ servicio.getArrayHoraAdministracion()
+//					+ "',array_gastos_logisticos='"
+//					+ servicio.getArrayGastosLogisticos()
+//					+ "',array_otros1='"
+//					+ servicio.getArrayOtros1()
+//					+ "',array_otros2='"
+//					+ servicio.getArrayOtros2()
+//
+//					+ "',realizado_por_retrabajos='"
+//					+ servicio.getRealizadoPorRetrabajos()
+//					+ "',fecha_retrabajos="
+//					+ servicio.getFechaRetrabajos()
+//					+ ",fecha_liberacion_retrabajos="
+//					+ servicio.getFechaLiberacionRetrabajos()
+//					+ ",num_reclamacion_retrabajos='"
+//					+ servicio.getNumReclamacionRetrabajos()
+//					+ "',fecha_reclamacion_retrabajos="
+//					+ servicio.getFechaReclamacionRetrabajos()
+//					+ ",referencia_pieza_retrabajos='"
+//					+ servicio.getReferenciaPiezaRetrabajos()
+//					+ "',fecha_comienzo_retrabajos="
+//					+ servicio.getFechaComienzoRetrabajos()
+//					+ ",tiempo_retrabajos='"
+//					+ servicio.getTiempoRetrabajos()
+//					+ "',clientes_retrabajos='"
+//					+ servicio.getClienteRetrabajos()
+//					+ "',firmas_retrabajos='"
+//					+ servicio.getFirmasRetrabajos()
+//					+ "',imagen_retrabajos='"
+//					+ servicio.getImagenRetrabajos()
+//
+//					+ "',realizado_por_personal='"
+//					+ servicio.getRealizadoPorPersonal()
+//					+ "',fecha_personal="
+//					+ servicio.getFechaPersonal()
+//					+ ",cliente_personal='"
+//					+ servicio.getClientePersonal()
+//					+ "',pieza_personal='"
+//					+ servicio.getPiezaPersonal()
+//					+ "',referencia_personal='"
+//					+ servicio.getReferenciaPersonal()
+//					+ "',firmas_personal='"
+//					+ servicio.getFirmasPersonal()
+//					+ "',imagen_personal='"
+//					+ servicio.getImagenPersonal()
+//
+//
+//					+ "' where num_accion='"
+//					+ servicio.getNumAccion() + "'");
+//			statement.close();
+//			connection.close();
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			return false;
+//		}
+//
+//		return true;
+//
+//	}
 
 
 	public boolean borrarServicio(String num_accion) {
@@ -776,6 +782,36 @@ public class Llamadas {
 			e.printStackTrace();
 		}
 		return numero;
+	}
+	
+	public boolean nuevoMensaje(Mensaje mensaje) {
+
+		Database database = new Database();
+		Connection connection;
+		try {
+			connection = database.Get_Connection();
+			PreparedStatement preparedStatement;
+
+			preparedStatement = connection
+					.prepareStatement("REPLACE INTO mensajes (para, cc, asunto, mensaje, ruta) VALUES (?,?,?,?,?)");
+
+			preparedStatement.setString(1, mensaje.getPara());
+			preparedStatement.setString(2, mensaje.getCc());
+			preparedStatement.setString(3, mensaje.getAsunto());
+			preparedStatement.setString(4, mensaje.getMensaje());
+			preparedStatement.setString(5, mensaje.getRuta());
+			
+			preparedStatement.executeUpdate();
+			preparedStatement.close();
+			connection.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+
+		return true;
+
 	}
 
 }

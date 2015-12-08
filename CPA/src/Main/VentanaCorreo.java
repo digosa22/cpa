@@ -1,24 +1,30 @@
 package Main;
 
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
-import javax.swing.text.DefaultCaret;
 
 public class VentanaCorreo extends JDialog {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private static final String PATTERN_EMAIL = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+            + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+	
 	private JPanel panel;
 	private JLabel paraLabel;
 	private JLabel ccLabel;
@@ -30,7 +36,7 @@ public class VentanaCorreo extends JDialog {
 	private JButton aceptar;
 	private JButton cancelar;
 
-	public VentanaCorreo(JFrame padre) {
+	public VentanaCorreo(JFrame padre, Llamadas llamadas) {
 
 		super(padre, true);
 
@@ -77,6 +83,58 @@ public class VentanaCorreo extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
+			
+				if(!para.getText().trim().isEmpty() 
+						&& !cc.getText().trim().isEmpty()
+						&& !asunto.getText().trim().isEmpty()
+						&& !mensaje.getText().trim().isEmpty()) 
+				{
+					String[] arrEmailsPara = para.getText().split(";");
+					
+					boolean emailParaCorrectos = true;
+					int cont = 0;
+					
+					do {
+					   emailParaCorrectos = validateEmail(arrEmailsPara[cont]);
+					   cont++;
+					} while (cont < arrEmailsPara.length && emailParaCorrectos);
+					
+					
+					String[] arrEmailsCc = cc.getText().split(";");
+					
+					boolean emailCcCorrectos = true;
+					cont = 0;
+					
+					do {
+						emailCcCorrectos = validateEmail(arrEmailsCc[cont]);
+					   cont++;
+					} while (cont < arrEmailsCc.length && emailCcCorrectos);
+
+					if (!emailParaCorrectos) {
+						
+						// TODO MENSAJE PARA EMAILS MAL
+						System.out.println("Emails para mal");
+						
+					} else if (! emailCcCorrectos) {
+						
+						// TODO MENSAJE CC EMAILS MAL
+						System.out.println("Emails cc mal");
+						
+					} else {
+						
+						Mensaje mens = new Mensaje(para.getText(), cc.getText(), asunto.getText(), mensaje.getText(), "inventada/A0001-15134822");
+						
+						llamadas.nuevoMensaje(mens);
+						
+					}
+				    
+				} else {
+					// TODO campos vacíos mensaje
+					System.out.println("Algún campo vacío");
+				}
+				
+				dispose();
+				
 			}
 		});
 
@@ -100,5 +158,14 @@ public class VentanaCorreo extends JDialog {
 				(getToolkit().getScreenSize().height - this.getBounds().height) / 2);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	}
+ 
+    public static boolean validateEmail(String email) {
+ 
+        Pattern pattern = Pattern.compile(PATTERN_EMAIL);
+ 
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+ 
+    }
 
 }

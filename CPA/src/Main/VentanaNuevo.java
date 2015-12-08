@@ -145,6 +145,7 @@ public class VentanaNuevo extends JDialog {
 	private Llamadas llamadas;
 	private Cliente cliente;
 	private String numAccion;
+	private String nombreCarpeta;
 
 	public VentanaNuevo(VentanaPrincipal ventPrin, boolean anadirRetra, boolean anadirForma, Cliente cli, String pers, String numA, Llamadas llam) {
 
@@ -172,6 +173,9 @@ public class VentanaNuevo extends JDialog {
 		anadirRetrabajos = anadirRetra;
 		anadirFormacion = anadirForma;
 		persona = pers;
+		Calendar fechaNomCarpeta = Calendar.getInstance();
+		SimpleDateFormat sdfNomCarpeta = new SimpleDateFormat("HHmmss");
+		nombreCarpeta = numAccion + sdfNomCarpeta.format(fechaNomCarpeta.getTime());
 
 		//TODO PESTAÑA ORDEN DE PEDIDO
 		ordenDePedido = new JPanel();
@@ -1039,15 +1043,29 @@ public class VentanaNuevo extends JDialog {
 				Cliente[] clientes = arrCli.toArray(new Cliente[arrCli.size()]);
 				Cliente clienteNuevo = (Cliente) JOptionPane.showInputDialog(ventanaPrincipal, "Nuevo cliente", "Selecciona el cliente", 
 						JOptionPane.QUESTION_MESSAGE, null, clientes, clientes[0]);
+				
+				Calendar fechaNomCarpeta;
+				SimpleDateFormat sdfNomCarpeta;
+				
 				if (clienteNuevo != null) {
 					if(!cliente.getTipo().equalsIgnoreCase(clienteNuevo.getTipo())) {
 						cliente = clienteNuevo;
 						clienteLabel2.setText("<html><h4>"+cliente+"</h4></html>");
 						numAccion = llamadas.generarNumAccion(cliente.getTipo());
 						numAccionLabel2.setText("<html><h4>"+numAccion+"</h4></html>");
+						
+						fechaNomCarpeta = Calendar.getInstance();
+						sdfNomCarpeta = new SimpleDateFormat("HHmmss");
+						nombreCarpeta = numAccion + sdfNomCarpeta.format(fechaNomCarpeta.getTime());
+						
 					} else {
 						cliente = clienteNuevo;
 						clienteLabel2.setText("<html><h4>"+cliente+"</h4></html>");
+						
+						fechaNomCarpeta = Calendar.getInstance();
+						sdfNomCarpeta = new SimpleDateFormat("HHmmss");
+						nombreCarpeta = numAccion + sdfNomCarpeta.format(fechaNomCarpeta.getTime());
+						
 					}
 
 				}
@@ -1301,7 +1319,7 @@ public class VentanaNuevo extends JDialog {
 					recuentoFinal, arrayHoraNormal, arrayHoraExtra, arrayHoraSabado, arrayHoraFestivo, arrayHoraNocturna, arrayHoraEspecialistaNormal, arrayHoraEspecialistaExtra, arrayHoraEspecialistaSabado, arrayHoraEspecialistaFestiva, 
 					arrayHoraEspecialistaNocturna, arrayHoraCoordinacion, arrayHoraAdministracion, arrayGastosLogisticos, arrayOtros1, arrayOtros2, realizadoRetrabajos.getText(), fechaRetrabajos.getDate(), fechaLiberacion.getDate(), 
 					numReclamacion.getText(), fechaReclamacion.getDate(), referenciaRetrabajos.getText(), fechaComienzo.getDate(), tiempo.getText(), clienteRetrabajos.getText(), firmasRetrabajos, "img/prueba.jpg", realizadoFormado.getText(), 
-					fechaFormado.getDate(), clienteFormado.getText(), piezaFormado.getText(), referenciaFormado.getText(), firmasPersonal, "img/prueba.jpg", anadirRetrabajos, anadirFormacion);
+					fechaFormado.getDate(), clienteFormado.getText(), piezaFormado.getText(), referenciaFormado.getText(), firmasPersonal, "img/prueba.jpg", anadirRetrabajos, anadirFormacion, nombreCarpeta);
 		} else if (anadirFormacion) {
 			servi = new Servicio(cliente.getNif(),cliente.getNombre(), persona, numAccion, cal.getTime(), nombrePieza.getText(), referencias.getText(), numChasis1.getText(), numChasis2.getText(), numChasis3.getText(), numChasis4.getText(),
 					responsable.getText(), piezasVerde.isSelected(), piezasBlanco.isSelected(), piezasOtros.isSelected(), piezasRojo.isSelected(), contenedorVerde.isSelected(), contenedorRojo.isSelected(), recomPersonaContacto.getText(),
@@ -1311,7 +1329,7 @@ public class VentanaNuevo extends JDialog {
 					recuentoFinal, arrayHoraNormal, arrayHoraExtra, arrayHoraSabado, arrayHoraFestivo, arrayHoraNocturna, arrayHoraEspecialistaNormal, arrayHoraEspecialistaExtra, arrayHoraEspecialistaSabado, arrayHoraEspecialistaFestiva, 
 					arrayHoraEspecialistaNocturna, arrayHoraCoordinacion, arrayHoraAdministracion, arrayGastosLogisticos, arrayOtros1, arrayOtros2, null, null, null, 
 					null, null, null, null, null, null, null, null, realizadoFormado.getText(), 
-					fechaFormado.getDate(), clienteFormado.getText(), piezaFormado.getText(), referenciaFormado.getText(), firmasPersonal, "img/prueba.jpg", anadirRetrabajos, anadirFormacion);
+					fechaFormado.getDate(), clienteFormado.getText(), piezaFormado.getText(), referenciaFormado.getText(), firmasPersonal, "img/prueba.jpg", anadirRetrabajos, anadirFormacion, nombreCarpeta);
 		} else if (anadirRetrabajos) {
 			servi = new Servicio(cliente.getNif(),cliente.getNombre(), persona, numAccion, cal.getTime(), nombrePieza.getText(), referencias.getText(), numChasis1.getText(), numChasis2.getText(), numChasis3.getText(), numChasis4.getText(),
 					responsable.getText(), piezasVerde.isSelected(), piezasBlanco.isSelected(), piezasOtros.isSelected(), piezasRojo.isSelected(), contenedorVerde.isSelected(), contenedorRojo.isSelected(), recomPersonaContacto.getText(),
@@ -1321,7 +1339,7 @@ public class VentanaNuevo extends JDialog {
 					recuentoFinal, arrayHoraNormal, arrayHoraExtra, arrayHoraSabado, arrayHoraFestivo, arrayHoraNocturna, arrayHoraEspecialistaNormal, arrayHoraEspecialistaExtra, arrayHoraEspecialistaSabado, arrayHoraEspecialistaFestiva, 
 					arrayHoraEspecialistaNocturna, arrayHoraCoordinacion, arrayHoraAdministracion, arrayGastosLogisticos, arrayOtros1, arrayOtros2, realizadoRetrabajos.getText(), fechaRetrabajos.getDate(), fechaLiberacion.getDate(), 
 					numReclamacion.getText(), fechaReclamacion.getDate(), referenciaRetrabajos.getText(), fechaComienzo.getDate(), tiempo.getText(), clienteRetrabajos.getText(), firmasRetrabajos, "img/prueba.jpg", null, 
-					null, null, null, null, null, null, anadirRetrabajos, anadirFormacion);
+					null, null, null, null, null, null, anadirRetrabajos, anadirFormacion, nombreCarpeta);
 		} else {
 			servi = new Servicio(cliente.getNif(),cliente.getNombre(), persona, numAccion, cal.getTime(), nombrePieza.getText(), referencias.getText(), numChasis1.getText(), numChasis2.getText(), numChasis3.getText(), numChasis4.getText(),
 					responsable.getText(), piezasVerde.isSelected(), piezasBlanco.isSelected(), piezasOtros.isSelected(), piezasRojo.isSelected(), contenedorVerde.isSelected(), contenedorRojo.isSelected(), recomPersonaContacto.getText(),
@@ -1330,11 +1348,24 @@ public class VentanaNuevo extends JDialog {
 					peticionMaterial.isSelected(), referenciasPiezas.isSelected(), seleccion.isSelected(), retrabajo.isSelected(), trasvase.isSelected(), otrosPiezas.isSelected(), accionesIntruccion, tablaDefectos, piezasOK, piezasRecuperadas,
 					recuentoFinal, arrayHoraNormal, arrayHoraExtra, arrayHoraSabado, arrayHoraFestivo, arrayHoraNocturna, arrayHoraEspecialistaNormal, arrayHoraEspecialistaExtra, arrayHoraEspecialistaSabado, arrayHoraEspecialistaFestiva, 
 					arrayHoraEspecialistaNocturna, arrayHoraCoordinacion, arrayHoraAdministracion, arrayGastosLogisticos, arrayOtros1, arrayOtros2, null, null, null, 
-					null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, anadirRetrabajos, anadirFormacion);
+					null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, anadirRetrabajos, anadirFormacion, nombreCarpeta);
 		}
 
 		llamadas.introducirServicio(servi);
 		ventanaPrincipal.refrescarListaServicios();
+		
+		int seleccion = JOptionPane.showOptionDialog(
+				null,"¿Deseas enviar un correo con los cambios?", "Enviar correo",JOptionPane.YES_NO_CANCEL_OPTION,
+				JOptionPane.QUESTION_MESSAGE, null, new Object[] { "SI", "NO" }, "Enviar");
+		
+		if (seleccion == 0) {
+			// TODO VENTANACORREO
+			new VentanaCorreo(ventanaPrincipal, llamadas).setVisible(true);
+		}
+		else if (seleccion == 1) {
+			dispose();
+		}
+		
 		dispose();
 	}
 	

@@ -27,7 +27,7 @@ public class Database {
 			Connection connection = null;
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			connection = DriverManager.getConnection(connectionURL, "he1hqohd_ireguat",
-					"xxx");
+					"XXX");
 			return connection;
 		} catch (SQLException e) {
 			throw e;
