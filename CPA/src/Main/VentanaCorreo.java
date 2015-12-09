@@ -9,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -85,7 +86,6 @@ public class VentanaCorreo extends JDialog {
 				
 			
 				if(!para.getText().trim().isEmpty() 
-						&& !cc.getText().trim().isEmpty()
 						&& !asunto.getText().trim().isEmpty()
 						&& !mensaje.getText().trim().isEmpty()) 
 				{
@@ -100,40 +100,41 @@ public class VentanaCorreo extends JDialog {
 					} while (cont < arrEmailsPara.length && emailParaCorrectos);
 					
 					
-					String[] arrEmailsCc = cc.getText().split(";");
-					
 					boolean emailCcCorrectos = true;
-					cont = 0;
-					
-					do {
-						emailCcCorrectos = validateEmail(arrEmailsCc[cont]);
-					   cont++;
-					} while (cont < arrEmailsCc.length && emailCcCorrectos);
+					if (!cc.getText().trim().isEmpty()) {
+						String[] arrEmailsCc = cc.getText().split(";");
+						
+						cont = 0;
+						
+						do {
+							emailCcCorrectos = validateEmail(arrEmailsCc[cont]);
+						   cont++;
+						} while (cont < arrEmailsCc.length && emailCcCorrectos);
+					}					
 
 					if (!emailParaCorrectos) {
 						
-						// TODO MENSAJE PARA EMAILS MAL
-						System.out.println("Emails para mal");
+						JOptionPane.showMessageDialog(
+								null, "No has escrito correctamente los correos en el apartado PARA", "Correos incorrectos", JOptionPane.ERROR_MESSAGE);
 						
 					} else if (! emailCcCorrectos) {
 						
-						// TODO MENSAJE CC EMAILS MAL
-						System.out.println("Emails cc mal");
+						JOptionPane.showMessageDialog(
+								null, "No has escrito correctamente los correos en el apartado CC", "Correos incorrectos", JOptionPane.ERROR_MESSAGE);
 						
 					} else {
 						
-						Mensaje mens = new Mensaje(para.getText(), cc.getText(), asunto.getText(), mensaje.getText(), "inventada/A0001-15134822");
+						Mensaje mens = new Mensaje(para.getText(), cc.getText(), asunto.getText(), mensaje.getText(), "inventada/A0001-15134822");//TODO CAMBIAR INVENTADA
 						
 						llamadas.nuevoMensaje(mens);
 						
+						dispose();
 					}
 				    
 				} else {
-					// TODO campos vacíos mensaje
-					System.out.println("Algún campo vacío");
+					JOptionPane.showMessageDialog(
+							null, "Los campos para, asunto y mensaje son obligatorios", "Campos vacíos", JOptionPane.ERROR_MESSAGE);
 				}
-				
-				dispose();
 				
 			}
 		});

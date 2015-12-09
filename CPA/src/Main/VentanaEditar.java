@@ -143,6 +143,9 @@ public class VentanaEditar extends JDialog {
 	private VentanaPrincipal ventanaPrincipal;
 	private Servicio servicio;
 	private String nombreCarpeta;
+	private String nombreCarpetaVieja;
+	
+	private Utilidades utilidades;
 
 	public VentanaEditar(VentanaPrincipal ventPrin, Servicio servic, Llamadas llam) {
 
@@ -153,6 +156,8 @@ public class VentanaEditar extends JDialog {
 		}
 		catch (Exception e) {
 		}
+		
+		utilidades = new Utilidades();
 
 		ventanaPrincipal = ventPrin;
 		llamadas = llam;
@@ -180,6 +185,7 @@ public class VentanaEditar extends JDialog {
 		numAccion = servicio.getNumAccion();
 		numAccionViejo = servicio.getNumAccion();
 		nombreCarpeta = servicio.getNombreCarpeta();
+		nombreCarpetaVieja = servicio.getNombreCarpeta();		
 
 		//TODO PESTAÑA ORDEN DE PEDIDO
 		ordenDePedido = new JPanel();
@@ -1556,8 +1562,25 @@ public class VentanaEditar extends JDialog {
 		if (numAccionViejo != numAccion) {
 			llamadas.borrarServicio(numAccionViejo);
 		}
+		
+		if (!nombreCarpetaVieja.equalsIgnoreCase(nombreCarpeta)) {
+			utilidades.renombrarCarpeta(nombreCarpetaVieja, nombreCarpeta);
+		}
 
 		ventanaPrincipal.refrescarListaServicios();
+		
+		int seleccion = JOptionPane.showOptionDialog(
+				null,"¿Deseas enviar un correo con los cambios?", "Enviar correo",JOptionPane.YES_NO_CANCEL_OPTION,
+				JOptionPane.QUESTION_MESSAGE, null, new Object[] { "Si", "No" }, "Enviar");
+		
+		if (seleccion == 0) {
+			
+			new VentanaCorreo(ventanaPrincipal, llamadas).setVisible(true);
+		}
+		else if (seleccion == 1) {
+			dispose();
+		}
+		utilidades.subirNuevoExcel(nombreCarpeta);
 		dispose();
 	}
 	

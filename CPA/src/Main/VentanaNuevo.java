@@ -146,6 +146,8 @@ public class VentanaNuevo extends JDialog {
 	private Cliente cliente;
 	private String numAccion;
 	private String nombreCarpeta;
+	
+	private Utilidades utilidades;
 
 	public VentanaNuevo(VentanaPrincipal ventPrin, boolean anadirRetra, boolean anadirForma, Cliente cli, String pers, String numA, Llamadas llam) {
 
@@ -156,6 +158,8 @@ public class VentanaNuevo extends JDialog {
 		}
 		catch (Exception e) {
 		}
+		
+		utilidades = new Utilidades();
 
 		panel = new JPanel();
 		panel.setLayout(null);
@@ -1356,16 +1360,17 @@ public class VentanaNuevo extends JDialog {
 		
 		int seleccion = JOptionPane.showOptionDialog(
 				null,"¿Deseas enviar un correo con los cambios?", "Enviar correo",JOptionPane.YES_NO_CANCEL_OPTION,
-				JOptionPane.QUESTION_MESSAGE, null, new Object[] { "SI", "NO" }, "Enviar");
+				JOptionPane.QUESTION_MESSAGE, null, new Object[] { "Si", "No" }, "Enviar");
 		
 		if (seleccion == 0) {
-			// TODO VENTANACORREO
+			
 			new VentanaCorreo(ventanaPrincipal, llamadas).setVisible(true);
 		}
 		else if (seleccion == 1) {
 			dispose();
 		}
-		
+		utilidades.prueba(servi);
+//		utilidades.subirNuevoExcel(nombreCarpeta);
 		dispose();
 	}
 	
