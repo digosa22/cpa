@@ -5,10 +5,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -32,9 +28,6 @@ import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
-
-import org.apache.commons.net.ftp.FTP;
-import org.apache.commons.net.ftp.FTPClient;
 
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JDateChooserCellEditor;
@@ -1376,65 +1369,8 @@ public class VentanaNuevo extends JDialog {
 		else if (seleccion == 1) {
 			dispose();
 		}
-//		utilidades.subirNuevoExcel(servi);
-		
-		
-		
-		
-		
-System.setProperty("java.net.preferIPv4Stack", "true");
-    	
-        String server = "lhcp1017.webapps.net";
-        int port = 21;
-        String user = "ireguatek@clientes-cpavitoria06.com";
-        String pass = "Ireguatekcpa1";
- 
-        FTPClient ftpClient = new FTPClient();
-        try {
- 
-            ftpClient.connect(server, port);
-            ftpClient.login(user, pass);
-            ftpClient.enterLocalPassiveMode();
- 
-            ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
- 
-            // APPROACH #1: uploads first file using an InputStream
-            File firstLocalFile = new File("img/cpa.jpg");
-            
-            String dirToCreate = "/cpa";
-            ftpClient.makeDirectory(dirToCreate);
-            
-            String firstRemoteFile = "cpa/cpa.jpg";
-            InputStream inputStream = new FileInputStream(firstLocalFile);
- 
-            System.out.println("Start uploading first file");
-            boolean done = ftpClient.storeFile(firstRemoteFile, inputStream);
-            inputStream.close();
-            if (done) {
-                System.out.println("The first file is uploaded successfully.");
-            }
-           
-            inputStream.close();
- 
-        } catch (IOException ex) {
-            System.out.println("Error: " + ex.getMessage());
-            ex.printStackTrace();
-        } finally {
-            try {
-                if (ftpClient.isConnected()) {
-                    ftpClient.logout();
-                    ftpClient.disconnect();
-                }
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
-		
-		
-		
-		
-		
-		
+//		utilidades.prueba(servi);
+		utilidades.subirExcel();
 		dispose();
 	}
 	

@@ -34,11 +34,11 @@ public class Utilidades {
 	private static final int IMG_WIDTH = 50;
 	private static final int IMG_HEIGHT = 50;
 	
-//	private String server = "lhcp1017.webapps.net";
-//	private int port = 21;
-//    private String user = "ireguatek@clientes-cpavitoria06.com";
-//    private String pass = "Ireguatekcpa1";
-//    private FTPClient ftpClient = new FTPClient();
+	private String server = "lhcp1017.webapps.net";
+	private int port = 21;
+    private String user = "ireguatek@clientes-cpavitoria06.com";
+    private String pass = "Ireguatekcpa1";
+    private FTPClient ftpClient = new FTPClient();
 
 	public void insertarImagen( XSSFWorkbook wb, XSSFSheet sheet, String imagen, Posicion posicion, int ancho, int alto, int filaSuma) {
 
@@ -1242,14 +1242,9 @@ public class Utilidades {
 	
 	public void subirExcel() {
 		
-System.setProperty("java.net.preferIPv4Stack", "true");
     	
-        String server = "lhcp1017.webapps.net";
-        int port = 21;
-        String user = "ireguatek@clientes-cpavitoria06.com";
-        String pass = "Ireguatekcpa1";
  
-        FTPClient ftpClient = new FTPClient();
+        ftpClient = new FTPClient();
         try {
  
             ftpClient.connect(server, port);
