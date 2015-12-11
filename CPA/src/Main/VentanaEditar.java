@@ -1564,7 +1564,7 @@ public class VentanaEditar extends JDialog {
 		}
 		
 		if (!nombreCarpetaVieja.equalsIgnoreCase(nombreCarpeta)) {
-			utilidades.renombrarCarpeta(nombreCarpetaVieja, nombreCarpeta);
+//			utilidades.renombrarCarpeta(nombreCarpetaVieja, nombreCarpeta);
 		}
 
 		ventanaPrincipal.refrescarListaServicios();
@@ -1580,7 +1580,7 @@ public class VentanaEditar extends JDialog {
 		else if (seleccion == 1) {
 			dispose();
 		}
-		utilidades.subirNuevoExcel(nombreCarpeta);
+		utilidades.subirNuevoExcel(servi);
 		dispose();
 	}
 	

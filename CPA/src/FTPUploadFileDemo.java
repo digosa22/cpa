@@ -33,12 +33,12 @@ public class FTPUploadFileDemo {
             ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
  
             // APPROACH #1: uploads first file using an InputStream
-            File firstLocalFile = new File("img/cuadrado.jpg");
+            File firstLocalFile = new File("img/cpa.jpg");
             
             String dirToCreate = "/cpa";
             ftpClient.makeDirectory(dirToCreate);
             
-            String firstRemoteFile = "cpa/cuadrado.jpg";
+            String firstRemoteFile = "cpa/cpa.jpg";
             InputStream inputStream = new FileInputStream(firstLocalFile);
  
             System.out.println("Start uploading first file");
