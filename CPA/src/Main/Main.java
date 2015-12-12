@@ -1,15 +1,11 @@
 package Main;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-
 public class Main {
 
 	public static void main(String[] args) {
 		
 		System.setProperty("java.net.preferIPv4Stack", "true");
-		
+				
 		new VentanaPrincipal().setVisible(true);
 //		Calendar c = Calendar.getInstance();
 //		c.set(2015, 3, 5);

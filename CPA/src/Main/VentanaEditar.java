@@ -1564,7 +1564,7 @@ public class VentanaEditar extends JDialog {
 		}
 		
 		if (!nombreCarpetaVieja.equalsIgnoreCase(nombreCarpeta)) {
-//			utilidades.renombrarCarpeta(nombreCarpetaVieja, nombreCarpeta);
+			utilidades.renombrarCarpeta(nombreCarpetaVieja, nombreCarpeta);
 		}
 
 		ventanaPrincipal.refrescarListaServicios();

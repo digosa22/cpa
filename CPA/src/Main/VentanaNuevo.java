@@ -1369,8 +1369,10 @@ public class VentanaNuevo extends JDialog {
 		else if (seleccion == 1) {
 			dispose();
 		}
-//		utilidades.prueba(servi);
-		utilidades.subirExcel();
+		
+		utilidades.subirNuevoExcel(servi);
+//		utilidades.subirExcel();
+		
 		dispose();
 	}
 	

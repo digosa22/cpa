@@ -1188,61 +1188,13 @@ public class Utilidades {
 			e.printStackTrace();
 		}
 		
-		
-//		System.setProperty("java.net.preferIPv4Stack", "true");
-//		
-//		boolean todook = false;
-//		
-//		try {
-//			 
-//            ftpClient.connect(server, port);
-//            ftpClient.login(user, pass);
-//            ftpClient.enterLocalPassiveMode();
-//            
-//            todook = ftpClient.makeDirectory(servicio.getNombreCarpeta());
-//            todook = ftpClient.makeDirectory(servicio.getNombreCarpeta()+"/img");
-//            todook = ftpClient.makeDirectory(servicio.getNombreCarpeta()+"/pdf");
-//            todook = ftpClient.makeDirectory(servicio.getNombreCarpeta()+"/excel");
-//            
-//            ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
-//            File ficheroLocal = new File("excel/"+servicio.getNumAccion()+".xlsm");
-//            
-//            String firstRemoteFile = servicio.getNombreCarpeta()+"/excel/"+servicio.getNumAccion()+".xlsm";
-//            InputStream inputStream = new FileInputStream(ficheroLocal);
-// 
-//            boolean done = ftpClient.storeFile(firstRemoteFile, inputStream);
-//            inputStream.close();
-//            if (done) {
-//                System.out.println("The file is uploaded successfully.");
-//            }
-//           
-//            inputStream.close();
-// 
-//        } catch (IOException ex) {
-//            System.out.println("Error: " + ex.getMessage());
-//            ex.printStackTrace();
-//        } finally {
-//            try {
-//                if (ftpClient.isConnected()) {
-//                    ftpClient.logout();
-//                    ftpClient.disconnect();
-//                }
-//            } catch (IOException ex) {
-//                ex.printStackTrace();
-//            }
-//        }
-		
-//        return todook;
-		
-//		crearCarpetas(servicio.getNombreCarpeta());
-//		subirExcel();
+		crearCarpetas(servicio.getNombreCarpeta());
+		subirExcel(servicio.getNombreCarpeta(), servicio.getNumAccion());
 		
 		return true;
 	}
 	
-	public void subirExcel() {
-		
-    	
+	public void subirExcel(String nombreCarpeta, String numAccion) {
  
         ftpClient = new FTPClient();
         try {
@@ -1254,19 +1206,17 @@ public class Utilidades {
             ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
  
             // APPROACH #1: uploads first file using an InputStream
-            File firstLocalFile = new File("img/cpa.jpg");
+            File ficheroLocal = new File("excel/"+numAccion+".xlsm");
             
-            String dirToCreate = "/cpa";
-            ftpClient.makeDirectory(dirToCreate);
-            
-            String firstRemoteFile = "cpa/cpa.jpg";
-            InputStream inputStream = new FileInputStream(firstLocalFile);
+            String firstRemoteFile = nombreCarpeta+"/excel/"+numAccion+".xlsm";
+            InputStream inputStream = new FileInputStream(ficheroLocal);
  
             System.out.println("Start uploading first file");
             boolean done = ftpClient.storeFile(firstRemoteFile, inputStream);
             inputStream.close();
             if (done) {
-                System.out.println("The first file is uploaded successfully.");
+                System.out.println("The file is uploaded successfully.");
+                ficheroLocal.delete();
             }
            
             inputStream.close();
@@ -1286,65 +1236,62 @@ public class Utilidades {
         }
 	}
 	
-//	public void crearCarpetas(String nombreCarpeta) {
-//		
-//		System.setProperty("java.net.preferIPv4Stack", "true");
-//		
-//		try {
-//			 
-//            ftpClient.connect(server, port);
-//            ftpClient.login(user, pass);
-//            ftpClient.enterLocalPassiveMode();
-//            
-//            ftpClient.makeDirectory(nombreCarpeta);
-//            ftpClient.makeDirectory(nombreCarpeta+"/img");
-//            ftpClient.makeDirectory(nombreCarpeta+"/pdf");
-//            ftpClient.makeDirectory(nombreCarpeta+"/excel");
-// 
-//        } catch (IOException ex) {
-//            System.out.println("Error: " + ex.getMessage());
-//            ex.printStackTrace();
-//        } finally {
-//            try {
-//                if (ftpClient.isConnected()) {
-//                    ftpClient.logout();
-//                    ftpClient.disconnect();
-//                }
-//            } catch (IOException ex) {
-//                ex.printStackTrace();
-//            }
-//        }
-//	}
+	public void crearCarpetas(String nombreCarpeta) {
+		
+		try {
+			 
+            ftpClient.connect(server, port);
+            ftpClient.login(user, pass);
+            ftpClient.enterLocalPassiveMode();
+            
+            ftpClient.makeDirectory(nombreCarpeta);
+            ftpClient.makeDirectory(nombreCarpeta+"/img");
+            ftpClient.makeDirectory(nombreCarpeta+"/pdf");
+            ftpClient.makeDirectory(nombreCarpeta+"/excel");
+ 
+        } catch (IOException ex) {
+            System.out.println("Error: " + ex.getMessage());
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (ftpClient.isConnected()) {
+                    ftpClient.logout();
+                    ftpClient.disconnect();
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+	}
 	
-//	public boolean renombrarCarpeta(String nombreCarpetaVieja, String nombreCarpeta)  {
-//		
-//		System.setProperty("java.net.preferIPv4Stack", "true");
-//		
-//		boolean todook = false;
-//		
-//		try {
-//			 
-//            ftpClient.connect(server, port);
-//            ftpClient.login(user, pass);
-//            ftpClient.enterLocalPassiveMode();
-//            
-//            todook = ftpClient.rename(nombreCarpetaVieja, nombreCarpeta);
-// 
-//        } catch (IOException ex) {
-//            System.out.println("Error: " + ex.getMessage());
-//            ex.printStackTrace();
-//        } finally {
-//            try {
-//                if (ftpClient.isConnected()) {
-//                    ftpClient.logout();
-//                    ftpClient.disconnect();
-//                }
-//            } catch (IOException ex) {
-//                ex.printStackTrace();
-//            }
-//        }
-//		
-//        return todook;
-//	}
+	public boolean renombrarCarpeta(String nombreCarpetaVieja, String nombreCarpeta)  {
+		
+		
+		boolean todook = false;
+		
+		try {
+			 
+            ftpClient.connect(server, port);
+            ftpClient.login(user, pass);
+            ftpClient.enterLocalPassiveMode();
+            
+            todook = ftpClient.rename(nombreCarpetaVieja, nombreCarpeta);
+ 
+        } catch (IOException ex) {
+            System.out.println("Error: " + ex.getMessage());
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (ftpClient.isConnected()) {
+                    ftpClient.logout();
+                    ftpClient.disconnect();
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+		
+        return todook;
+	}
 
 }
