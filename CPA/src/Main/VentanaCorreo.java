@@ -37,7 +37,7 @@ public class VentanaCorreo extends JDialog {
 	private JButton aceptar;
 	private JButton cancelar;
 
-	public VentanaCorreo(JFrame padre, Llamadas llamadas) {
+	public VentanaCorreo(JFrame padre, Llamadas llamadas, String nombreCarpeta) {
 
 		super(padre, true);
 
@@ -124,7 +124,7 @@ public class VentanaCorreo extends JDialog {
 						
 					} else {
 						
-						Mensaje mens = new Mensaje(para.getText(), cc.getText(), asunto.getText(), mensaje.getText(), "inventada/A0001-15134822");//TODO CAMBIAR INVENTADA
+						Mensaje mens = new Mensaje(para.getText(), cc.getText(), asunto.getText(), mensaje.getText(), nombreCarpeta );
 						
 						llamadas.nuevoMensaje(mens);
 						

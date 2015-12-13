@@ -199,7 +199,7 @@ public class VentanaPrincipal extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new VentanaCorreo(ventanaPrincipal, llamadas).setVisible(true);
+//				new VentanaCorreo(ventanaPrincipal, llamadas).setVisible(true);
 			}
 		});
 		

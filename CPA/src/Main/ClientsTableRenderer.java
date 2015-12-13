@@ -42,14 +42,18 @@ class ClientsTableButtonRenderer extends JButton implements TableCellRenderer
     private String[] imgs;
     private JDialog padre;
     private int accion;
+    private String nombreCarpeta;
+    private Utilidades utilidades;
     
-    public ClientsTableRenderer(JCheckBox checkBox, String[] imgs, JDialog padre, int accion)
+    public ClientsTableRenderer(JCheckBox checkBox, String[] imgs, JDialog padre, int accion, String nombreCarpeta, Utilidades utilidades)
     {
       super(checkBox);
       
       this.padre = padre;
       this.imgs = imgs;
       this.accion = accion;
+      this.nombreCarpeta = nombreCarpeta;
+      this.utilidades = utilidades;
       button = new JButton();
       button.setOpaque(true);
       button.addActionListener(new ActionListener()
@@ -80,7 +84,7 @@ class ClientsTableButtonRenderer extends JButton implements TableCellRenderer
 //        JOptionPane.showMessageDialog(button, "Click en la fila: "+imgs[row]);
 //    	  imgs[row] = "http://cdn.revistagq.com/uploads/images/thumbs/201430/james_rodriguez_real_madrid_cristiano_ronaldo_7238_200x200.jpg#;#http://www.fotosdecamiones.com/wp-content/uploads/2015/07/camion-bordo.jpg";
     	  
-    	  new VentanaImagenes(padre, imgs[row], row, table.getValueAt(row, 0).toString(), accion).setVisible(true);
+    	  new VentanaImagenes(padre, imgs[row], row, table.getValueAt(row, 0).toString(), accion, utilidades, nombreCarpeta).setVisible(true);
       }
       clicked = false;
       return new String(label);

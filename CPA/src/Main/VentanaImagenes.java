@@ -42,7 +42,7 @@ public class VentanaImagenes extends JDialog {
 	private String ruta1;
 	private String ruta2;
 
-	public VentanaImagenes(JDialog ventanaPadre, String imags, int fila, String nombre, int accion) {
+	public VentanaImagenes(JDialog ventanaPadre, String imags, int fila, String nombre, int accion, Utilidades utilidades, String nombreCarpeta) {
 
 		super(ventanaPadre, true);
 
@@ -62,8 +62,6 @@ public class VentanaImagenes extends JDialog {
 
 		Image image1 = null;
 		Image image2 = null;
-		
-//		imagenes = "http://cdn.revistagq.com/uploads/images/thumbs/201430/james_rodriguez_real_madrid_cristiano_ronaldo_7238_200x200.jpg#;#http://www.fotosdecamiones.com/wp-content/uploads/2015/07/camion-bordo.jpg";
 		
 		ruta1 = imagenes.substring(0, imagenes.indexOf("#;#"));
 		ruta2 = imagenes.substring(imagenes.indexOf("#;#")+3);
@@ -112,12 +110,6 @@ public class VentanaImagenes extends JDialog {
 		borrar2.setBounds(710, 515, 100, 20);
 		panel.add(borrar2);
 		
-		Random random = new Random();
-		String[] rutas = new String[3];
-		rutas[0] = "http://i.ytimg.com/vi/BqNh2AiCbKs/hqdefault.jpg";
-		rutas[1] = "http://www.fotosdecamiones.com/wp-content/uploads/2015/07/camion-bordo.jpg";
-		rutas[2] = "http://cdn.revistagq.com/uploads/images/thumbs/201430/james_rodriguez_real_madrid_cristiano_ronaldo_7238_200x200.jpg";
-		
 		anadir1.addActionListener(new ActionListener() {
 			
 			@Override
@@ -131,7 +123,6 @@ public class VentanaImagenes extends JDialog {
 				
 				if (status == JFileChooser.APPROVE_OPTION) {
 					File selectedFile = fileChooser.getSelectedFile();
-					System.out.println(selectedFile.getAbsolutePath());
 					File folderFiles = new File(selectedFile.getParent());
 					String[] array = folderFiles.list();
 					ArrayList<String> excelFiles = new ArrayList<>();
@@ -139,11 +130,11 @@ public class VentanaImagenes extends JDialog {
 					
 					boolean existe = false;
 					for (int i=0; i<array.length; i++) {
-						if (array[i].endsWith(".jpg") || array[i].endsWith(".png"))
+						if (array[i].toLowerCase().endsWith(".jpg") || array[i].toLowerCase().endsWith(".png"))
 							excelFiles.add(array[i].substring(0, array[i].length()-4));
 					}
 					
-					if (filename.endsWith(".jpg") || filename.endsWith(".png"))
+					if (filename.toLowerCase().endsWith(".jpg") || filename.toLowerCase().endsWith(".png"))
 						filename = filename.substring(0, filename.length()-4);
 
 					for (int i=0; i<excelFiles.size() && !existe; i++) {
@@ -152,9 +143,17 @@ public class VentanaImagenes extends JDialog {
 					}
 
 					if (existe) {
-						//TODO SUBIR LA IMAGEN AL SERVIDOR
+						String imagen = selectedFile.getAbsolutePath();
 						
-						ruta1 = rutas[random.nextInt(2 - 0 + 1) + 0];
+						String extension = ".jpg";
+						if(imagen.toLowerCase().endsWith(".png"))
+							extension = ".png";
+						
+						utilidades.crearCarpetas(nombreCarpeta);
+						int temp = fila + 1;
+						String nombre = "instruccion" + temp + "1" + extension;
+						utilidades.subirImagenInstruccion(imagen, nombreCarpeta, nombre);
+						ruta1 = "http://clientes-cpavitoria06.com/"+nombreCarpeta+"/img/"+nombre;
 						actualizarImagenes();
 						try {
 							label.setIcon(new ImageIcon(ImageIO.read(new URL(imagenes.substring(0, imagenes.indexOf("#;#"))))));
@@ -165,7 +164,7 @@ public class VentanaImagenes extends JDialog {
 						}
 					}
 					else
-						System.out.println("no existe");//TODO JOPTIONPANE AVISANDO QUE NO EXISTE
+						JOptionPane.showMessageDialog(null, "El fichero seleccionado no existe", "Fichero no existe", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -173,14 +172,58 @@ public class VentanaImagenes extends JDialog {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ruta2 = rutas[random.nextInt(2 - 0 + 1) + 0];
-				actualizarImagenes();
-				try {
-					label2.setIcon(new ImageIcon(ImageIO.read(new URL(imagenes.substring(imagenes.indexOf("#;#")+3)))));
-				} catch (MalformedURLException e1) {
-					e1.printStackTrace();
-				} catch (IOException e1) {
-					e1.printStackTrace();
+				JFileChooser fileChooser = new JFileChooser(".");
+
+				FileFilter filter = new ExtensionFileFilter("Imagenes (*.jpg, *.png)", new String[] { "jpg", "png" });
+				fileChooser.setFileFilter(filter);
+
+				int status = fileChooser.showOpenDialog(null);
+				
+				if (status == JFileChooser.APPROVE_OPTION) {
+					File selectedFile = fileChooser.getSelectedFile();
+					File folderFiles = new File(selectedFile.getParent());
+					String[] array = folderFiles.list();
+					ArrayList<String> excelFiles = new ArrayList<>();
+					String filename = selectedFile.getName();
+					
+					boolean existe = false;
+					for (int i=0; i<array.length; i++) {
+						if (array[i].toLowerCase().endsWith(".jpg") || array[i].toLowerCase().endsWith(".png"))
+							excelFiles.add(array[i].substring(0, array[i].length()-4));
+					}
+					
+					if (filename.toLowerCase().endsWith(".jpg") || filename.toLowerCase().endsWith(".png"))
+						filename = filename.substring(0, filename.length()-4);
+
+					for (int i=0; i<excelFiles.size() && !existe; i++) {
+						if (excelFiles.get(i).toLowerCase().equals(filename.toLowerCase()))
+							existe = true;
+					}
+
+					if (existe) {
+						String imagen = selectedFile.getAbsolutePath();
+						
+						String extension = ".jpg";
+						if(imagen.toLowerCase().endsWith(".png"))
+							extension = ".png";
+						
+						utilidades.crearCarpetas(nombreCarpeta);
+						int temp = fila + 1;
+						String nombre = "instruccion" + temp + "2" + extension;
+						utilidades.subirImagenInstruccion(imagen, nombreCarpeta, nombre);
+						
+						ruta2 = "http://clientes-cpavitoria06.com/"+nombreCarpeta+"/img/"+nombre;
+						actualizarImagenes();
+						try {
+							label2.setIcon(new ImageIcon(ImageIO.read(new URL(imagenes.substring(imagenes.indexOf("#;#")+3)))));
+						} catch (MalformedURLException e1) {
+							e1.printStackTrace();
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
+					}
+					else
+						JOptionPane.showMessageDialog(null, "El fichero seleccionado no existe", "Fichero no existe", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -188,6 +231,7 @@ public class VentanaImagenes extends JDialog {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				utilidades.borrarImagen(ruta1);
 				ruta1 = "";
 				actualizarImagenes();
 				label.setIcon(null);
@@ -197,6 +241,7 @@ public class VentanaImagenes extends JDialog {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				utilidades.borrarImagen(ruta2);
 				ruta2 = "";
 				actualizarImagenes();
 				label2.setIcon(null);
