@@ -1,6 +1,5 @@
 package Main;
 
-import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,27 +8,21 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Random;
 
 import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
-import javax.swing.text.DefaultCaret;
 
 public class VentanaImagenes extends JDialog {
 
+	private static final long serialVersionUID = 1L;
 	private JPanel panel;
 	private String imagenes;
 	private JLabel label;
@@ -59,9 +52,6 @@ public class VentanaImagenes extends JDialog {
 		imagenes = imags;
 		panel = new JPanel();
 		panel.setLayout(null);
-
-		Image image1 = null;
-		Image image2 = null;
 		
 		ruta1 = imagenes.substring(0, imagenes.indexOf("#;#"));
 		ruta2 = imagenes.substring(imagenes.indexOf("#;#")+3);
@@ -73,17 +63,49 @@ public class VentanaImagenes extends JDialog {
         
 		
         try {
-        	if (!ruta1.equals("")) {
-        		URL url = new URL(ruta1);
-                image1 = ImageIO.read(url);
-                label = new JLabel(new ImageIcon(image1));
-                label.setBounds(10, 50, 450, 450);
+        	if (!ruta1.isEmpty()) {
+        		ImageIcon imgTemporal = new ImageIcon(ImageIO.read(new URL(ruta1)));
+        		int anchoOriginal = imgTemporal.getIconWidth();
+				int altoOriginal = imgTemporal.getIconHeight();
+				if (anchoOriginal > altoOriginal) {
+					if (anchoOriginal > 450) {
+						double coeficiente = (double)450 / (double)anchoOriginal;
+						anchoOriginal = (int) (coeficiente * anchoOriginal);
+						altoOriginal = (int) (coeficiente * altoOriginal);
+					}
+				}
+				else {
+					if (anchoOriginal > 450) {
+						double coeficiente = (double)450 / (double)altoOriginal;
+						anchoOriginal = (int) (coeficiente * anchoOriginal);
+						altoOriginal = (int) (coeficiente * altoOriginal);
+					}
+				}
+				Image img = imgTemporal.getImage().getScaledInstance(anchoOriginal, altoOriginal, Image.SCALE_SMOOTH);
+				label = new JLabel(new ImageIcon(img));
+				label.setBounds(10, 50, 450, 450);
         	}
-        	if (!ruta2.equals("")) {
-        		URL url = new URL(ruta2);
-                image2 = ImageIO.read(url);
-                label2 = new JLabel(new ImageIcon(image2));
-                label2.setBounds(470, 50, 450, 450);
+        	if (!ruta2.isEmpty()) {
+        		ImageIcon imgTemporal = new ImageIcon(ImageIO.read(new URL(ruta2)));
+        		int anchoOriginal = imgTemporal.getIconWidth();
+				int altoOriginal = imgTemporal.getIconHeight();
+				if (anchoOriginal > altoOriginal) {
+					if (anchoOriginal > 450) {
+						double coeficiente = (double)450 / (double)anchoOriginal;
+						anchoOriginal = (int) (coeficiente * anchoOriginal);
+						altoOriginal = (int) (coeficiente * altoOriginal);
+					}
+				}
+				else {
+					if (anchoOriginal > 450) {
+						double coeficiente = (double)450 / (double)altoOriginal;
+						anchoOriginal = (int) (coeficiente * anchoOriginal);
+						altoOriginal = (int) (coeficiente * altoOriginal);
+					}
+				}
+				Image img = imgTemporal.getImage().getScaledInstance(anchoOriginal, altoOriginal, Image.SCALE_SMOOTH);
+				label2 = new JLabel(new ImageIcon(img));
+				label2.setBounds(470, 50, 450, 450);
         	}
         } catch (IOException e) {
         	e.printStackTrace();
@@ -155,8 +177,26 @@ public class VentanaImagenes extends JDialog {
 						utilidades.subirImagenInstruccion(imagen, nombreCarpeta, nombre);
 						ruta1 = "http://clientes-cpavitoria06.com/"+nombreCarpeta+"/img/"+nombre;
 						actualizarImagenes();
-						try {
-							label.setIcon(new ImageIcon(ImageIO.read(new URL(imagenes.substring(0, imagenes.indexOf("#;#"))))));
+						try {//TODO PREGUNTAR SI ESTAS SEGURO DE SOBREESCRIBIRLA O BORRARLA (SOLO SI ES EDITAR)
+							ImageIcon imgTemporal = new ImageIcon(ImageIO.read(new URL(ruta1)));
+							int anchoOriginal = imgTemporal.getIconWidth();
+							int altoOriginal = imgTemporal.getIconHeight();
+							if (anchoOriginal > altoOriginal) {
+								if (anchoOriginal > 450) {
+									double coeficiente = (double)450 / (double)anchoOriginal;
+									anchoOriginal = (int) (coeficiente * anchoOriginal);
+									altoOriginal = (int) (coeficiente * altoOriginal);
+								}
+							}
+							else {
+								if (anchoOriginal > 450) {
+									double coeficiente = (double)450 / (double)altoOriginal;
+									anchoOriginal = (int) (coeficiente * anchoOriginal);
+									altoOriginal = (int) (coeficiente * altoOriginal);
+								}
+							}
+							Image img = imgTemporal.getImage().getScaledInstance(anchoOriginal, altoOriginal, Image.SCALE_SMOOTH);
+							label.setIcon(new ImageIcon(img));
 						} catch (MalformedURLException e1) {
 							e1.printStackTrace();
 						} catch (IOException e1) {
@@ -214,8 +254,26 @@ public class VentanaImagenes extends JDialog {
 						
 						ruta2 = "http://clientes-cpavitoria06.com/"+nombreCarpeta+"/img/"+nombre;
 						actualizarImagenes();
-						try {
-							label2.setIcon(new ImageIcon(ImageIO.read(new URL(imagenes.substring(imagenes.indexOf("#;#")+3)))));
+						try {//TODO PREGUNTAR SI ESTAS SEGURO DE SOBREESCRIBIRLA O BORRARLA (SOLO SI ES EDITAR)
+							ImageIcon imgTemporal = new ImageIcon(ImageIO.read(new URL(ruta2)));
+							int anchoOriginal = imgTemporal.getIconWidth();
+							int altoOriginal = imgTemporal.getIconHeight();
+							if (anchoOriginal > altoOriginal) {
+								if (anchoOriginal > 450) {
+									double coeficiente = (double)450 / (double)anchoOriginal;
+									anchoOriginal = (int) (coeficiente * anchoOriginal);
+									altoOriginal = (int) (coeficiente * altoOriginal);
+								}
+							}
+							else {
+								if (anchoOriginal > 450) {
+									double coeficiente = (double)450 / (double)altoOriginal;
+									anchoOriginal = (int) (coeficiente * anchoOriginal);
+									altoOriginal = (int) (coeficiente * altoOriginal);
+								}
+							}
+							Image img = imgTemporal.getImage().getScaledInstance(anchoOriginal, altoOriginal, Image.SCALE_SMOOTH);
+							label2.setIcon(new ImageIcon(img));
 						} catch (MalformedURLException e1) {
 							e1.printStackTrace();
 						} catch (IOException e1) {

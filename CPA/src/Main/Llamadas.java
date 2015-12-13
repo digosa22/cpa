@@ -46,6 +46,34 @@ public class Llamadas {
 		return listaServiciosEnLinea;
 	}
 
+	public ClienteRecuperado recuperarCliente(int id) {
+
+		Database database = new Database();
+
+		ClienteRecuperado cliente = null;
+		try {
+			Connection connection = database.Get_Connection();
+			PreparedStatement ps = connection
+					.prepareStatement("SELECT * FROM clientes WHERE id=" + id );
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				cliente = new ClienteRecuperado(rs.getInt("id"), rs.getString("nif"), rs.getString("tipo_num_accion"), rs.getString("empresa"), rs.getString("tel"), rs.getString("persona_contacto"), rs.getString("web"), rs.getString("departamento"), 
+						rs.getString("email"), rs.getString("banco"), rs.getString("num_ccc"), rs.getString("IBAN"), rs.getString("BIC"), rs.getString("idioma"), rs.getInt("num_proveedor"), rs.getDouble("hora_normal"), rs.getDouble("hora_extra"), 
+						rs.getDouble("hora_sabado"), rs.getDouble("hora_festiva"), rs.getDouble("hora_nocturna"), rs.getDouble("hora_especialista_normal"), rs.getDouble("hora_especialista_extra"), rs.getDouble("hora_especialista_sabado"), 
+						rs.getDouble("hora_especialista_festiva"), rs.getDouble("hora_especialista_nocturna"), rs.getDouble("hora_coordinacion"), rs.getDouble("hora_administracion"), rs.getDouble("gastos_logisticos"), rs.getString("direccion"), 
+						rs.getString("codigo_postal"), rs.getString("pais"), rs.getString("poblacion"), rs.getString("apartado_de_correo"), rs.getString("codigo_postal_2"), rs.getString("codigo_postal_empresa"));
+			}
+			rs.close();
+			ps.close();
+			connection.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return cliente;
+	}
+	
+	
 
 	public Servicio recuperarServicio(String num_accion) {
 
@@ -142,7 +170,7 @@ public class Llamadas {
 							+ "?,?,?,?,?"
 							+ ")");
 
-			preparedStatement.setInt(1, servicio.getNifCliente());
+			preparedStatement.setInt(1, servicio.getIdCliente());
 			preparedStatement.setString(2, servicio.getNomCliente());
 			preparedStatement.setString(3, servicio.getPersonaCPA());
 			preparedStatement.setString(4, servicio.getNumAccion());
@@ -355,7 +383,7 @@ public class Llamadas {
 							+ ",?,?,?,?,?,?,?,?,?,?"
 							+ "?,?,?,?,?)");
 
-			preparedStatement.setInt(1, servicio.getNifCliente());
+			preparedStatement.setInt(1, servicio.getIdCliente());
 			preparedStatement.setString(2, servicio.getNomCliente());
 			preparedStatement.setString(3, servicio.getPersonaCPA());
 			preparedStatement.setString(4, servicio.getNumAccion());
@@ -460,201 +488,30 @@ public class Llamadas {
 
 	}
 
-//	public boolean actualizarServicio(Servicio servicio) {
-//
-//		Database database = new Database();
-//		Connection connection;
-//		try {
-//			connection = database.Get_Connection();
-//			Statement statement = connection.createStatement();
-//
-//			statement
-//			.executeUpdate("UPDATE servicios_en_linea SET nif_cliente='"
-//					+ servicio.getNifCliente()
-//					+ "',nom_cliente='"
-//					+ servicio.getNomCliente()
-//					+ "',persona_cpa='"
-//					+ servicio.getPersonaCPA()
-//					+ "',fecha_inicio="
-//					+ servicio.getFechaInicio()
-//
-//					+ ",nombre_pieza='"
-//					+ servicio.getNombrePieza()
-//					+ "',referencias='"
-//					+ servicio.getReferencias()
-//					+ "',num_chasis_1='"
-//					+ servicio.getNumChasis1()
-//					+ "',num_chasis_2='"
-//					+ servicio.getNumChasis2()
-//					+ "',num_chasis_3='"
-//					+ servicio.getNumChasis3()
-//					+ "',num_chasis_4='"
-//					+ servicio.getNumChasis4()
-//					+ "',responsable_cpa='"
-//					+ servicio.getResponsableCPA()
-//					+ "',piezas_verde='"
-//					+ servicio.isPiezasVerde()
-//					+ "',piezas_blanco='"
-//					+ servicio.isPiezasBlanco()
-//					+ "',piezas_otros='"
-//					+ servicio.isPiezasOtros()
-//					+ "',piezas_rojo='"
-//					+ servicio.isPiezasRojo()
-//					+ "',contenedor_verde='"
-//					+ servicio.isContenedorVerde()
-//					+ "',contenedor_rojo='"
-//					+ servicio.isContenedorRojo()
-//					+ "',persona_recomendador='"
-//					+ servicio.getPersonaRecomendador()
-//					+ "',departamento_recomendador='"
-//					+ servicio.getDepartamentoRecomendador()
-//					+ "',telefono_recomendador='"
-//					+ servicio.getTelefonoRecomendador()
-//					+ "',email_recomendador='"
-//					+ servicio.getEmailRecomendador()
-//					+ "',fecha_solicitud_recomendador="
-//					+ servicio.getFechaSolicitudRecomendador()
-//					+ ",descripcion_instruccion_del_servicio='"
-//					+ servicio.getDescripcionInstruccionDelServicio()
-//					+ "',seguridad_calzado='"
-//					+ servicio.isSeguridadCalzado()
-//					+ "',seguridad_gafas='"
-//					+ servicio.isSeguridadGafas()
-//					+ "',seguridad_chaleco='"
-//					+ servicio.isSeguridadChaleco()
-//					+ "',seguridad_tapones='"
-//					+ servicio.isSeguridadTapones()
-//					+ "',seguridad_guantes='"
-//					+ servicio.isSeguridadGuantes()
-//					+ "',informacion_resultados='"
-//					+ servicio.getInformacionResultados()
-//					+ "',imagen_orden_de_pedido='"
-//					+ servicio.getImagenOrdenDePedido()
-//
-//					+ "',operario_a1='"
-//					+ servicio.isOperarioA1()
-//					+ "',operario_a2='"
-//					+ servicio.isOperarioA2()
-//					+ "',operario_a3='"
-//					+ servicio.isOperarioA3()
-//					+ "',operario_a4='"
-//					+ servicio.isOperarioA4()
-//					+ "',operario_a5='"
-//					+ servicio.isOperarioA5()
-//					+ "',operario_a6='"
-//					+ servicio.isOperarioA6()
-//					+ "',operario_a7='"
-//					+ servicio.isOperarioA7()
-//					+ "',peticion_material_instruccion='"
-//					+ servicio.isPeticionMaterialInstruccion()
-//					+ "',referencias_correctas_instruccion='"
-//					+ servicio.isReferenciasCorrectasInstruccion()
-//					+ "',seleccion_piezas_instruccion='"
-//					+ servicio.isSeleccionPiezasInstruccion()
-//					+ "',retrabajo_piezas_instruccion='"
-//					+ servicio.isRetrabajoPiezasInstruccion()
-//					+ "',trasvase_instruccion='"
-//					+ servicio.isTrasvaseInstruccion()
-//					+ "',otros_instruccion='"
-//					+ servicio.isOtrosInstruccion()
-//					+ "',acciones_instruccion='"
-//					+ servicio.getAccionesIntruccion()
-//
-//					+ "',array_defectos='"
-//					+ servicio.getTablaDefectos()
-//					+ "',array_piezas_ok='"
-//					+ servicio.getPiezasOK()
-//					+ "',array_piezas_recuperadas='"
-//					+ servicio.getPiezasRecuperadas()
-//
-//					+ "',recuento_final='"
-//					+ servicio.getRecuentoFinal()
-//
-//					+ "',array_hora_normal='"
-//					+ servicio.getArrayHoraNormal()
-//					+ "',array_hora_extra='"
-//					+ servicio.getArrayHoraExtra()
-//					+ "',array_hora_sabado='"
-//					+ servicio.getArrayHoraSabado()
-//					+ "',array_hora_festivo='"
-//					+ servicio.getArrayHoraFestivo()
-//					+ "',array_hora_nocturna='"
-//					+ servicio.getArrayHoraNocturna()
-//
-//					+ "',array_hora_especialista_normal='"
-//					+ servicio.getArrayHoraEspecialistaNormal()
-//					+ "',array_hora_especialista_extra='"
-//					+ servicio.getArrayHoraEspecialistaExtra()
-//					+ "',array_hora_especialista_sabado='"
-//					+ servicio.getArrayHoraEspecialistaSabado()
-//					+ "',array_hora_especialista_festivo='"
-//					+ servicio.getArrayHoraEspecialistaFestiva()
-//					+ "',array_hora_especialista_nocturna='"
-//					+ servicio.getArrayHoraEspecialistaNocturna()
-//
-//					+ "',array_hora_coordinacion='"
-//					+ servicio.getArrayHoraCoordinacion()
-//					+ "',array_hora_administracion='"
-//					+ servicio.getArrayHoraAdministracion()
-//					+ "',array_gastos_logisticos='"
-//					+ servicio.getArrayGastosLogisticos()
-//					+ "',array_otros1='"
-//					+ servicio.getArrayOtros1()
-//					+ "',array_otros2='"
-//					+ servicio.getArrayOtros2()
-//
-//					+ "',realizado_por_retrabajos='"
-//					+ servicio.getRealizadoPorRetrabajos()
-//					+ "',fecha_retrabajos="
-//					+ servicio.getFechaRetrabajos()
-//					+ ",fecha_liberacion_retrabajos="
-//					+ servicio.getFechaLiberacionRetrabajos()
-//					+ ",num_reclamacion_retrabajos='"
-//					+ servicio.getNumReclamacionRetrabajos()
-//					+ "',fecha_reclamacion_retrabajos="
-//					+ servicio.getFechaReclamacionRetrabajos()
-//					+ ",referencia_pieza_retrabajos='"
-//					+ servicio.getReferenciaPiezaRetrabajos()
-//					+ "',fecha_comienzo_retrabajos="
-//					+ servicio.getFechaComienzoRetrabajos()
-//					+ ",tiempo_retrabajos='"
-//					+ servicio.getTiempoRetrabajos()
-//					+ "',clientes_retrabajos='"
-//					+ servicio.getClienteRetrabajos()
-//					+ "',firmas_retrabajos='"
-//					+ servicio.getFirmasRetrabajos()
-//					+ "',imagen_retrabajos='"
-//					+ servicio.getImagenRetrabajos()
-//
-//					+ "',realizado_por_personal='"
-//					+ servicio.getRealizadoPorPersonal()
-//					+ "',fecha_personal="
-//					+ servicio.getFechaPersonal()
-//					+ ",cliente_personal='"
-//					+ servicio.getClientePersonal()
-//					+ "',pieza_personal='"
-//					+ servicio.getPiezaPersonal()
-//					+ "',referencia_personal='"
-//					+ servicio.getReferenciaPersonal()
-//					+ "',firmas_personal='"
-//					+ servicio.getFirmasPersonal()
-//					+ "',imagen_personal='"
-//					+ servicio.getImagenPersonal()
-//
-//
-//					+ "' where num_accion='"
-//					+ servicio.getNumAccion() + "'");
-//			statement.close();
-//			connection.close();
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//			return false;
-//		}
-//
-//		return true;
-//
-//	}
+	public boolean actualizarImagen(String columnaAActualizar, String imagen, String numAccion) {
+
+		Database database = new Database();
+		Connection connection;
+		try {
+			connection = database.Get_Connection();
+			Statement statement = connection.createStatement();
+
+			statement
+			.executeUpdate("UPDATE servicios_en_linea SET "+columnaAActualizar+"='"
+					+ imagen
+					+ "' where num_accion='"
+					+ numAccion + "'");
+			statement.close();
+			connection.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+
+		return true;
+
+	}
 
 
 	public boolean borrarServicio(String num_accion) {

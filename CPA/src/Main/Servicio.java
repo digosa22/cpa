@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class Servicio {
 
 	// GENERICOS
-	private int nifCliente;
+	private int idCliente;
 	private String nomCliente;
 	private String personaCPA;
 	private String numAccion;
@@ -125,7 +125,7 @@ public class Servicio {
 	private String nombreCarpeta;
 	
 	// CONSTRUCTOR
-	public Servicio(int nifCliente, String nomCliente, String personaCPA, String numAccion, Date fechaInicio,
+	public Servicio(int idCliente, String nomCliente, String personaCPA, String numAccion, Date fechaInicio,
 			String nombrePieza, String referencias, String numChasis1, String numChasis2, String numChasis3,
 			String numChasis4, String responsableCPA, boolean piezasVerde, boolean piezasBlanco, boolean piezasOtros,
 			boolean piezasRojo, boolean contenedorVerde, boolean contenedorRojo, String personaRecomendador,
@@ -149,7 +149,7 @@ public class Servicio {
 			String piezaPersonal, String referenciaPersonal, String firmasPersonal, String imagenPersonal, 
 			boolean retrabajos, boolean formacion, String nombreCarpeta) {
 		super();
-		this.nifCliente = nifCliente;
+		this.idCliente = idCliente;
 		this.nomCliente = nomCliente;
 		this.personaCPA = personaCPA;
 		this.numAccion = numAccion;
@@ -235,12 +235,14 @@ public class Servicio {
 		this.formacion = formacion;
 		this.nombreCarpeta = nombreCarpeta;
 	}
-	public int getNifCliente() {
-		return nifCliente;
+	public int getIdCliente() {
+		return idCliente;
 	}
-	public void setNifCliente(int nifCliente) {
-		this.nifCliente = nifCliente;
+
+	public void setIdCliente(int idCliente) {
+		this.idCliente = idCliente;
 	}
+
 	public String getNomCliente() {
 		return nomCliente;
 	}

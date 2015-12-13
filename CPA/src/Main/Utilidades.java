@@ -49,58 +49,58 @@ public class Utilidades {
 	private String pass = "Ireguatekcpa1";
 	private FTPClient ftpClient = new FTPClient();
 
-	public void insertarImagen2( XSSFWorkbook wb, XSSFSheet sheet, String imagen, Posicion posicion, int ancho, int alto, int filaSuma) {
+//	public void insertarImagen2( XSSFWorkbook wb, XSSFSheet sheet, String imagen, Posicion posicion, int ancho, int alto, int filaSuma) {
+//
+//		try {
+//
+//			File i = new File("img/descarga_prueba.jpg");
+//
+//			BufferedImage originalImage = ImageIO.read(new File(imagen));
+//			int type = originalImage.getType() == 0? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
+//
+//			BufferedImage resizeImageJpg = resizeImage(originalImage, type, ancho, alto);
+//			ImageIO.write(resizeImageJpg, "jpg", i); 
+//
+//			//FileInputStream obtains input bytes from the image file
+//			InputStream inputStream = new FileInputStream("img/descarga_prueba.jpg");
+//
+//			//Get the contents of an InputStream as a byte[].
+//			byte[] bytes = IOUtils.toByteArray(inputStream);
+//			//Adds a picture to the workbook
+//			int pictureIdx = wb.addPicture(bytes, Workbook.PICTURE_TYPE_PNG);
+//			//close the input stream
+//			inputStream.close();
+//
+//			//Returns an object that handles instantiating concrete classes
+//			CreationHelper helper = wb.getCreationHelper();
+//
+//			//Creates the top-level drawing patriarch.
+//			Drawing drawing = sheet.createDrawingPatriarch();
+//
+//			//Create an anchor that is attached to the worksheet
+//			ClientAnchor anchor = helper.createClientAnchor();
+//			//set top-left corner for the image
+//			anchor.setCol1(posicion.getColumna());
+//			anchor.setRow1(posicion.getFila() + filaSuma);
+//
+//			//Creates a picture
+//			Picture pict = drawing.createPicture(anchor, pictureIdx);
+//			//   System.out.println(pict.getImageDimension().height);
+//			//   System.out.println(pict.getImageDimension().width);
+//			//Reset the image to the original size
+//			pict.resize();
+//
+//			i.delete();
+//
+//
+//		}
+//		catch (Exception e) {
+//			System.out.println(e);
+//		}
+//
+//	}
 
-		try {
-
-			File i = new File("img/descarga_prueba.jpg");
-
-			BufferedImage originalImage = ImageIO.read(new File(imagen));
-			int type = originalImage.getType() == 0? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
-
-			BufferedImage resizeImageJpg = resizeImage(originalImage, type, ancho, alto);
-			ImageIO.write(resizeImageJpg, "jpg", i); 
-
-			//FileInputStream obtains input bytes from the image file
-			InputStream inputStream = new FileInputStream("img/descarga_prueba.jpg");
-
-			//Get the contents of an InputStream as a byte[].
-			byte[] bytes = IOUtils.toByteArray(inputStream);
-			//Adds a picture to the workbook
-			int pictureIdx = wb.addPicture(bytes, Workbook.PICTURE_TYPE_PNG);
-			//close the input stream
-			inputStream.close();
-
-			//Returns an object that handles instantiating concrete classes
-			CreationHelper helper = wb.getCreationHelper();
-
-			//Creates the top-level drawing patriarch.
-			Drawing drawing = sheet.createDrawingPatriarch();
-
-			//Create an anchor that is attached to the worksheet
-			ClientAnchor anchor = helper.createClientAnchor();
-			//set top-left corner for the image
-			anchor.setCol1(posicion.getColumna());
-			anchor.setRow1(posicion.getFila() + filaSuma);
-
-			//Creates a picture
-			Picture pict = drawing.createPicture(anchor, pictureIdx);
-			//   System.out.println(pict.getImageDimension().height);
-			//   System.out.println(pict.getImageDimension().width);
-			//Reset the image to the original size
-			pict.resize();
-
-			i.delete();
-
-
-		}
-		catch (Exception e) {
-			System.out.println(e);
-		}
-
-	}
-
-	public void insertarImagen(XSSFWorkbook wb, XSSFSheet sheet, String rutaImagenSinExtension, String extension, Posicion posicion, int ancho, int alto, int filaSuma) {
+	public void insertarImagen(XSSFWorkbook wb, XSSFSheet sheet, String rutaImagenSinExtension, String extension, Posicion posicion, int anchoMaximo, int altoMaximo, int filaSuma) {
 
 		try {
 
@@ -109,6 +109,25 @@ public class Utilidades {
 
 			BufferedImage originalImage = ImageIO.read(original);
 			int type = originalImage.getType() == 0? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
+			int anchoOriginal = originalImage.getWidth();
+			int altoOriginal = originalImage.getHeight();
+
+			int ancho = 50;
+			int alto = 50;
+			if (anchoOriginal > anchoMaximo) {
+				double coeficiente = (double)anchoMaximo / (double)anchoOriginal;
+				ancho = (int) (coeficiente * anchoOriginal);
+				alto = (int) (coeficiente * altoOriginal);
+			}
+			else {
+				ancho = anchoOriginal;
+				alto = altoOriginal;
+			}
+			if (alto > altoMaximo) {
+				double coeficiente = (double)altoMaximo / (double)alto;
+				ancho = (int) (coeficiente * ancho);
+				alto = (int) (coeficiente * alto);
+			}
 
 			BufferedImage resizeImageJpg = resizeImage(originalImage, type, ancho, alto);
 			ImageIO.write(resizeImageJpg, extension, temporal); 
@@ -152,7 +171,7 @@ public class Utilidades {
 
 		}
 		catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 	}
@@ -182,7 +201,9 @@ public class Utilidades {
 
 		ventana.setEnabled(false);
 
-		String idioma = "es";//TODO METODO LLAMADAS
+		ClienteRecuperado cliente = new Llamadas().recuperarCliente(servicio.getIdCliente());
+
+		String idioma = cliente.getIdioma();
 		String plantilla = "plantilla/plantilla-"+idioma+".xlsm";
 
 		try {
@@ -194,6 +215,38 @@ public class Utilidades {
 			XSSFSheet sheet = null;
 			XSSFCell cell = null;
 			Posiciones posiciones = new Posiciones();
+
+			//VALIDACION 0
+			sheet = workbook.getSheetAt(0);
+
+			cell = sheet.getRow(posiciones.getNif().getFila()).getCell(posiciones.getNif().getColumna());
+			cell.setCellValue(cliente.getNif());
+
+			cell = sheet.getRow(posiciones.getWeb().getFila()).getCell(posiciones.getWeb().getColumna());
+			cell.setCellValue(cliente.getWeb());
+
+			cell = sheet.getRow(posiciones.getNumBanco().getFila()).getCell(posiciones.getNumBanco().getColumna());
+			cell.setCellValue(cliente.getBanco());
+
+			cell = sheet.getRow(posiciones.getNumCuenta().getFila()).getCell(posiciones.getNumCuenta().getColumna());
+			cell.setCellValue(cliente.getNum_cc());
+
+			cell = sheet.getRow(posiciones.getIBAN().getFila()).getCell(posiciones.getIBAN().getColumna());
+			cell.setCellValue(cliente.getIban());
+
+			cell = sheet.getRow(posiciones.getBIC().getFila()).getCell(posiciones.getBIC().getColumna());
+			cell.setCellValue(cliente.getBic());
+
+			cell = sheet.getRow(posiciones.getTarifa().getFila()).getCell(posiciones.getTarifa().getColumna());
+			cell.setCellValue("Hora Normal: " + cliente.getHora_normal() + " €/h");
+
+			if (!servicio.getImagenOrdenDePedido().isEmpty()) {
+				String destino = "img/ordenpedido"+servicio.getNumAccion()+servicio.getImagenOrdenDePedido().substring(servicio.getImagenOrdenDePedido().length()-4);
+				descargarImagen(servicio.getImagenOrdenDePedido(), destino);
+				insertarImagen(workbook, sheet, destino.substring(0, destino.length()-4), destino.substring(destino.length()-3), posiciones.getImagenOrdenDePedido(), 600, 1000, 0);
+			}
+
+
 
 			// ORDEN DE PEDIDO 1 
 			sheet = workbook.getSheetAt(1);
@@ -268,40 +321,40 @@ public class Utilidades {
 			}
 
 			cell = sheet.getRow(posiciones.getEmpresaCliente().getFila()).getCell(posiciones.getEmpresaCliente().getColumna());
-			cell.setCellValue("Empresa cliente");
+			cell.setCellValue(cliente.getEmpresa());
 
 			cell = sheet.getRow(posiciones.getDireccionCliente().getFila()).getCell(posiciones.getDireccionCliente().getColumna());
-			cell.setCellValue("getDireccionCliente");
+			cell.setCellValue(cliente.getDireccion());
 
 			cell = sheet.getRow(posiciones.getCodigoPostalCliente().getFila()).getCell(posiciones.getCodigoPostalCliente().getColumna());
-			cell.setCellValue("getCodigoPostalCliente");
+			cell.setCellValue(cliente.getCodigo_postal()); 
 
 			cell = sheet.getRow(posiciones.getPaisCliente().getFila()).getCell(posiciones.getPaisCliente().getColumna());
-			cell.setCellValue("getPaisCliente");
+			cell.setCellValue(cliente.getPais());
 
 			cell = sheet.getRow(posiciones.getPoblacionCliente().getFila()).getCell(posiciones.getPoblacionCliente().getColumna());
-			cell.setCellValue("getPoblacionCliente");
+			cell.setCellValue(cliente.getPoblacion());
 
 			cell = sheet.getRow(posiciones.getApartadoDeCorreosCliente().getFila()).getCell(posiciones.getApartadoDeCorreosCliente().getColumna());
-			cell.setCellValue("getApartadoDeCorreosCliente");
+			cell.setCellValue(cliente.getApartado_de_correo());
 
 			cell = sheet.getRow(posiciones.getCodigoPostalCliente2().getFila()).getCell(posiciones.getCodigoPostalCliente2().getColumna());
-			cell.setCellValue("getCodigoPostalCliente2");
+			cell.setCellValue(cliente.getCodigo_postal_2());
 
 			cell = sheet.getRow(posiciones.getCodigoPostalEmpresaCliente().getFila()).getCell(posiciones.getCodigoPostalEmpresaCliente().getColumna());
-			cell.setCellValue("getCodigoPostalEmpresaCliente");
+			cell.setCellValue(cliente.getCodigo_postal_empresa());
 
 			cell = sheet.getRow(posiciones.getPersonaDeContactoCliente().getFila()).getCell(posiciones.getPersonaDeContactoCliente().getColumna());
-			cell.setCellValue("getPersonaDeContactoCliente");
+			cell.setCellValue(cliente.getPersona_contacto());
 
 			cell = sheet.getRow(posiciones.getDepartamentoCliente().getFila()).getCell(posiciones.getDepartamentoCliente().getColumna());
-			cell.setCellValue("getDepartamentoCliente");
+			cell.setCellValue(cliente.getDepartamento());
 
 			cell = sheet.getRow(posiciones.getTelefonoCliente().getFila()).getCell(posiciones.getTelefonoCliente().getColumna());
-			cell.setCellValue("getTelefonoCliente");
+			cell.setCellValue(cliente.getTelefono());
 
 			cell = sheet.getRow(posiciones.getEmailCliente().getFila()).getCell(posiciones.getEmailCliente().getColumna());
-			cell.setCellValue("getEmailCliente");
+			cell.setCellValue(cliente.getEmail());
 
 			cell = sheet.getRow(posiciones.getDescripcionInstruccionDelServicio().getFila()).getCell(posiciones.getDescripcionInstruccionDelServicio().getColumna());
 			cell.setCellValue(servicio.getDescripcionInstruccionDelServicio());
@@ -335,12 +388,6 @@ public class Utilidades {
 			else
 				cell = sheet.getRow(posiciones.getInformacionResultadosOtros().getFila()).getCell(posiciones.getInformacionResultadosOtros().getColumna());
 			cell.setCellValue("X");
-
-			if (!servicio.getImagenOrdenDePedido().isEmpty()) {
-				String destino = "img/ordenpedido"+servicio.getNumAccion()+servicio.getImagenOrdenDePedido().substring(servicio.getImagenOrdenDePedido().length()-4);
-				descargarImagen(servicio.getImagenOrdenDePedido(), destino);
-				insertarImagen(workbook, sheet, destino.substring(0, destino.length()-4), destino.substring(destino.length()-3), posiciones.getImagenOrdenDePedido(), 50, 50, 0);
-			}
 
 
 
@@ -396,12 +443,12 @@ public class Utilidades {
 						if (!imagenes[0].isEmpty()) {
 							String destino = "img/instruccion"+servicio.getNumAccion()+imagenes[0].substring(imagenes[0].length()-4);
 							descargarImagen(imagenes[0], destino);
-							insertarImagen(workbook, sheet, destino.substring(0, destino.length()-4), destino.substring(destino.length()-3), posiciones.getAccionesInstruccionOtros1Inicial(), 50, 50, fila);
+							insertarImagen(workbook, sheet, destino.substring(0, destino.length()-4), destino.substring(destino.length()-3), posiciones.getAccionesInstruccionOtros1Inicial(), 50, 50, fila);//TODO CAMBIAR ANCHO Y ALTO CUANDO ESTE PLANTILLA
 						}
 						if (!imagenes[1].isEmpty()) {
 							String destino = "img/instruccion"+servicio.getNumAccion()+imagenes[1].substring(imagenes[1].length()-4);
 							descargarImagen(imagenes[1], destino);
-							insertarImagen(workbook, sheet, destino.substring(0, destino.length()-4), destino.substring(destino.length()-3), posiciones.getAccionesInstruccionOtros2Inicial(), 50, 50, fila);
+							insertarImagen(workbook, sheet, destino.substring(0, destino.length()-4), destino.substring(destino.length()-3), posiciones.getAccionesInstruccionOtros2Inicial(), 50, 50, fila);//TODO CAMBIAR ANCHO Y ALTO CUANDO ESTE PLANTILLA
 						}
 					} else {
 						cell = sheet.getRow(posiciones.getAccionesInstruccionAplicaInicial().getFila()+fila).getCell(posiciones.getAccionesInstruccionAplicaInicial().getColumna());
@@ -462,27 +509,33 @@ public class Utilidades {
 				else {
 					if (fila == 0) {
 						cell = sheet.getRow(posiciones.getDefecto1Fechas().getFila()).getCell(posiciones.getDefecto1Fechas().getColumna()+contador);
-						cell.setCellValue(Integer.parseInt(arrTemp[i]));
+						if (!arrTemp[i].isEmpty())
+							cell.setCellValue(Integer.parseInt(arrTemp[i]));
 					}
 					else if (fila == 1) {
 						cell = sheet.getRow(posiciones.getDefecto2Fechas().getFila()).getCell(posiciones.getDefecto2Fechas().getColumna()+contador);
-						cell.setCellValue(Integer.parseInt(arrTemp[i]));
+						if (!arrTemp[i].isEmpty())
+							cell.setCellValue(Integer.parseInt(arrTemp[i]));
 					}
 					else if (fila == 2) {
 						cell = sheet.getRow(posiciones.getDefecto3Fechas().getFila()).getCell(posiciones.getDefecto3Fechas().getColumna()+contador);
-						cell.setCellValue(Integer.parseInt(arrTemp[i]));
+						if (!arrTemp[i].isEmpty())
+							cell.setCellValue(Integer.parseInt(arrTemp[i]));
 					}
 					else if (fila == 3) {
 						cell = sheet.getRow(posiciones.getDefecto4Fechas().getFila()).getCell(posiciones.getDefecto4Fechas().getColumna()+contador);
-						cell.setCellValue(Integer.parseInt(arrTemp[i]));
+						if (!arrTemp[i].isEmpty())
+							cell.setCellValue(Integer.parseInt(arrTemp[i]));
 					}
 					else if (fila == 4) {
 						cell = sheet.getRow(posiciones.getDefecto5Fechas().getFila()).getCell(posiciones.getDefecto5Fechas().getColumna()+contador);
-						cell.setCellValue(Integer.parseInt(arrTemp[i]));
+						if (!arrTemp[i].isEmpty())
+							cell.setCellValue(Integer.parseInt(arrTemp[i]));
 					}
 					else if (fila == 5) {
 						cell = sheet.getRow(posiciones.getDefecto6Fechas().getFila()).getCell(posiciones.getDefecto6Fechas().getColumna()+contador);
-						cell.setCellValue(Integer.parseInt(arrTemp[i]));
+						if (!arrTemp[i].isEmpty())
+							cell.setCellValue(Integer.parseInt(arrTemp[i]));
 					}
 					contador++;
 				}
@@ -500,12 +553,14 @@ public class Utilidades {
 			arrTemp = servicio.getPiezasOK().split("@;@");
 			for (int i=0; i<arrTemp.length; i++) {
 				cell = sheet.getRow(posiciones.getPiezasOK().getFila()).getCell(posiciones.getPiezasOK().getColumna()+i);
-				cell.setCellValue(Integer.parseInt(arrTemp[i]));
+				if (!arrTemp[i].isEmpty())
+					cell.setCellValue(Integer.parseInt(arrTemp[i]));
 			}
 			arrTemp = servicio.getPiezasRecuperadas().split("@;@");
 			for (int i=0; i<arrTemp.length; i++) {
 				cell = sheet.getRow(posiciones.getPiezasRecuperadas().getFila()).getCell(posiciones.getPiezasRecuperadas().getColumna()+i);
-				cell.setCellValue(Integer.parseInt(arrTemp[i]));
+				if (!arrTemp[i].isEmpty())
+					cell.setCellValue(Integer.parseInt(arrTemp[i]));
 			}
 
 
@@ -519,7 +574,7 @@ public class Utilidades {
 				cell = sheet.getRow(posiciones.getRecuentoFinal().getFila()+fila).getCell(posiciones.getRecuentoFinal().getColumna()+columna);
 				if (columna < 4)
 					cell.setCellValue(arrTemp[i]);
-				else
+				else if (!arrTemp[i].isEmpty())
 					cell.setCellValue(Integer.parseInt(arrTemp[i]));
 				columna++;
 				if (columna > 6) {
@@ -537,85 +592,110 @@ public class Utilidades {
 			arrTemp = servicio.getArrayHoraNormal().split("@;@");
 			for (int i=0; i<arrTemp.length; i++) {
 				cell = sheet.getRow(posiciones.getArrayHoraNormal().getFila()).getCell(posiciones.getArrayHoraNormal().getColumna()+i);
-				cell.setCellValue(Integer.parseInt(arrTemp[i]));
+				if (!arrTemp[i].isEmpty())
+					cell.setCellValue(Integer.parseInt(arrTemp[i]));
 			}
 
 
 			arrTemp = servicio.getArrayHoraExtra().split("@;@");
 			for (int i=0; i<arrTemp.length; i++) {
 				cell = sheet.getRow(posiciones.getArrayHoraExtra().getFila()).getCell(posiciones.getArrayHoraExtra().getColumna()+i);
-				cell.setCellValue(Integer.parseInt(arrTemp[i]));
+				if (!arrTemp[i].isEmpty())
+					cell.setCellValue(Integer.parseInt(arrTemp[i]));
 			}
 
 
 			arrTemp = servicio.getArrayHoraSabado().split("@;@");
 			for (int i=0; i<arrTemp.length; i++) {
 				cell = sheet.getRow(posiciones.getArrayHoraSabado().getFila()).getCell(posiciones.getArrayHoraSabado().getColumna()+i);
-				cell.setCellValue(Integer.parseInt(arrTemp[i]));
+				if (!arrTemp[i].isEmpty())
+					cell.setCellValue(Integer.parseInt(arrTemp[i]));
 			}
 
 
 			arrTemp = servicio.getArrayHoraFestivo().split("@;@");
 			for (int i=0; i<arrTemp.length; i++) {
 				cell = sheet.getRow(posiciones.getArrayHoraFestivo().getFila()).getCell(posiciones.getArrayHoraFestivo().getColumna()+i);
-				cell.setCellValue(Integer.parseInt(arrTemp[i]));
+				if (!arrTemp[i].isEmpty())
+					cell.setCellValue(Integer.parseInt(arrTemp[i]));
 			}
 
 
 			arrTemp = servicio.getArrayHoraNocturna().split("@;@");
 			for (int i=0; i<arrTemp.length; i++) {
 				cell = sheet.getRow(posiciones.getArrayHoraNocturna().getFila()).getCell(posiciones.getArrayHoraNocturna().getColumna()+i);
-				cell.setCellValue(Integer.parseInt(arrTemp[i]));
+				if (!arrTemp[i].isEmpty())
+					cell.setCellValue(Integer.parseInt(arrTemp[i]));
 			}
 
 
 			arrTemp = servicio.getArrayHoraEspecialistaNormal().split("@;@");
 			for (int i=0; i<arrTemp.length; i++) {
 				cell = sheet.getRow(posiciones.getArrayHoraEspecialistaNormal().getFila()).getCell(posiciones.getArrayHoraEspecialistaNormal().getColumna()+i);
-				cell.setCellValue(Integer.parseInt(arrTemp[i]));
+				if (!arrTemp[i].isEmpty())
+					cell.setCellValue(Integer.parseInt(arrTemp[i]));
 			}
 
 
 			arrTemp = servicio.getArrayHoraEspecialistaFestiva().split("@;@");
 			for (int i=0; i<arrTemp.length; i++) {
 				cell = sheet.getRow(posiciones.getArrayHoraEspecialistaFestivo().getFila()).getCell(posiciones.getArrayHoraEspecialistaFestivo().getColumna()+i);
-				cell.setCellValue(Integer.parseInt(arrTemp[i]));
+				if (!arrTemp[i].isEmpty())
+					cell.setCellValue(Integer.parseInt(arrTemp[i]));
 			}
 
 
 			arrTemp = servicio.getArrayHoraEspecialistaNocturna().split("@;@");
 			for (int i=0; i<arrTemp.length; i++) {
 				cell = sheet.getRow(posiciones.getArrayHoraEspecialistaNocturna().getFila()).getCell(posiciones.getArrayHoraEspecialistaNocturna().getColumna()+i);
-				cell.setCellValue(Integer.parseInt(arrTemp[i]));
+				if (!arrTemp[i].isEmpty())
+					cell.setCellValue(Integer.parseInt(arrTemp[i]));
 			}
 
 
 			arrTemp = servicio.getArrayHoraCoordinacion().split("@;@");
 			for (int i=0; i<arrTemp.length; i++) {
 				cell = sheet.getRow(posiciones.getArrayHoraCoordinacion().getFila()).getCell(posiciones.getArrayHoraCoordinacion().getColumna()+i);
-				cell.setCellValue(Integer.parseInt(arrTemp[i]));
+				if (!arrTemp[i].isEmpty())
+					cell.setCellValue(Integer.parseInt(arrTemp[i]));
 			}
 
 
 			arrTemp = servicio.getArrayHoraAdministracion().split("@;@");
 			for (int i=0; i<arrTemp.length; i++) {
 				cell = sheet.getRow(posiciones.getArrayHoraAdministracion().getFila()).getCell(posiciones.getArrayHoraAdministracion().getColumna()+i);
-				cell.setCellValue(Integer.parseInt(arrTemp[i]));
+				if (!arrTemp[i].isEmpty())
+					cell.setCellValue(Integer.parseInt(arrTemp[i]));
 			}
 
 
 			arrTemp = servicio.getArrayGastosLogisticos().split("@;@");
 			for (int i=0; i<arrTemp.length; i++) {
 				cell = sheet.getRow(posiciones.getArrayGastosLogisticos().getFila()).getCell(posiciones.getArrayGastosLogisticos().getColumna()+i);
-				cell.setCellValue(Integer.parseInt(arrTemp[i]));
+				if (!arrTemp[i].isEmpty())
+					cell.setCellValue(Integer.parseInt(arrTemp[i]));
 			}
 
 
 			arrTemp = servicio.getArrayOtros1().split("@;@");
 			for (int i=0; i<arrTemp.length; i++) {
 				cell = sheet.getRow(posiciones.getArrayOtros1().getFila()).getCell(posiciones.getArrayOtros1().getColumna()+i);
-				cell.setCellValue(Integer.parseInt(arrTemp[i]));
+				if (!arrTemp[i].isEmpty())
+					cell.setCellValue(Integer.parseInt(arrTemp[i]));
 			}
+
+			arrTemp = servicio.getArrayOtros2().split("@;@");
+			for (int i=0; i<arrTemp.length; i++) {
+				cell = sheet.getRow(posiciones.getArrayOtros2().getFila()).getCell(posiciones.getArrayOtros2().getColumna()+i);
+				if (!arrTemp[i].isEmpty())
+					cell.setCellValue(Integer.parseInt(arrTemp[i]));
+			}
+
+			cell = sheet.getRow(posiciones.getTotalImporteTiempoInvertido().getFila()).getCell(posiciones.getTotalImporteTiempoInvertido().getColumna());
+			String formula = "AG3*" + cliente.getHora_normal() + "+AG4*" + cliente.getHora_extra() + "+AG5*" + cliente.getHora_sabado() + "+AG6*" + cliente.getHora_festiva() + "+AG7*" + cliente.getHora_nocturna() 
+			+ "+AG8*" + cliente.getHora_especialista_normal() + "+AG9*" + cliente.getHora_especialista_extra() + "+AG10*" + cliente.getHora_especialista_sabado() + "+AG11*" + cliente.getHora_especialista_festiva() 
+			+ "+AG12*" + cliente.getHora_especialista_nocturna() + "+AG13*" + cliente.getHora_coordinacion() + "+AG14*" + cliente.getHora_administracion() + "+AG15*" + cliente.getGastos_logisticos() + "+AG16+AG17";
+			cell.setCellFormula(formula);
 
 
 			if (!servicio.isRetrabajos()) {
@@ -676,7 +756,11 @@ public class Utilidades {
 					}
 				}
 
-				//				ut.insertarImagen(workbook, sheet, serv.getImagenRetrabajos(), posiciones.getImagenRetrabajos(), 0, 0, 0);	TODO
+				if (!servicio.getImagenRetrabajos().isEmpty()) {
+					String destino = "img/retrabajos"+servicio.getNumAccion()+servicio.getImagenRetrabajos().substring(servicio.getImagenRetrabajos().length()-4);
+					descargarImagen(servicio.getImagenRetrabajos(), destino);
+					insertarImagen(workbook, sheet, destino.substring(0, destino.length()-4), destino.substring(destino.length()-3), posiciones.getImagenRetrabajos(), 750, 640, 0);
+				}
 
 			}
 
@@ -724,7 +808,11 @@ public class Utilidades {
 					}
 				}
 
-				//				ut.insertarImagen(workbook, sheet, serv.getImagenPersonal(), posiciones.getImagenPersonal(), 0, 0, 0);	TODO
+				if (!servicio.getImagenPersonal().isEmpty()) {
+					String destino = "img/personal"+servicio.getNumAccion()+servicio.getImagenPersonal().substring(servicio.getImagenPersonal().length()-4);
+					descargarImagen(servicio.getImagenPersonal(), destino);
+					insertarImagen(workbook, sheet, destino.substring(0, destino.length()-4), destino.substring(destino.length()-3), posiciones.getImagenPersonal(), 750, 640, 0);
+				}
 
 			}
 
@@ -1048,7 +1136,7 @@ public class Utilidades {
 			File ficheroLocal = new File(imagen);
 
 			String firstRemoteFile = nombreCarpeta+"/img/" + nombreImagen;
-			
+
 			InputStream inputStream = new FileInputStream(ficheroLocal);
 
 			ftpClient.storeFile(firstRemoteFile, inputStream);

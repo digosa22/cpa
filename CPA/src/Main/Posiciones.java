@@ -50,7 +50,14 @@ public class Posiciones {
 	
 	
 	// VALIDACION
-	private Posicion imagenOrdenDePedido = new Posicion(10,0); // K1
+	private Posicion nif = new Posicion(1,16); // B17
+	private Posicion web = new Posicion(1,18); // B19
+	private Posicion numBanco = new Posicion(1,23); // B24
+	private Posicion numCuenta = new Posicion(1,24); // B25
+	private Posicion IBAN = new Posicion(1,25); // B26
+	private Posicion BIC = new Posicion(1,26); // B27
+	private Posicion tarifa = new Posicion(1,27); // B28
+	private Posicion imagenOrdenDePedido = new Posicion(11,0); // L1
 	
 	
 	
@@ -121,6 +128,7 @@ public class Posiciones {
 	private Posicion arrayGastosLogisticos = new Posicion(2,14); // C15
 	private Posicion arrayOtros1 = new Posicion(2,15); // C16
 	private Posicion arrayOtros2 = new Posicion(2,16); // C17
+	private Posicion totalImporteTiempoInvertido = new Posicion(30,18); // AE19
 	
 	
 	
@@ -618,6 +626,42 @@ public class Posiciones {
 
 	public Posicion getImagenPersonal() {
 		return imagenPersonal;
+	}
+
+	public Posicion getTotalImporteTiempoInvertido() {
+		return totalImporteTiempoInvertido;
+	}
+
+	public void setTotalImporteTiempoInvertido(Posicion totalImporteTiempoInvertido) {
+		this.totalImporteTiempoInvertido = totalImporteTiempoInvertido;
+	}
+
+	public Posicion getNif() {
+		return nif;
+	}
+
+	public Posicion getWeb() {
+		return web;
+	}
+
+	public Posicion getNumBanco() {
+		return numBanco;
+	}
+
+	public Posicion getNumCuenta() {
+		return numCuenta;
+	}
+
+	public Posicion getIBAN() {
+		return IBAN;
+	}
+
+	public Posicion getBIC() {
+		return BIC;
+	}
+
+	public Posicion getTarifa() {
+		return tarifa;
 	}
 	
 }

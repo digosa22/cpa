@@ -2,23 +2,25 @@ package Main;
 
 public class Cliente {
 
-	private int nif;
+	private int id;
 	private String nombre;
 	private String tipo;
 	
 	public Cliente(){}
 	
-	public Cliente(int nif, String nombre, String tipo) {
+	public Cliente(int id, String nombre, String tipo) {
 		super();
-		this.nif = nif;
+		this.id = id;
 		this.nombre = nombre;
 		this.tipo = tipo;
 	}
-	public int getNif() {
-		return nif;
+	
+	public int getId() {
+		return id;
 	}
-	public void setNif(int nif) {
-		this.nif = nif;
+
+	public void setId(int id) {
+		this.id = id;
 	}
 	public String getNombre() {
 		return nombre;

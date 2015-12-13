@@ -31,9 +31,9 @@ public class VentanaImagen extends JDialog {
 	private JLabel label;
 	private int accion;
 	private int pestanya;
-	
+
 	private String urlImg = "";
-	
+
 	private JDialog ventanaPadre;
 
 	public VentanaImagen(JDialog ventanaPadre, String imag, int accion, int pestanya, String nombreCarpeta, Utilidades utilidades) {
@@ -49,52 +49,66 @@ public class VentanaImagen extends JDialog {
 		this.ventanaPadre = ventanaPadre;
 		this.accion = accion;
 		this.pestanya = pestanya;
-		
+
 		imagen = imag;
 		panel = new JPanel();
 		panel.setLayout(null);
 
-		Image image1 = null;
-		
 		label = new JLabel();
-        label.setBounds(10, 50, 450, 450);
-        
-		
-        try {
-        		if(!imagen.isEmpty()) {
-	        		URL url = new URL(imagen);
-	                image1 = ImageIO.read(url);
-	                label = new JLabel(new ImageIcon(image1));
-	                label.setBounds(10, 50, 450, 450);
-        		} else {
-        			label = new JLabel();
-        			label.setIcon(null);
-	                label.setBounds(10, 50, 450, 450);
-        		}
-        } catch (IOException e) {
-        	e.printStackTrace();
-        }
-        
-        panel.add(label);
-        
-        JLabel nombreLabel = new JLabel("<html><h2>Imagen orden de pedido</h2></html>");
-        if (pestanya == 1)
-        	nombreLabel.setText("<html><h2>Imagen formación personal</h2></html>");
-        else if (pestanya == 2)
-        	nombreLabel.setText("<html><h2>Imagen gama retrabajos</h2></html>");
-        nombreLabel.setBounds(370, 10, 500, 30);
+		label.setBounds(10, 50, 450, 450);
+
+
+		try {
+			if(!imagen.isEmpty()) {
+				ImageIcon imgTemporal = new ImageIcon(ImageIO.read(new URL(imagen)));
+				int anchoOriginal = imgTemporal.getIconWidth();
+				int altoOriginal = imgTemporal.getIconHeight();
+				if (anchoOriginal > altoOriginal) {
+					if (anchoOriginal > 450) {
+						double coeficiente = (double)450 / (double)anchoOriginal;
+						anchoOriginal = (int) (coeficiente * anchoOriginal);
+						altoOriginal = (int) (coeficiente * altoOriginal);
+					}
+				}
+				else {
+					if (anchoOriginal > 450) {
+						double coeficiente = (double)450 / (double)altoOriginal;
+						anchoOriginal = (int) (coeficiente * anchoOriginal);
+						altoOriginal = (int) (coeficiente * altoOriginal);
+					}
+				}
+				Image img = imgTemporal.getImage().getScaledInstance(anchoOriginal, altoOriginal, Image.SCALE_SMOOTH);
+				label = new JLabel(new ImageIcon(img));
+				label.setBounds(10, 50, 450, 450);
+			} else {
+				label = new JLabel();
+				label.setIcon(null);
+				label.setBounds(10, 50, 450, 450);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		panel.add(label);
+
+		JLabel nombreLabel = new JLabel("<html><h2>Imagen orden de pedido</h2></html>");
+		if (pestanya == 1)
+			nombreLabel.setText("<html><h2>Imagen formación personal</h2></html>");
+		else if (pestanya == 2)
+			nombreLabel.setText("<html><h2>Imagen gama retrabajos</h2></html>");
+		nombreLabel.setBounds(100, 10, 500, 30);
 		panel.add(nombreLabel);
-		
+
 		JButton anadir1 = new JButton("Añadir imagen");
 		JButton borrar1 = new JButton("Borrar imagen");
-		
+
 		anadir1.setBounds(125, 515, 100, 20);
 		panel.add(anadir1);
 		borrar1.setBounds(275, 515, 100, 20);
 		panel.add(borrar1);
-		
+
 		anadir1.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fileChooser = new JFileChooser(".");
@@ -103,20 +117,20 @@ public class VentanaImagen extends JDialog {
 				fileChooser.setFileFilter(filter);
 
 				int status = fileChooser.showOpenDialog(null);
-				
+
 				if (status == JFileChooser.APPROVE_OPTION) {
 					File selectedFile = fileChooser.getSelectedFile();
 					File folderFiles = new File(selectedFile.getParent());
 					String[] array = folderFiles.list();
 					ArrayList<String> excelFiles = new ArrayList<>();
 					String filename = selectedFile.getName();
-					
+
 					boolean existe = false;
 					for (int i=0; i<array.length; i++) {
 						if (array[i].toLowerCase().endsWith(".jpg") || array[i].toLowerCase().endsWith(".png"))
 							excelFiles.add(array[i].substring(0, array[i].length()-4));
 					}
-					
+
 					if (filename.toLowerCase().endsWith(".jpg") || filename.toLowerCase().endsWith(".png"))
 						filename = filename.substring(0, filename.length()-4);
 
@@ -127,15 +141,15 @@ public class VentanaImagen extends JDialog {
 
 					if (existe) {
 						imagen = selectedFile.getAbsolutePath();
-						
+
 						String extension = ".jpg";
 						if(imagen.toLowerCase().endsWith(".png"))
 							extension = ".png";
-						
+
 						utilidades.crearCarpetas(nombreCarpeta);
 						utilidades.subirImagen(imagen, nombreCarpeta, pestanya, extension);
-				
-						try {
+
+						try {//TODO PREGUNTAR SI ESTAS SEGURO DE SOBREESCRIBIRLA O BORRARLA (SOLO SI ES EDITAR)
 							urlImg = "http://clientes-cpavitoria06.com/"+nombreCarpeta+"/img/";
 							if (pestanya == 0)
 								urlImg += "ordendepedido";
@@ -144,7 +158,25 @@ public class VentanaImagen extends JDialog {
 							else
 								urlImg += "retrabajos";
 							urlImg += extension;
-							label.setIcon(new ImageIcon(ImageIO.read(new URL(urlImg))));
+							ImageIcon imgTemporal = new ImageIcon(ImageIO.read(new URL(urlImg)));
+							int anchoOriginal = imgTemporal.getIconWidth();
+							int altoOriginal = imgTemporal.getIconHeight();
+							if (anchoOriginal > altoOriginal) {
+								if (anchoOriginal > 450) {
+									double coeficiente = (double)450 / (double)anchoOriginal;
+									anchoOriginal = (int) (coeficiente * anchoOriginal);
+									altoOriginal = (int) (coeficiente * altoOriginal);
+								}
+							}
+							else {
+								if (anchoOriginal > 450) {
+									double coeficiente = (double)450 / (double)altoOriginal;
+									anchoOriginal = (int) (coeficiente * anchoOriginal);
+									altoOriginal = (int) (coeficiente * altoOriginal);
+								}
+							}
+							Image img = imgTemporal.getImage().getScaledInstance(anchoOriginal, altoOriginal, Image.SCALE_SMOOTH);
+							label.setIcon(new ImageIcon(img));
 							actualizarImagen();
 						} catch (MalformedURLException e1) {
 							e1.printStackTrace();
@@ -157,9 +189,9 @@ public class VentanaImagen extends JDialog {
 				}
 			}
 		});
-		
+
 		borrar1.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				utilidades.borrarImagen(imagen.substring(imagen.indexOf(".com/")+4));
@@ -168,16 +200,16 @@ public class VentanaImagen extends JDialog {
 				label.setIcon(null);
 			}
 		});
-		
+
 		this.getContentPane().add(panel);
-		this.setSize(940, 580);
-		this.setTitle("Añadir imágenes");
+		this.setSize(470, 580);
+		this.setTitle("Añadir imagen");
 		this.setResizable(false);
 		this.setLocation((getToolkit().getScreenSize().width - this.getBounds().width) / 2,
 				(getToolkit().getScreenSize().height - this.getBounds().height) / 2);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	}
-	
+
 	public void actualizarImagen() {
 		if (accion == 0) {
 			((VentanaNuevo)ventanaPadre).actualizarImagen(urlImg, pestanya);
@@ -186,7 +218,7 @@ public class VentanaImagen extends JDialog {
 			((VentanaEditar)ventanaPadre).actualizarImagen(urlImg, pestanya);
 		}
 	}
-	
+
 	public void borrarImagen() {
 		if (accion == 0) {
 			((VentanaNuevo)ventanaPadre).actualizarImagen("", pestanya);

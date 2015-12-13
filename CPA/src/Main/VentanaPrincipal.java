@@ -152,7 +152,7 @@ public class VentanaPrincipal extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (list.isSelectionEmpty()) {
-					System.out.println("elige algo cabron"); //TODO
+					JOptionPane.showMessageDialog(null, "Selecciona un servicio de la lista", "Servicio no seleccionado", JOptionPane.ERROR_MESSAGE);
 				} else {
 					int reply = JOptionPane.showConfirmDialog(null, "¿Deseas borrar el servicio seleccionado?", "Borrar", JOptionPane.YES_NO_OPTION);
 					if (reply == JOptionPane.YES_OPTION) {
@@ -165,7 +165,7 @@ public class VentanaPrincipal extends JFrame {
 							}
 						}
 						else {
-							System.out.println("mal borrado"); //TODO
+							JOptionPane.showMessageDialog(null, "Ha ocurrido un error al intentar borrar el servicio", "Servicio no borrado", JOptionPane.ERROR_MESSAGE);
 						}
 					}
 				}
@@ -181,7 +181,7 @@ public class VentanaPrincipal extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				
 				if (list.isSelectionEmpty()) {
-					System.out.println("elige algo cabron"); //TODO
+					JOptionPane.showMessageDialog(null, "Selecciona un servicio de la lista", "Servicio no seleccionado", JOptionPane.ERROR_MESSAGE);
 				} else {
 					
 					new VentanaEditar(ventanaPrincipal, llamadas.recuperarServicio(list.getSelectedValue()), llamadas).setVisible(true);;
