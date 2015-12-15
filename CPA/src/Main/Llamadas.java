@@ -11,19 +11,6 @@ import java.util.List;
 
 public class Llamadas {
 
-	//	public static void main(String[] args) {
-	//		
-	//		String num_accion = "";
-	//		Servicio servicio = null;
-	//		
-	//		recuperarListaServiciosEnLinea();
-	//		recuperarServicio(num_accion);
-	//		introducirServicio(servicio);
-	//		actualizarServicio(servicio);
-	//		borrarServicio(num_accion);
-	//		servicioTerminado(num_accion);
-	//	}
-
 	public List<String> recuperarListaServiciosEnLinea() {
 		Database database = new Database();
 
@@ -40,7 +27,6 @@ public class Llamadas {
 			ps.close();
 			connection.close();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return listaServiciosEnLinea;
@@ -67,7 +53,6 @@ public class Llamadas {
 			ps.close();
 			connection.close();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return cliente;
@@ -119,7 +104,6 @@ public class Llamadas {
 			ps.close();
 			connection.close();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return servicio;
@@ -330,7 +314,6 @@ public class Llamadas {
 			preparedStatement.close();
 			connection.close();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
@@ -479,7 +462,6 @@ public class Llamadas {
 			preparedStatement.close();
 			connection.close();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
@@ -504,7 +486,6 @@ public class Llamadas {
 			statement.close();
 			connection.close();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
@@ -513,6 +494,29 @@ public class Llamadas {
 
 	}
 
+	public boolean actualizarImagenes(String imagenes, String numAccion) {
+
+		Database database = new Database();
+		Connection connection;
+		try {
+			connection = database.Get_Connection();
+			Statement statement = connection.createStatement();
+
+			statement
+			.executeUpdate("UPDATE servicios_en_linea SET acciones_instruccion='"
+					+ imagenes
+					+ "' where num_accion='"
+					+ numAccion + "'");
+			statement.close();
+			connection.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		return true;
+
+	}
 
 	public boolean borrarServicio(String num_accion) {
 
@@ -527,7 +531,6 @@ public class Llamadas {
 			statement.close();
 			connection.close();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
@@ -566,7 +569,6 @@ public class Llamadas {
 			ps.close();
 			connection.close();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return clientes;
@@ -635,7 +637,6 @@ public class Llamadas {
 			ps.close();
 			connection.close();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return numero;
@@ -662,7 +663,6 @@ public class Llamadas {
 			preparedStatement.close();
 			connection.close();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}

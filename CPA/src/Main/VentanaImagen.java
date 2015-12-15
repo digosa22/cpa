@@ -34,6 +34,10 @@ public class VentanaImagen extends JDialog {
 
 	private String urlImg = "";
 
+	private boolean existeImagen = false;
+	private JButton botonAnadir;
+	private JButton botonBorrar;
+
 	private JDialog ventanaPadre;
 
 	public VentanaImagen(JDialog ventanaPadre, String imag, int accion, int pestanya, String nombreCarpeta, Utilidades utilidades) {
@@ -80,6 +84,7 @@ public class VentanaImagen extends JDialog {
 				Image img = imgTemporal.getImage().getScaledInstance(anchoOriginal, altoOriginal, Image.SCALE_SMOOTH);
 				label = new JLabel(new ImageIcon(img));
 				label.setBounds(10, 50, 450, 450);
+				existeImagen = true;
 			} else {
 				label = new JLabel();
 				label.setIcon(null);
@@ -99,15 +104,16 @@ public class VentanaImagen extends JDialog {
 		nombreLabel.setBounds(100, 10, 500, 30);
 		panel.add(nombreLabel);
 
-		JButton anadir1 = new JButton("Añadir imagen");
-		JButton borrar1 = new JButton("Borrar imagen");
+		botonAnadir = new JButton("Añadir imagen");
+		botonBorrar = new JButton("Borrar imagen");
+		botonBorrar.setEnabled(existeImagen);
 
-		anadir1.setBounds(125, 515, 100, 20);
-		panel.add(anadir1);
-		borrar1.setBounds(275, 515, 100, 20);
-		panel.add(borrar1);
+		botonAnadir.setBounds(125, 515, 100, 20);
+		panel.add(botonAnadir);
+		botonBorrar.setBounds(275, 515, 100, 20);
+		panel.add(botonBorrar);
 
-		anadir1.addActionListener(new ActionListener() {
+		botonAnadir.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -140,48 +146,54 @@ public class VentanaImagen extends JDialog {
 					}
 
 					if (existe) {
-						imagen = selectedFile.getAbsolutePath();
+						int reply = 0;
+						if (existeImagen && accion == 1)
+							reply = JOptionPane.showConfirmDialog(null, "¿Deseas sobreescribir la imagen actual por la imagen seleccionada?", "Sobreescribir imagen", JOptionPane.YES_NO_OPTION);
 
-						String extension = ".jpg";
-						if(imagen.toLowerCase().endsWith(".png"))
-							extension = ".png";
+						if (reply == JOptionPane.YES_OPTION) {
+							imagen = selectedFile.getAbsolutePath();
 
-						utilidades.crearCarpetas(nombreCarpeta);
-						utilidades.subirImagen(imagen, nombreCarpeta, pestanya, extension);
+							String extension = ".jpg";
+							if(imagen.toLowerCase().endsWith(".png"))
+								extension = ".png";
 
-						try {//TODO PREGUNTAR SI ESTAS SEGURO DE SOBREESCRIBIRLA O BORRARLA (SOLO SI ES EDITAR)
-							urlImg = "http://clientes-cpavitoria06.com/"+nombreCarpeta+"/img/";
-							if (pestanya == 0)
-								urlImg += "ordendepedido";
-							else if (pestanya == 1)
-								urlImg += "personal";
-							else
-								urlImg += "retrabajos";
-							urlImg += extension;
-							ImageIcon imgTemporal = new ImageIcon(ImageIO.read(new URL(urlImg)));
-							int anchoOriginal = imgTemporal.getIconWidth();
-							int altoOriginal = imgTemporal.getIconHeight();
-							if (anchoOriginal > altoOriginal) {
-								if (anchoOriginal > 450) {
-									double coeficiente = (double)450 / (double)anchoOriginal;
-									anchoOriginal = (int) (coeficiente * anchoOriginal);
-									altoOriginal = (int) (coeficiente * altoOriginal);
+							utilidades.crearCarpetas(nombreCarpeta);
+							utilidades.subirImagen(imagen, nombreCarpeta, pestanya, extension);
+
+							try {
+								urlImg = "http://clientes-cpavitoria06.com/"+nombreCarpeta+"/img/";
+								if (pestanya == 0)
+									urlImg += "ordendepedido";
+								else if (pestanya == 1)
+									urlImg += "personal";
+								else
+									urlImg += "retrabajos";
+								urlImg += extension;
+								ImageIcon imgTemporal = new ImageIcon(ImageIO.read(new URL(urlImg)));
+								int anchoOriginal = imgTemporal.getIconWidth();
+								int altoOriginal = imgTemporal.getIconHeight();
+								if (anchoOriginal > altoOriginal) {
+									if (anchoOriginal > 450) {
+										double coeficiente = (double)450 / (double)anchoOriginal;
+										anchoOriginal = (int) (coeficiente * anchoOriginal);
+										altoOriginal = (int) (coeficiente * altoOriginal);
+									}
 								}
-							}
-							else {
-								if (anchoOriginal > 450) {
-									double coeficiente = (double)450 / (double)altoOriginal;
-									anchoOriginal = (int) (coeficiente * anchoOriginal);
-									altoOriginal = (int) (coeficiente * altoOriginal);
+								else {
+									if (anchoOriginal > 450) {
+										double coeficiente = (double)450 / (double)altoOriginal;
+										anchoOriginal = (int) (coeficiente * anchoOriginal);
+										altoOriginal = (int) (coeficiente * altoOriginal);
+									}
 								}
+								Image img = imgTemporal.getImage().getScaledInstance(anchoOriginal, altoOriginal, Image.SCALE_SMOOTH);
+								actualizarImagen();
+								label.setIcon(new ImageIcon(img));
+							} catch (MalformedURLException e1) {
+								e1.printStackTrace();
+							} catch (IOException e1) {
+								e1.printStackTrace();
 							}
-							Image img = imgTemporal.getImage().getScaledInstance(anchoOriginal, altoOriginal, Image.SCALE_SMOOTH);
-							label.setIcon(new ImageIcon(img));
-							actualizarImagen();
-						} catch (MalformedURLException e1) {
-							e1.printStackTrace();
-						} catch (IOException e1) {
-							e1.printStackTrace();
 						}
 					}
 					else
@@ -190,14 +202,17 @@ public class VentanaImagen extends JDialog {
 			}
 		});
 
-		borrar1.addActionListener(new ActionListener() {
+		botonBorrar.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				utilidades.borrarImagen(imagen.substring(imagen.indexOf(".com/")+4));
-				imagen = "";
-				borrarImagen();
-				label.setIcon(null);
+				int reply = JOptionPane.showConfirmDialog(null, "¿Deseas borrar la imagen?", "Borrar imagen", JOptionPane.YES_NO_OPTION);
+				if (reply == JOptionPane.YES_OPTION) {
+					utilidades.borrarImagen(imagen.substring(imagen.indexOf(".com/")+4));
+					imagen = "";
+					borrarImagen();
+					label.setIcon(null);
+				}
 			}
 		});
 
@@ -217,6 +232,8 @@ public class VentanaImagen extends JDialog {
 		else {
 			((VentanaEditar)ventanaPadre).actualizarImagen(urlImg, pestanya);
 		}
+		existeImagen = true;
+		botonBorrar.setEnabled(true);
 	}
 
 	public void borrarImagen() {
@@ -226,6 +243,7 @@ public class VentanaImagen extends JDialog {
 		else {
 			((VentanaEditar)ventanaPadre).actualizarImagen("", pestanya);
 		}
+		existeImagen = false;
+		botonBorrar.setEnabled(false);
 	}
-
 }

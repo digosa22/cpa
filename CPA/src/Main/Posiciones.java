@@ -90,6 +90,7 @@ public class Posiciones {
 	private Posicion accionesInstruccionNoAplica12 = new Posicion(8,56); // I57
 	
 	// INFORMACION DE RESULTADOS
+	private Posicion arrayDeFechasInformacion = new Posicion(8,1); // I2
 	private Posicion defecto1Nombre = new Posicion(1,2); // B3
 	private Posicion defecto1Fechas = new Posicion(8,2); // I3
 	private Posicion defecto2Nombre = new Posicion(1,3); // B4
@@ -113,6 +114,7 @@ public class Posiciones {
 	
 	
 	// ESTIMACION DE HORAS Y COSTES
+	private Posicion arrayDeFechasEstimacion = new Posicion(2,1); // C2
 	private Posicion arrayHoraNormal = new Posicion(2,2); // C3
 	private Posicion arrayHoraExtra = new Posicion(2,3); // C4
 	private Posicion arrayHoraSabado = new Posicion(2,4); // C5
@@ -663,5 +665,12 @@ public class Posiciones {
 	public Posicion getTarifa() {
 		return tarifa;
 	}
-	
+
+	public Posicion getArrayDeFechasEstimacion() {
+		return arrayDeFechasEstimacion;
+	}
+
+	public Posicion getArrayDeFechasInformacion() {
+		return arrayDeFechasInformacion;
+	}
 }

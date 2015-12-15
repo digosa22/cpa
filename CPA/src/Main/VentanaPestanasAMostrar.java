@@ -19,9 +19,9 @@ public class VentanaPestanasAMostrar extends JDialog {
 	private JCheckBox mostrarRetrabajos;
 	private JCheckBox mostrarFormacion;
 	
-	public VentanaPestanasAMostrar(VentanaPrincipal venInventario, Cliente cliente, String persona, Llamadas llamadas) {
+	public VentanaPestanasAMostrar(VentanaPrincipal ventanaPrincipal, Cliente cliente, String persona, Llamadas llamadas) {
 		
-		super(venInventario, true);
+		super(ventanaPrincipal, true);
 		
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -50,7 +50,7 @@ public class VentanaPestanasAMostrar extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				dispose();				
-				new VentanaNuevo(venInventario, mostrarRetrabajos.isSelected(), mostrarFormacion.isSelected(), cliente, persona, llamadas.generarNumAccion(cliente.getTipo()), llamadas).setVisible(true);
+				new VentanaNuevo(ventanaPrincipal, mostrarRetrabajos.isSelected(), mostrarFormacion.isSelected(), cliente, persona, llamadas.generarNumAccion(cliente.getTipo()), llamadas).setVisible(true);
 			}
 		});
 		

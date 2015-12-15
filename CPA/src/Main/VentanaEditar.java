@@ -257,6 +257,7 @@ public class VentanaEditar extends JDialog {
 		panelGenerales.add(responsableLabel);
 		responsable = new JTextField();
 		responsable.setBounds(115, 95, 150, 20);
+		responsable.setEnabled(false);
 		panelGenerales.add(responsable);
 		JLabel numChasis1Label = new JLabel("Num. Chasis 1:");
 		numChasis1Label.setBounds(285, 20, 80, 20);
@@ -572,7 +573,7 @@ public class VentanaEditar extends JDialog {
 		}
 		filaVacia = new String[30];
 		for (int i=0; i<30; i++) {
-			defectos.getColumnModel().getColumn(i).setPreferredWidth(40);
+			defectos.getColumnModel().getColumn(i).setPreferredWidth(45);
 			defectos.getColumnModel().getColumn(i).setResizable(false);
 			filaVacia[i] = "";
 		}
@@ -633,7 +634,7 @@ public class VentanaEditar extends JDialog {
 		}
 		filaVacia = new String[30];
 		for (int i=0; i<30; i++) {
-			piezas.getColumnModel().getColumn(i).setPreferredWidth(40);
+			piezas.getColumnModel().getColumn(i).setPreferredWidth(45);
 			piezas.getColumnModel().getColumn(i).setResizable(false);
 			filaVacia[i] = "";
 		}
@@ -665,7 +666,33 @@ public class VentanaEditar extends JDialog {
 		recuentoFinal = new JPanel();
 		panelDePestanas.addTab("Recuento final", null, recuentoFinal, null);
 		recuentoFinal.setLayout(null);
-		recuento = new JTable();
+		recuentoFinal.setLayout(null);
+		recuento = new JTable() {
+
+			private static final long serialVersionUID = 1L;
+			@Override
+			public Class<?> getColumnClass(int column) {
+				switch (column) {
+				case 0:
+					return String.class;
+				case 1:
+					return String.class;
+				case 2:
+					return String.class;
+				case 3:
+					return String.class;
+				case 4:
+					return Integer.class;
+				case 5:
+					return Integer.class;
+				case 6:
+					return Integer.class;
+				default:
+					return String.class;
+				}
+			}
+		};
+		recuento.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
 		DefaultTableModel modeloRecuento = (DefaultTableModel)recuento.getModel();
 		modeloRecuento.addColumn("Fecha");
 		modeloRecuento.addColumn("Nº Lote");
@@ -747,7 +774,7 @@ public class VentanaEditar extends JDialog {
 		filaVacia = new String[30];
 
 		for (int i=0; i<30; i++) {
-			horas.getColumnModel().getColumn(i).setPreferredWidth(40);
+			horas.getColumnModel().getColumn(i).setPreferredWidth(45);
 			horas.getColumnModel().getColumn(i).setResizable(false);
 			filaVacia[i] = "";
 		}
@@ -1285,7 +1312,6 @@ public class VentanaEditar extends JDialog {
 						try {
 							arrayFechasRetrabajos.get(row).setDate(formatter.parse(arrTemp[i]));
 						} catch (ParseException e1) {
-							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
 
@@ -1446,7 +1472,25 @@ public class VentanaEditar extends JDialog {
 		arrayOtros1 = arrayOtros1.substring(3);
 		arrayOtros2 = arrayOtros2.substring(3);
 		piezasOK = piezasOK.substring(3);
-		piezasRecuperadas = piezasRecuperadas.substring(3);			
+		piezasRecuperadas = piezasRecuperadas.substring(3);
+		
+		arrayHoraNormal = arrayHoraNormal.replace("null", "");
+		arrayHoraExtra = arrayHoraExtra.replace("null", "");
+		arrayHoraSabado = arrayHoraSabado.replace("null", "");			
+		arrayHoraFestivo = arrayHoraFestivo.replace("null", "");
+		arrayHoraNocturna = arrayHoraNocturna.replace("null", "");
+		arrayHoraEspecialistaNormal = arrayHoraEspecialistaNormal.replace("null", "");
+		arrayHoraEspecialistaExtra = arrayHoraEspecialistaExtra.replace("null", "");
+		arrayHoraEspecialistaSabado = arrayHoraEspecialistaSabado.replace("null", "");			
+		arrayHoraEspecialistaFestiva = arrayHoraEspecialistaFestiva.replace("null", "");
+		arrayHoraEspecialistaNocturna = arrayHoraEspecialistaNocturna.replace("null", "");
+		arrayHoraCoordinacion = arrayHoraCoordinacion.replace("null", "");
+		arrayHoraAdministracion = arrayHoraAdministracion.replace("null", "");
+		arrayGastosLogisticos = arrayGastosLogisticos.replace("null", "");			
+		arrayOtros1 = arrayOtros1.replace("null", "");
+		arrayOtros2 = arrayOtros2.replace("null", "");
+		piezasOK = piezasOK.replace("null", "");
+		piezasRecuperadas = piezasRecuperadas.replace("null", "");
 
 		String recuentoFinal = "";
 
@@ -1457,6 +1501,7 @@ public class VentanaEditar extends JDialog {
 		}
 
 		recuentoFinal = recuentoFinal.substring(3);
+		recuentoFinal = recuentoFinal.replace("null", "");
 
 		String tablaDefectos = "";
 
@@ -1470,6 +1515,7 @@ public class VentanaEditar extends JDialog {
 		}
 
 		tablaDefectos = tablaDefectos.substring(3);
+		tablaDefectos = tablaDefectos.replace("null", "");
 
 		String accionesIntruccion = "";
 
@@ -1586,20 +1632,20 @@ public class VentanaEditar extends JDialog {
 
 			new VentanaCorreo(ventanaPrincipal, llamadas, servi.getNombreCarpeta()).setVisible(true);
 		}
-
-		utilidades.subirNuevoExcel(servi, this);
-		ventanaPrincipal.requestFocus();
+		
+		dispose();
+		Runnable runnable = new HiloEspera(utilidades, servi, ventanaPrincipal);
+		Thread thread = new Thread(runnable);
+		thread.start();
 	}
 
 	public void actualizarImagen(String imagen, int pestanya) {
-		if (!imagen.isEmpty()) {
-			if (pestanya == 0) {
-				imagenOrdenDePedido = imagen;
-			} else if (pestanya == 1) {
-				imagenPersonal = imagen;
-			} else {
-				imagenRetrabajos = imagen;
-			}
+		if (pestanya == 0) {
+			imagenOrdenDePedido = imagen;
+		} else if (pestanya == 1) {
+			imagenPersonal = imagen;
+		} else {
+			imagenRetrabajos = imagen;
 		}
 		String columnaAActualizar = "imagen_orden_de_pedido";
 		if (pestanya == 1) {
@@ -1612,7 +1658,30 @@ public class VentanaEditar extends JDialog {
 
 	public void actualizarImagenesAccionesInstruccion(String imgs, int fila) {
 		arrayImagenes[fila] = imgs;
-		//TODO ACTUALIZAR LA COLUMNA DE IMAGENES
+
+		String accionesInst = "";
+		String[] arrayDeAcciones = servicio.getAccionesIntruccion().split("@;@");
+		int columnaActual = 0;
+		int filaActual = 0;
+		for (int i=0; i<arrayDeAcciones.length; i++) {
+			if (columnaActual == 0) {
+				accionesInst += "@;@" + arrayDeAcciones[i];
+			}
+			else if (columnaActual == 1) {
+				accionesInst += "@;@" + arrayImagenes[filaActual];
+			}
+			else {
+				accionesInst += "@;@" + arrayDeAcciones[i];
+			}
+
+			columnaActual++;
+			if (columnaActual == 3) {
+				columnaActual = 0;
+				filaActual++;
+			}
+		}
+		accionesInst = accionesInst.substring(3);
+		llamadas.actualizarImagenes(accionesInst, servicio.getNumAccion());
 	}
 }
 

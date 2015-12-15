@@ -143,13 +143,13 @@ public class VentanaNuevo extends JDialog {
 	private Cliente cliente;
 	private String numAccion;
 	private String nombreCarpeta;
-	
+
 	private Utilidades utilidades;
-	
+
 	private String imagenOrdenDePedido = "";
 	private String imagenPersonal = "";
 	private String imagenRetrabajos = "";
-	
+
 	public VentanaNuevo(VentanaPrincipal ventPrin, boolean anadirRetra, boolean anadirForma, Cliente cli, String pers, String numA, Llamadas llam) {
 
 		super(ventPrin, true);
@@ -159,7 +159,7 @@ public class VentanaNuevo extends JDialog {
 		}
 		catch (Exception e) {
 		}
-		
+
 		utilidades = new Utilidades();
 
 		panel = new JPanel();
@@ -191,9 +191,9 @@ public class VentanaNuevo extends JDialog {
 		ordenDePedido.add(confirmacionValidacion);
 
 		VentanaNuevo im = this;
-		
+
 		confirmacionValidacion.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new VentanaImagen(im, imagenOrdenDePedido, 0, 0, nombreCarpeta,utilidades).setVisible(true);
@@ -245,8 +245,9 @@ public class VentanaNuevo extends JDialog {
 		JLabel responsableLabel = new JLabel("Responsable CPA:");
 		responsableLabel.setBounds(10, 95, 95, 20);
 		panelGenerales.add(responsableLabel);
-		responsable = new JTextField();
+		responsable = new JTextField(persona);
 		responsable.setBounds(115, 95, 150, 20);
+		responsable.setEnabled(false);
 		panelGenerales.add(responsable);
 		JLabel numChasis1Label = new JLabel("Num. Chasis 1:");
 		numChasis1Label.setBounds(285, 20, 80, 20);
@@ -569,7 +570,7 @@ public class VentanaNuevo extends JDialog {
 		}
 		filaVacia = new String[30];
 		for (int i=0; i<30; i++) {
-			defectos.getColumnModel().getColumn(i).setPreferredWidth(40);
+			defectos.getColumnModel().getColumn(i).setPreferredWidth(45);
 			defectos.getColumnModel().getColumn(i).setResizable(false);
 			filaVacia[i] = "";
 		}
@@ -630,7 +631,7 @@ public class VentanaNuevo extends JDialog {
 		}
 		filaVacia = new String[30];
 		for (int i=0; i<30; i++) {
-			piezas.getColumnModel().getColumn(i).setPreferredWidth(40);
+			piezas.getColumnModel().getColumn(i).setPreferredWidth(45);
 			piezas.getColumnModel().getColumn(i).setResizable(false);
 			filaVacia[i] = "";
 		}
@@ -769,7 +770,7 @@ public class VentanaNuevo extends JDialog {
 		filaVacia = new String[30];
 
 		for (int i=0; i<30; i++) {
-			horas.getColumnModel().getColumn(i).setPreferredWidth(40);
+			horas.getColumnModel().getColumn(i).setPreferredWidth(45);
 			horas.getColumnModel().getColumn(i).setResizable(false);
 			filaVacia[i] = "";
 		}
@@ -1050,29 +1051,29 @@ public class VentanaNuevo extends JDialog {
 				Cliente[] clientes = arrCli.toArray(new Cliente[arrCli.size()]);
 				Cliente clienteNuevo = (Cliente) JOptionPane.showInputDialog(ventanaPrincipal, "Nuevo cliente", "Selecciona el cliente", 
 						JOptionPane.QUESTION_MESSAGE, null, clientes, clientes[0]);
-				
+
 				Calendar fechaNomCarpeta;
 				SimpleDateFormat sdfNomCarpeta;
-				
+
 				if (clienteNuevo != null) {
 					if(!cliente.getTipo().equalsIgnoreCase(clienteNuevo.getTipo())) {
 						cliente = clienteNuevo;
 						clienteLabel2.setText("<html><h4>"+cliente+"</h4></html>");
 						numAccion = llamadas.generarNumAccion(cliente.getTipo());
 						numAccionLabel2.setText("<html><h4>"+numAccion+"</h4></html>");
-						
+
 						fechaNomCarpeta = Calendar.getInstance();
 						sdfNomCarpeta = new SimpleDateFormat("HHmmss");
 						nombreCarpeta = numAccion + sdfNomCarpeta.format(fechaNomCarpeta.getTime());
-						
+
 					} else {
 						cliente = clienteNuevo;
 						clienteLabel2.setText("<html><h4>"+cliente+"</h4></html>");
-						
+
 						fechaNomCarpeta = Calendar.getInstance();
 						sdfNomCarpeta = new SimpleDateFormat("HHmmss");
 						nombreCarpeta = numAccion + sdfNomCarpeta.format(fechaNomCarpeta.getTime());
-						
+
 					}
 
 				}
@@ -1120,7 +1121,7 @@ public class VentanaNuevo extends JDialog {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println(arrayImagenes[0]);
+
 			}
 		});
 
@@ -1238,7 +1239,25 @@ public class VentanaNuevo extends JDialog {
 		arrayOtros1 = arrayOtros1.substring(3);
 		arrayOtros2 = arrayOtros2.substring(3);
 		piezasOK = piezasOK.substring(3);
-		piezasRecuperadas = piezasRecuperadas.substring(3);			
+		piezasRecuperadas = piezasRecuperadas.substring(3);
+
+		arrayHoraNormal = arrayHoraNormal.replace("null", "");
+		arrayHoraExtra = arrayHoraExtra.replace("null", "");
+		arrayHoraSabado = arrayHoraSabado.replace("null", "");			
+		arrayHoraFestivo = arrayHoraFestivo.replace("null", "");
+		arrayHoraNocturna = arrayHoraNocturna.replace("null", "");
+		arrayHoraEspecialistaNormal = arrayHoraEspecialistaNormal.replace("null", "");
+		arrayHoraEspecialistaExtra = arrayHoraEspecialistaExtra.replace("null", "");
+		arrayHoraEspecialistaSabado = arrayHoraEspecialistaSabado.replace("null", "");			
+		arrayHoraEspecialistaFestiva = arrayHoraEspecialistaFestiva.replace("null", "");
+		arrayHoraEspecialistaNocturna = arrayHoraEspecialistaNocturna.replace("null", "");
+		arrayHoraCoordinacion = arrayHoraCoordinacion.replace("null", "");
+		arrayHoraAdministracion = arrayHoraAdministracion.replace("null", "");
+		arrayGastosLogisticos = arrayGastosLogisticos.replace("null", "");			
+		arrayOtros1 = arrayOtros1.replace("null", "");
+		arrayOtros2 = arrayOtros2.replace("null", "");
+		piezasOK = piezasOK.replace("null", "");
+		piezasRecuperadas = piezasRecuperadas.replace("null", "");
 
 		String recuentoFinal = "";
 
@@ -1249,6 +1268,7 @@ public class VentanaNuevo extends JDialog {
 		}
 
 		recuentoFinal = recuentoFinal.substring(3);
+		recuentoFinal = recuentoFinal.replace("null", "");
 
 		String tablaDefectos = "";
 
@@ -1262,6 +1282,7 @@ public class VentanaNuevo extends JDialog {
 		}
 
 		tablaDefectos = tablaDefectos.substring(3);
+		tablaDefectos = tablaDefectos.replace("null", "");
 
 		String accionesIntruccion = "";
 
@@ -1360,30 +1381,32 @@ public class VentanaNuevo extends JDialog {
 
 		llamadas.introducirServicio(servi);
 		ventanaPrincipal.refrescarListaServicios();
-		
+
 		int seleccion = JOptionPane.showOptionDialog(
 				null,"¿Deseas enviar un correo con los cambios?", "Enviar correo",JOptionPane.YES_NO_CANCEL_OPTION,
 				JOptionPane.QUESTION_MESSAGE, null, new Object[] { "Si", "No" }, "Enviar");
-		
+
 		if (seleccion == 0) {
-			
+
 			new VentanaCorreo(ventanaPrincipal, llamadas, servi.getNombreCarpeta()).setVisible(true);
 		}
 		
-		utilidades.subirNuevoExcel(servi, this);
-		ventanaPrincipal.requestFocus();
+		dispose();
+		Runnable runnable = new HiloEspera(utilidades, servi, ventanaPrincipal);
+		Thread thread = new Thread(runnable);
+		thread.start();
 	}
-	
+
 	public void actualizarImagen(String imagen, int pestanya) {
 		if (pestanya == 0) {
 			imagenOrdenDePedido = imagen;
 		} else if (pestanya == 1) {
-			 imagenPersonal = imagen;
+			imagenPersonal = imagen;
 		} else {
-			 imagenRetrabajos = imagen;
+			imagenRetrabajos = imagen;
 		}
 	}
-	
+
 	public void actualizarImagenesAccionesInstruccion(String imgs, int fila) {
 		arrayImagenes[fila] = imgs;
 	}

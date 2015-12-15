@@ -1,4 +1,5 @@
 package Main;
+
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -14,9 +15,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import javax.imageio.ImageIO;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
@@ -36,7 +34,6 @@ import org.apache.poi.ss.usermodel.ClientAnchor;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.Picture;
-import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.util.IOUtils;
 
@@ -46,7 +43,7 @@ public class Utilidades {
 	private String server = "lhcp1017.webapps.net";
 	private int port = 21;
 	private String user = "ireguatek@clientes-cpavitoria06.com";
-	private String pass = "Ireguatekcpa1";
+	private String pass = "xxx";
 	private FTPClient ftpClient = new FTPClient();
 
 //	public void insertarImagen2( XSSFWorkbook wb, XSSFSheet sheet, String imagen, Posicion posicion, int ancho, int alto, int filaSuma) {
@@ -85,8 +82,6 @@ public class Utilidades {
 //
 //			//Creates a picture
 //			Picture pict = drawing.createPicture(anchor, pictureIdx);
-//			//   System.out.println(pict.getImageDimension().height);
-//			//   System.out.println(pict.getImageDimension().width);
 //			//Reset the image to the original size
 //			pict.resize();
 //
@@ -95,7 +90,6 @@ public class Utilidades {
 //
 //		}
 //		catch (Exception e) {
-//			System.out.println(e);
 //		}
 //
 //	}
@@ -161,8 +155,6 @@ public class Utilidades {
 
 			//Creates a picture
 			Picture pict = drawing.createPicture(anchor, pictureIdx);
-			//   System.out.println(pict.getImageDimension().height);
-			//   System.out.println(pict.getImageDimension().width);
 			//Reset the image to the original size
 			pict.resize();
 
@@ -197,9 +189,7 @@ public class Utilidades {
 		}
 	}
 
-	public boolean subirNuevoExcel(Servicio servicio, JDialog ventana)  {
-
-		ventana.setEnabled(false);
+	public boolean subirNuevoExcel(Servicio servicio)  {
 
 		ClienteRecuperado cliente = new Llamadas().recuperarCliente(servicio.getIdCliente());
 
@@ -439,7 +429,9 @@ public class Utilidades {
 						cell = sheet.getRow(posiciones.getAccionesInstruccionDescripcionInicial().getFila()+fila).getCell(posiciones.getAccionesInstruccionDescripcionInicial().getColumna());
 						cell.setCellValue(arrTemp[i]);
 					} else if (columna == 1) {
-						imagenes = arrTemp[i].split("#;#");
+						imagenes = new String[2];
+						imagenes[0] = arrTemp[i].substring(0, arrTemp[i].indexOf("#;#"));
+						imagenes[1] = arrTemp[i].substring(arrTemp[i].indexOf("#;#")+3);
 						if (!imagenes[0].isEmpty()) {
 							String destino = "img/instruccion"+servicio.getNumAccion()+imagenes[0].substring(imagenes[0].length()-4);
 							descargarImagen(imagenes[0], destino);
@@ -472,6 +464,15 @@ public class Utilidades {
 			// INFORMACION DE RESULTADOS 3
 
 			sheet = workbook.getSheetAt(3);
+			
+			SimpleDateFormat formateador = new SimpleDateFormat("dd-MMM");
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(servicio.getFechaInicio());
+			for (int i=0; i<30; i++) {
+				cell = sheet.getRow(posiciones.getArrayDeFechasInformacion().getFila()).getCell(posiciones.getArrayDeFechasInformacion().getColumna()+i);
+				cell.setCellValue(formateador.format(cal.getTime()));
+				cal.add(Calendar.DATE, 1);
+			}
 
 			arrTemp = servicio.getTablaDefectos().split("@;@");
 			fila = 0;
@@ -589,6 +590,15 @@ public class Utilidades {
 			// ESTIMACION DE HORAS Y COSTES 6
 			sheet = workbook.getSheetAt(6);
 
+			formateador = new SimpleDateFormat("dd-MMM");
+			cal = Calendar.getInstance();
+			cal.setTime(servicio.getFechaInicio());
+			for (int i=0; i<30; i++) {
+				cell = sheet.getRow(posiciones.getArrayDeFechasEstimacion().getFila()).getCell(posiciones.getArrayDeFechasEstimacion().getColumna()+i);
+				cell.setCellValue(formateador.format(cal.getTime()));
+				cal.add(Calendar.DATE, 1);
+			}
+			
 			arrTemp = servicio.getArrayHoraNormal().split("@;@");
 			for (int i=0; i<arrTemp.length; i++) {
 				cell = sheet.getRow(posiciones.getArrayHoraNormal().getFila()).getCell(posiciones.getArrayHoraNormal().getColumna()+i);
@@ -838,10 +848,6 @@ public class Utilidades {
 		subirExcel(servicio.getNombreCarpeta(), servicio.getNumAccion());
 		subirPdfs(servicio.getNombreCarpeta(), servicio.getNumAccion().replace("-", ""), servicio.isFormacion(), servicio.isRetrabajos());
 
-		JOptionPane.showMessageDialog(null, "Servicio guardado correctamente", "Servicio", JOptionPane.INFORMATION_MESSAGE);
-
-		ventana.dispose();
-
 		return true;
 	}
 
@@ -901,7 +907,6 @@ public class Utilidades {
 			delete(carpeta);
 
 		} catch (IOException ex) {
-			System.out.println("Error: " + ex.getMessage());
 			ex.printStackTrace();
 		} finally {
 			try {
@@ -977,7 +982,6 @@ public class Utilidades {
 			inputStream.close();
 
 		} catch (IOException ex) {
-			System.out.println("Error: " + ex.getMessage());
 			ex.printStackTrace();
 		} finally {
 			try {
@@ -1005,7 +1009,6 @@ public class Utilidades {
 			ftpClient.makeDirectory(nombreCarpeta+"/excel");
 
 		} catch (IOException ex) {
-			System.out.println("Error: " + ex.getMessage());
 			ex.printStackTrace();
 		} finally {
 			try {
@@ -1033,7 +1036,6 @@ public class Utilidades {
 			todook = ftpClient.rename(nombreCarpetaVieja, nombreCarpeta);
 
 		} catch (IOException ex) {
-			System.out.println("Error: " + ex.getMessage());
 			ex.printStackTrace();
 		} finally {
 			try {
@@ -1107,7 +1109,6 @@ public class Utilidades {
 			inputStream.close();
 
 		} catch (IOException ex) {
-			System.out.println("Error: " + ex.getMessage());
 			ex.printStackTrace();
 		} finally {
 			try {
@@ -1143,7 +1144,6 @@ public class Utilidades {
 			inputStream.close();
 
 		} catch (IOException ex) {
-			System.out.println("Error: " + ex.getMessage());
 			ex.printStackTrace();
 		} finally {
 			try {
@@ -1171,7 +1171,6 @@ public class Utilidades {
 			ftpClient.deleteFile(url);
 
 		} catch (IOException ex) {
-			System.out.println("Error: " + ex.getMessage());
 			ex.printStackTrace();
 		} finally {
 			try {
