@@ -69,8 +69,7 @@ public class VentanaPestanasAMostrar extends JDialog {
 		this.setSize(270, 140);
 		this.setTitle("Pestañas a mostrar");
 		this.setResizable(false);
-		this.setLocation((getToolkit().getScreenSize().width - this.getBounds().width) / 2,
-				(getToolkit().getScreenSize().height - this.getBounds().height) / 2);
+		this.setLocation(ventanaPrincipal.getLocation().x+120, ventanaPrincipal.getLocation().y+120);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	}
 }

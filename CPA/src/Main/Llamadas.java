@@ -558,7 +558,7 @@ public class Llamadas {
 		try {
 			Connection connection = database.Get_Connection();
 			PreparedStatement ps = connection
-					.prepareStatement("SELECT * FROM clientes");
+					.prepareStatement("SELECT * FROM clientes ORDER BY empresa");
 			Cliente cliente = new Cliente();
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
@@ -572,6 +572,28 @@ public class Llamadas {
 			e.printStackTrace();
 		}
 		return clientes;
+	}
+	
+	public ArrayList<String> recuperarPersonalCPA() {
+
+		Database database = new Database();
+
+		ArrayList<String> personasCPA = new ArrayList<String>();
+		try {
+			Connection connection = database.Get_Connection();
+			PreparedStatement ps = connection
+					.prepareStatement("SELECT * FROM personal_cpa ORDER BY nombre");
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				personasCPA.add(rs.getString("nombre"));
+			}
+			rs.close();
+			ps.close();
+			connection.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return personasCPA;
 	}
 	
 	public String generarNumAccion(String tipo) {

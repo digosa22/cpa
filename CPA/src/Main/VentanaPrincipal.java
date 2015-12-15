@@ -128,12 +128,13 @@ public class VentanaPrincipal extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				ArrayList<Cliente> arrCli = llamadas.recuperarClientes(); 
 				Cliente[] clientes = arrCli.toArray(new Cliente[arrCli.size()]);
-				String[] personal = { "Amagoia", "Mikel", "Miguel Ángel", "Javier", "Sustituto 1", "Sustituto 2" };
+				ArrayList<String> arrPer = llamadas.recuperarPersonalCPA(); 
+				String[] personas = arrPer.toArray(new String[arrPer.size()]);
 				Cliente cliente = (Cliente) JOptionPane.showInputDialog(ventanaPrincipal, "Selecciona el cliente", "Selecciona el cliente", 
 						JOptionPane.QUESTION_MESSAGE, null, clientes, clientes[0]);
 				if (cliente != null) {
 					String persona = (String) JOptionPane.showInputDialog(ventanaPrincipal, "Identifícate", "Identifícate", 
-							JOptionPane.QUESTION_MESSAGE, null, personal, personal[0]); 
+							JOptionPane.QUESTION_MESSAGE, null, personas, personas[0]); 
 					if (persona != null) {
 						new VentanaPestanasAMostrar(ventanaPrincipal, cliente, persona, llamadas).setVisible(true);
 					}

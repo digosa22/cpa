@@ -62,32 +62,34 @@ public class Posiciones {
 	
 	
 	// INSTRUCCION DE TRABAJO
-	private Posicion operario = new Posicion(7,3); // H4
-	private Posicion peticionMaterialInstruccionAplica = new Posicion(7,15); // H16
-	private Posicion peticionMaterialInstruccionNoAplica = new Posicion(8,15); // I16
-	private Posicion referenciasCorrectasInstruccionAplica = new Posicion(7,16); // H17
-	private Posicion referenciasCorrectasInstruccionNoAplica = new Posicion(8,16); // I17
-	private Posicion seleccionPiezasInstruccionAplica = new Posicion(7,18); // H19
-	private Posicion seleccionPiezasInstruccionNoAplica = new Posicion(8,18); // I19
-	private Posicion retrabajoPiezasInstruccionAplica = new Posicion(7,19); // H20
-	private Posicion retrabajoPiezasInstruccionNoAplica = new Posicion(8,19); // I20
-	private Posicion trasvaseInstruccionAplica = new Posicion(7,20); // H21
-	private Posicion trasvaseInstruccionNoAplica = new Posicion(8,20); // I21
-	private Posicion otrosInstruccionAplica = new Posicion(7,21); // H22
-	private Posicion otrosInstruccionNoAplica = new Posicion(8,21); // I22
+	private Posicion operario = new Posicion(9,3); // J4
+	private Posicion peticionMaterialInstruccionAplica = new Posicion(9,15); // J16
+	private Posicion peticionMaterialInstruccionNoAplica = new Posicion(10,15); // K16
+	private Posicion referenciasCorrectasInstruccionAplica = new Posicion(9,16); // J17
+	private Posicion referenciasCorrectasInstruccionNoAplica = new Posicion(10,16); // K17
+	private Posicion seleccionPiezasInstruccionAplica = new Posicion(9,18); // J19
+	private Posicion seleccionPiezasInstruccionNoAplica = new Posicion(10,18); // K19
+	private Posicion retrabajoPiezasInstruccionAplica = new Posicion(9,19); // J20
+	private Posicion retrabajoPiezasInstruccionNoAplica = new Posicion(10,19); // K20
+	private Posicion trasvaseInstruccionAplica = new Posicion(9,20); // J21
+	private Posicion trasvaseInstruccionNoAplica = new Posicion(10,20); // K21
+	private Posicion otrosInstruccionAplica = new Posicion(9,21); // J22
+	private Posicion otrosInstruccionNoAplica = new Posicion(10,21); // K22
 	
 	private Posicion accionesInstruccionDescripcionInicial = new Posicion(1,22); // B23
-	private Posicion accionesInstruccionOtros1Inicial = new Posicion(3,22); // D23
-	private Posicion accionesInstruccionOtros2Inicial = new Posicion(5,22); // F23
-	private Posicion accionesInstruccionAplicaInicial = new Posicion(7,22); // H23
-	private Posicion accionesInstruccionNoAplicaInicial = new Posicion(8,22); // I23
+	private Posicion accionesInstruccionOtros1Inicial = new Posicion(4,23); // E24
+	private Posicion accionesInstruccionOtros2Inicial = new Posicion(7,23); // H24
+	private Posicion accionesInstruccionAplicaInicial = new Posicion(9,22); // J23
+	private Posicion accionesInstruccionNoAplicaInicial = new Posicion(10,22); // K23
 	
 	
 	private Posicion accionesInstruccionDescripcion12 = new Posicion(1,56); // B57
-	private Posicion accionesInstruccionOtros121 = new Posicion(3,56); // D57
-	private Posicion accionesInstruccionOtro122 = new Posicion(5,56); // F57
-	private Posicion accionesInstruccionAplica12 = new Posicion(7,56); // H57
-	private Posicion accionesInstruccionNoAplica12 = new Posicion(8,56); // I57
+	private Posicion accionesInstruccionOtros121 = new Posicion(4,57); // E58
+	private Posicion accionesInstruccionOtro122 = new Posicion(7,57); // H58
+	private Posicion accionesInstruccionAplica12 = new Posicion(9,56); // J57
+	private Posicion accionesInstruccionNoAplica12 = new Posicion(10,56); // K57
+	
+	
 	
 	// INFORMACION DE RESULTADOS
 	private Posicion arrayDeFechasInformacion = new Posicion(8,1); // I2

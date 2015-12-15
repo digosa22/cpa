@@ -233,7 +233,7 @@ public class Utilidades {
 			if (!servicio.getImagenOrdenDePedido().isEmpty()) {
 				String destino = "img/ordenpedido"+servicio.getNumAccion()+servicio.getImagenOrdenDePedido().substring(servicio.getImagenOrdenDePedido().length()-4);
 				descargarImagen(servicio.getImagenOrdenDePedido(), destino);
-				insertarImagen(workbook, sheet, destino.substring(0, destino.length()-4), destino.substring(destino.length()-3), posiciones.getImagenOrdenDePedido(), 600, 1000, 0);
+				insertarImagen(workbook, sheet, destino.substring(0, destino.length()-4), destino.substring(destino.length()-3), posiciones.getImagenOrdenDePedido(), 480, 700, 0);
 			}
 
 
@@ -435,12 +435,12 @@ public class Utilidades {
 						if (!imagenes[0].isEmpty()) {
 							String destino = "img/instruccion"+servicio.getNumAccion()+imagenes[0].substring(imagenes[0].length()-4);
 							descargarImagen(imagenes[0], destino);
-							insertarImagen(workbook, sheet, destino.substring(0, destino.length()-4), destino.substring(destino.length()-3), posiciones.getAccionesInstruccionOtros1Inicial(), 50, 50, fila);//TODO CAMBIAR ANCHO Y ALTO CUANDO ESTE PLANTILLA
+							insertarImagen(workbook, sheet, destino.substring(0, destino.length()-4), destino.substring(destino.length()-3), posiciones.getAccionesInstruccionOtros1Inicial(), 150, 150, fila);//TODO CAMBIAR ANCHO Y ALTO CUANDO ESTE PLANTILLA
 						}
 						if (!imagenes[1].isEmpty()) {
 							String destino = "img/instruccion"+servicio.getNumAccion()+imagenes[1].substring(imagenes[1].length()-4);
 							descargarImagen(imagenes[1], destino);
-							insertarImagen(workbook, sheet, destino.substring(0, destino.length()-4), destino.substring(destino.length()-3), posiciones.getAccionesInstruccionOtros2Inicial(), 50, 50, fila);//TODO CAMBIAR ANCHO Y ALTO CUANDO ESTE PLANTILLA
+							insertarImagen(workbook, sheet, destino.substring(0, destino.length()-4), destino.substring(destino.length()-3), posiciones.getAccionesInstruccionOtros2Inicial(), 150, 150, fila);//TODO CAMBIAR ANCHO Y ALTO CUANDO ESTE PLANTILLA
 						}
 					} else {
 						cell = sheet.getRow(posiciones.getAccionesInstruccionAplicaInicial().getFila()+fila).getCell(posiciones.getAccionesInstruccionAplicaInicial().getColumna());
