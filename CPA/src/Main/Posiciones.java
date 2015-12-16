@@ -57,7 +57,8 @@ public class Posiciones {
 	private Posicion IBAN = new Posicion(1,25); // B26
 	private Posicion BIC = new Posicion(1,26); // B27
 	private Posicion tarifa = new Posicion(1,27); // B28
-	private Posicion imagenOrdenDePedido = new Posicion(11,0); // L1
+	private Posicion imagenPantallazoValidacion = new Posicion(11,0); // L1
+	private Posicion imagenFirmaValidacion = new Posicion(5,43); // F44
 	
 	
 	
@@ -336,8 +337,12 @@ public class Posiciones {
 		return informacionResultadosOtros;
 	}
 
-	public Posicion getImagenOrdenDePedido() {
-		return imagenOrdenDePedido;
+	public Posicion getImagenFirmaValidacion() {
+		return imagenFirmaValidacion;
+	}
+
+	public Posicion getImagenPantallazoValidacion() {
+		return imagenPantallazoValidacion;
 	}
 
 	public Posicion getOperario() {

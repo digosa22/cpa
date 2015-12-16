@@ -96,7 +96,9 @@ public class VentanaImagen extends JDialog {
 
 		panel.add(label);
 
-		JLabel nombreLabel = new JLabel("<html><h2>Imagen orden de pedido</h2></html>");
+		JLabel nombreLabel = new JLabel("<html><h2>Pantallazo validación</h2></html>");
+		if (pestanya == 9)
+			nombreLabel.setText("<html><h2>Imagen firma validación</h2></html>");
 		if (pestanya == 1)
 			nombreLabel.setText("<html><h2>Imagen formación personal</h2></html>");
 		else if (pestanya == 2)
@@ -164,6 +166,8 @@ public class VentanaImagen extends JDialog {
 								urlImg = "http://clientes-cpavitoria06.com/"+nombreCarpeta+"/img/";
 								if (pestanya == 0)
 									urlImg += "ordendepedido";
+								else if (pestanya == 9)
+									urlImg += "firmaValidacion";
 								else if (pestanya == 1)
 									urlImg += "personal";
 								else

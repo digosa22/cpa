@@ -57,8 +57,8 @@ public class Llamadas {
 		}
 		return cliente;
 	}
-	
-	
+
+
 
 	public Servicio recuperarServicio(String num_accion) {
 
@@ -81,7 +81,7 @@ public class Llamadas {
 						rs.getBoolean("seguridad_gafas"), rs.getBoolean("seguridad_chaleco"), rs.getBoolean("seguridad_tapones"), rs.getBoolean("seguridad_guantes"),
 						rs.getInt("informacion_resultados"), rs.getString("imagen_orden_de_pedido"), rs.getBoolean("operario_a1"),
 						rs.getBoolean("operario_a2"), rs.getBoolean("operario_a3"), rs.getBoolean("operario_a4"), rs.getBoolean("operario_a5"),
-						rs.getBoolean("operario_a6"), rs.getBoolean("operario_a7"), rs.getBoolean("peticion_material_instruccion"),
+						rs.getBoolean("operario_a6"), rs.getBoolean("operario_a7"), rs.getBoolean("operario_a8"), rs.getBoolean("operario_a9"), rs.getBoolean("peticion_material_instruccion"),
 						rs.getBoolean("referencias_correctas_instruccion"),  rs.getBoolean("seleccion_piezas_instruccion"),
 						rs.getBoolean("retrabajo_piezas_instruccion"), rs.getBoolean("trasvase_instruccion"),
 						rs.getBoolean("otros_instruccion"), rs.getString("acciones_instruccion"), rs.getString("array_defectos"), rs.getString("array_piezas_ok"),
@@ -305,7 +305,7 @@ public class Llamadas {
 				preparedStatement.setString(82, servicio.getImagenPersonal());
 			else
 				preparedStatement.setString(82, null);
-			
+
 			preparedStatement.setBoolean(83, servicio.isRetrabajos());
 			preparedStatement.setBoolean(84, servicio.isFormacion());
 			preparedStatement.setString(85, servicio.getNombreCarpeta());
@@ -341,7 +341,7 @@ public class Llamadas {
 							+ " seguridad_calzado, seguridad_gafas, seguridad_chaleco, seguridad_tapones,"
 							+ " seguridad_guantes, informacion_resultados, imagen_orden_de_pedido,"
 							+ " operario_a1, operario_a2, operario_a3, operario_a4, operario_a5,"
-							+ " operario_a6, operario_a7, peticion_material_instruccion,"
+							+ " operario_a6, operario_a7, operario_a8, operario_a9, peticion_material_instruccion,"
 							+ " referencias_correctas_instruccion, seleccion_piezas_instruccion,"
 							+ " retrabajo_piezas_instruccion, trasvase_instruccion, otros_instruccion,"
 							+ " acciones_instruccion, array_defectos, array_piezas_ok,"
@@ -364,7 +364,7 @@ public class Llamadas {
 							+ ",?,?,?,?,?,?,?,?,?,?"
 							+ ",?,?,?,?,?,?,?,?,?,?"
 							+ ",?,?,?,?,?,?,?,?,?,?"
-							+ "?,?,?,?,?)");
+							+ "?,?,?,?,?,?,?)");
 
 			preparedStatement.setInt(1, servicio.getIdCliente());
 			preparedStatement.setString(2, servicio.getNomCliente());
@@ -406,58 +406,60 @@ public class Llamadas {
 			preparedStatement.setBoolean(36, servicio.isOperarioA5());
 			preparedStatement.setBoolean(37, servicio.isOperarioA6());
 			preparedStatement.setBoolean(38, servicio.isOperarioA7());
-			preparedStatement.setBoolean(39, servicio.isPeticionMaterialInstruccion());
-			preparedStatement.setBoolean(40, servicio.isReferenciasCorrectasInstruccion());
-			preparedStatement.setBoolean(41, servicio.isSeleccionPiezasInstruccion());
-			preparedStatement.setBoolean(42, servicio.isRetrabajoPiezasInstruccion());
-			preparedStatement.setBoolean(43, servicio.isTrasvaseInstruccion());
-			preparedStatement.setBoolean(44, servicio.isOtrosInstruccion());
-			preparedStatement.setString(45, servicio.getAccionesIntruccion());
+			preparedStatement.setBoolean(39, servicio.isOperarioA8());
+			preparedStatement.setBoolean(40, servicio.isOperarioA9());
+			preparedStatement.setBoolean(41, servicio.isPeticionMaterialInstruccion());
+			preparedStatement.setBoolean(42, servicio.isReferenciasCorrectasInstruccion());
+			preparedStatement.setBoolean(43, servicio.isSeleccionPiezasInstruccion());
+			preparedStatement.setBoolean(44, servicio.isRetrabajoPiezasInstruccion());
+			preparedStatement.setBoolean(45, servicio.isTrasvaseInstruccion());
+			preparedStatement.setBoolean(46, servicio.isOtrosInstruccion());
+			preparedStatement.setString(47, servicio.getAccionesIntruccion());
 
-			preparedStatement.setString(46, servicio.getTablaDefectos());
-			preparedStatement.setString(47, servicio.getPiezasOK());
-			preparedStatement.setString(48, servicio.getPiezasRecuperadas());
-			preparedStatement.setString(49, servicio.getRecuentoFinal());
-			preparedStatement.setString(50, servicio.getArrayHoraNormal());
-			preparedStatement.setString(51, servicio.getArrayHoraExtra());
-			preparedStatement.setString(52, servicio.getArrayHoraSabado());
-			preparedStatement.setString(53, servicio.getArrayHoraFestivo());
-			preparedStatement.setString(54, servicio.getArrayHoraNocturna());
-			preparedStatement.setString(55, servicio.getArrayHoraEspecialistaNormal());
-			preparedStatement.setString(56, servicio.getArrayHoraEspecialistaExtra());
-			preparedStatement.setString(57, servicio.getArrayHoraEspecialistaSabado());
-			preparedStatement.setString(58, servicio.getArrayHoraEspecialistaFestiva());
-			preparedStatement.setString(59, servicio.getArrayHoraEspecialistaNocturna());
-			preparedStatement.setString(60, servicio.getArrayHoraCoordinacion());
-			preparedStatement.setString(61, servicio.getArrayHoraAdministracion());
-			preparedStatement.setString(62, servicio.getArrayGastosLogisticos());
-			preparedStatement.setString(63, servicio.getArrayOtros1());
-			preparedStatement.setString(64, servicio.getArrayOtros2());
+			preparedStatement.setString(48, servicio.getTablaDefectos());
+			preparedStatement.setString(49, servicio.getPiezasOK());
+			preparedStatement.setString(50, servicio.getPiezasRecuperadas());
+			preparedStatement.setString(51, servicio.getRecuentoFinal());
+			preparedStatement.setString(52, servicio.getArrayHoraNormal());
+			preparedStatement.setString(53, servicio.getArrayHoraExtra());
+			preparedStatement.setString(54, servicio.getArrayHoraSabado());
+			preparedStatement.setString(55, servicio.getArrayHoraFestivo());
+			preparedStatement.setString(56, servicio.getArrayHoraNocturna());
+			preparedStatement.setString(57, servicio.getArrayHoraEspecialistaNormal());
+			preparedStatement.setString(58, servicio.getArrayHoraEspecialistaExtra());
+			preparedStatement.setString(59, servicio.getArrayHoraEspecialistaSabado());
+			preparedStatement.setString(60, servicio.getArrayHoraEspecialistaFestiva());
+			preparedStatement.setString(61, servicio.getArrayHoraEspecialistaNocturna());
+			preparedStatement.setString(62, servicio.getArrayHoraCoordinacion());
+			preparedStatement.setString(63, servicio.getArrayHoraAdministracion());
+			preparedStatement.setString(64, servicio.getArrayGastosLogisticos());
+			preparedStatement.setString(65, servicio.getArrayOtros1());
+			preparedStatement.setString(66, servicio.getArrayOtros2());
 
-			preparedStatement.setString(65, servicio.getRealizadoPorRetrabajos());
-			preparedStatement.setDate(66, new java.sql.Date(servicio.getFechaRetrabajos().getTime()));
-			preparedStatement.setDate(67, new java.sql.Date(servicio.getFechaLiberacionRetrabajos().getTime()));
-			preparedStatement.setString(68, servicio.getNumReclamacionRetrabajos());
-			preparedStatement.setDate(69, new java.sql.Date(servicio.getFechaReclamacionRetrabajos().getTime()));
-			preparedStatement.setString(70, servicio.getReferenciaPiezaRetrabajos());
-			preparedStatement.setDate(71, new java.sql.Date(servicio.getFechaComienzoRetrabajos().getTime()));
-			preparedStatement.setString(72, servicio.getTiempoRetrabajos());
-			preparedStatement.setString(73, servicio.getClienteRetrabajos());
-			preparedStatement.setString(74, servicio.getFirmasRetrabajos());
-			preparedStatement.setString(75, servicio.getImagenRetrabajos());
+			preparedStatement.setString(67, servicio.getRealizadoPorRetrabajos());
+			preparedStatement.setDate(68, new java.sql.Date(servicio.getFechaRetrabajos().getTime()));
+			preparedStatement.setDate(69, new java.sql.Date(servicio.getFechaLiberacionRetrabajos().getTime()));
+			preparedStatement.setString(70, servicio.getNumReclamacionRetrabajos());
+			preparedStatement.setDate(71, new java.sql.Date(servicio.getFechaReclamacionRetrabajos().getTime()));
+			preparedStatement.setString(72, servicio.getReferenciaPiezaRetrabajos());
+			preparedStatement.setDate(73, new java.sql.Date(servicio.getFechaComienzoRetrabajos().getTime()));
+			preparedStatement.setString(74, servicio.getTiempoRetrabajos());
+			preparedStatement.setString(75, servicio.getClienteRetrabajos());
+			preparedStatement.setString(76, servicio.getFirmasRetrabajos());
+			preparedStatement.setString(77, servicio.getImagenRetrabajos());
 
-			preparedStatement.setString(76, servicio.getRealizadoPorPersonal());
-			preparedStatement.setDate(77, new java.sql.Date(servicio.getFechaPersonal().getTime()));
-			preparedStatement.setString(78, servicio.getClientePersonal());
-			preparedStatement.setString(79, servicio.getPiezaPersonal());
-			preparedStatement.setString(80, servicio.getReferenciaPersonal());
-			preparedStatement.setString(81, servicio.getFirmasPersonal());
-			preparedStatement.setString(82, servicio.getImagenPersonal());
-			
-			preparedStatement.setBoolean(83, servicio.isRetrabajos());
-			preparedStatement.setBoolean(84, servicio.isFormacion());
-			preparedStatement.setString(85, servicio.getNombreCarpeta());
-			
+			preparedStatement.setString(78, servicio.getRealizadoPorPersonal());
+			preparedStatement.setDate(79, new java.sql.Date(servicio.getFechaPersonal().getTime()));
+			preparedStatement.setString(80, servicio.getClientePersonal());
+			preparedStatement.setString(81, servicio.getPiezaPersonal());
+			preparedStatement.setString(82, servicio.getReferenciaPersonal());
+			preparedStatement.setString(83, servicio.getFirmasPersonal());
+			preparedStatement.setString(84, servicio.getImagenPersonal());
+
+			preparedStatement.setBoolean(85, servicio.isRetrabajos());
+			preparedStatement.setBoolean(86, servicio.isFormacion());
+			preparedStatement.setString(87, servicio.getNombreCarpeta());
+
 			preparedStatement.executeUpdate();
 			preparedStatement.close();
 			connection.close();
@@ -549,7 +551,7 @@ public class Llamadas {
 
 		return true;
 	}
-	
+
 	public ArrayList<Cliente> recuperarClientes() {
 
 		Database database = new Database();
@@ -573,7 +575,7 @@ public class Llamadas {
 		}
 		return clientes;
 	}
-	
+
 	public ArrayList<String> recuperarPersonalCPA() {
 
 		Database database = new Database();
@@ -595,75 +597,121 @@ public class Llamadas {
 		}
 		return personasCPA;
 	}
-	
-	public String generarNumAccion(String tipo) {
+
+	public String hayNumerosDeAccionDisponibles(String tipo) {
 
 		Database database = new Database();
 		String numero = "";
+
+		Calendar cal = Calendar.getInstance();
+		int anyo = cal.get(Calendar.YEAR);
+
 		try {
 			Connection connection = database.Get_Connection();
+
 			PreparedStatement ps = connection
-					.prepareStatement("SELECT * FROM generar_num_accion WHERE  tipo='" + tipo +"'");
+					.prepareStatement("SELECT * FROM num_accion_disponibles WHERE tipo='" + tipo +"' AND anyo=" + anyo + " ORDER BY num");
 			ResultSet rs = ps.executeQuery();
-			Statement statement = null;
 			if (rs.next()) {
-				
-				int anyo = rs.getInt("anyo");
 				int num = rs.getInt("num");
-				Calendar cal = Calendar.getInstance();
-				if (anyo == cal.get(Calendar.YEAR)) {
-					
-					anyo = cal.get(Calendar.YEAR);
-					String year = anyo + "";
-					year = year.substring(2);
-					
-					String longitud = num + "";					
-					if(longitud.length() == 1) {
-						numero = tipo + "000"+ longitud+ "-" + year;
-					} else if(longitud.length() == 2) {
-						numero = tipo + "00"+ longitud+ "-" + year;
-					} else if(longitud.length() == 3) {
-						numero = tipo + "0"+ longitud+ "-" + year;
-					} else {
-						numero = tipo + ""+ longitud+ "-" + year;
-					}
-					
-					statement = connection.createStatement();
-					
-					num++;
+				int id = rs.getInt("id");
+				String year = anyo + "";
+				year = year.substring(2);
 
-					statement
-					.executeUpdate("UPDATE generar_num_accion SET num='"
-							+ num
-							+ "' WHERE tipo = '" + tipo + "'");
-					
+				String longitud = num + "";					
+				if(longitud.length() == 1) {
+					numero = tipo + "000"+ longitud+ "-" + year;
+				} else if(longitud.length() == 2) {
+					numero = tipo + "00"+ longitud+ "-" + year;
+				} else if(longitud.length() == 3) {
+					numero = tipo + "0"+ longitud+ "-" + year;
 				} else {
-					
-					anyo = cal.get(Calendar.YEAR);
-					String year = anyo + "";
-					year = year.substring(2);
-					
-					numero = tipo + "0001-" + year;
-					
-					statement = connection.createStatement();
-
-					statement
-					.executeUpdate("UPDATE generar_num_accion SET anyo='"
-							+ anyo
-							+ "',num='2' WHERE tipo = '" + tipo + "'");
+					numero = tipo + ""+ longitud+ "-" + year;
 				}
-				
+				Statement statement = connection.createStatement();
+				statement.executeUpdate("DELETE FROM num_accion_disponibles WHERE id='" + id + "'");
+				statement.close();
 			}
-			statement.close();
 			rs.close();
 			ps.close();
 			connection.close();
 		} catch (Exception e) {
 			e.printStackTrace();
+		}			
+
+		return numero;
+	}
+
+	public String generarNumAccion(String tipo) {
+
+		Database database = new Database();
+		String numero = hayNumerosDeAccionDisponibles(tipo);
+		if (numero.equalsIgnoreCase("")) {
+			try {
+				Connection connection = database.Get_Connection();
+				PreparedStatement ps = connection
+						.prepareStatement("SELECT * FROM generar_num_accion WHERE  tipo='" + tipo +"'");
+				ResultSet rs = ps.executeQuery();
+				Statement statement = null;
+				if (rs.next()) {
+
+					int anyo = rs.getInt("anyo");
+					int num = rs.getInt("num");
+					Calendar cal = Calendar.getInstance();
+					if (anyo == cal.get(Calendar.YEAR)) {
+
+						anyo = cal.get(Calendar.YEAR);
+						String year = anyo + "";
+						year = year.substring(2);
+
+						String longitud = num + "";					
+						if(longitud.length() == 1) {
+							numero = tipo + "000"+ longitud+ "-" + year;
+						} else if(longitud.length() == 2) {
+							numero = tipo + "00"+ longitud+ "-" + year;
+						} else if(longitud.length() == 3) {
+							numero = tipo + "0"+ longitud+ "-" + year;
+						} else {
+							numero = tipo + ""+ longitud+ "-" + year;
+						}
+
+						statement = connection.createStatement();
+
+						num++;
+
+						statement
+						.executeUpdate("UPDATE generar_num_accion SET num='"
+								+ num
+								+ "' WHERE tipo = '" + tipo + "'");
+
+					} else {
+
+						anyo = cal.get(Calendar.YEAR);
+						String year = anyo + "";
+						year = year.substring(2);
+
+						numero = tipo + "0001-" + year;
+
+						statement = connection.createStatement();
+
+						statement
+						.executeUpdate("UPDATE generar_num_accion SET anyo='"
+								+ anyo
+								+ "',num='2' WHERE tipo = '" + tipo + "'");
+					}
+
+				}
+				statement.close();
+				rs.close();
+				ps.close();
+				connection.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return numero;
 	}
-	
+
 	public boolean nuevoMensaje(Mensaje mensaje) {
 
 		Database database = new Database();
@@ -680,7 +728,7 @@ public class Llamadas {
 			preparedStatement.setString(3, mensaje.getAsunto());
 			preparedStatement.setString(4, mensaje.getMensaje());
 			preparedStatement.setString(5, mensaje.getRuta());
-			
+
 			preparedStatement.executeUpdate();
 			preparedStatement.close();
 			connection.close();
@@ -693,4 +741,27 @@ public class Llamadas {
 
 	}
 
+	public void guardarNumAccionComoDisponible(String numAccion) {
+		
+		Database database = new Database();
+		Connection connection;
+		try {
+			connection = database.Get_Connection();
+			PreparedStatement preparedStatement;
+
+			preparedStatement = connection
+					.prepareStatement("REPLACE INTO num_accion_disponibles (tipo, num, anyo) VALUES (?,?,?)");
+
+			Calendar cal = Calendar.getInstance();
+			preparedStatement.setString(1, numAccion.substring(0, 1));
+			preparedStatement.setInt(2, Integer.parseInt(numAccion.substring(1, 5)));
+			preparedStatement.setInt(3, cal.get(Calendar.YEAR));
+
+			preparedStatement.executeUpdate();
+			preparedStatement.close();
+			connection.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

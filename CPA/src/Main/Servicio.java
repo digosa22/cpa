@@ -51,6 +51,8 @@ public class Servicio {
 	private boolean operarioA5;
 	private boolean operarioA6;
 	private boolean operarioA7;
+	private boolean operarioA8;
+	private boolean operarioA9;
 	private boolean peticionMaterialInstruccion;
 	private boolean referenciasCorrectasInstruccion;
 	private boolean seleccionPiezasInstruccion;
@@ -132,7 +134,7 @@ public class Servicio {
 			Date fechaSolicitudRecomendador, String descripcionInstruccionDelServicio, boolean seguridadCalzado,
 			boolean seguridadGafas, boolean seguridadChaleco, boolean seguridadTapones, boolean seguridadGuantes,
 			int informacionResultados, String imagenOrdenDePedido, boolean operarioA1, boolean operarioA2,
-			boolean operarioA3, boolean operarioA4, boolean operarioA5, boolean operarioA6, boolean operarioA7,
+			boolean operarioA3, boolean operarioA4, boolean operarioA5, boolean operarioA6, boolean operarioA7, boolean operarioA8, boolean operarioA9,
 			boolean peticionMaterialInstruccion, boolean referenciasCorrectasInstruccion,
 			boolean seleccionPiezasInstruccion, boolean retrabajoPiezasInstruccion, boolean trasvaseInstruccion,
 			boolean otrosInstruccion, String accionesIntruccion, String tablaDefectos, String piezasOK,
@@ -186,6 +188,8 @@ public class Servicio {
 		this.operarioA5 = operarioA5;
 		this.operarioA6 = operarioA6;
 		this.operarioA7 = operarioA7;
+		this.operarioA8 = operarioA8;
+		this.operarioA9 = operarioA9;
 		this.peticionMaterialInstruccion = peticionMaterialInstruccion;
 		this.referenciasCorrectasInstruccion = referenciasCorrectasInstruccion;
 		this.seleccionPiezasInstruccion = seleccionPiezasInstruccion;
@@ -415,6 +419,12 @@ public class Servicio {
 	}
 	public void setInformacionResultados(int informacionResultados) {
 		this.informacionResultados = informacionResultados;
+	}
+	public String getImagenFirmaValidacion() {
+		return imagenOrdenDePedido.substring(0, imagenOrdenDePedido.indexOf(";;"));
+	}
+	public String getImagenPantallazoValidacion() {
+		return imagenOrdenDePedido.substring(imagenOrdenDePedido.indexOf(";;")+2);
 	}
 	public String getImagenOrdenDePedido() {
 		return imagenOrdenDePedido;
@@ -749,5 +759,16 @@ public class Servicio {
 	public void setNombreCarpeta(String nombreCarpeta) {
 		this.nombreCarpeta = nombreCarpeta;
 	}
-	
+	public boolean isOperarioA8() {
+		return operarioA8;
+	}
+	public void setOperarioA8(boolean operarioA8) {
+		this.operarioA8 = operarioA8;
+	}
+	public boolean isOperarioA9() {
+		return operarioA9;
+	}
+	public void setOperarioA9(boolean operarioA9) {
+		this.operarioA9 = operarioA9;
+	}
 }

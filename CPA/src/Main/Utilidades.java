@@ -43,7 +43,7 @@ public class Utilidades {
 	private String server = "lhcp1017.webapps.net";
 	private int port = 21;
 	private String user = "ireguatek@clientes-cpavitoria06.com";
-	private String pass = "xxx";
+	private String pass = "Ireguatekcpa1";
 	private FTPClient ftpClient = new FTPClient();
 
 //	public void insertarImagen2( XSSFWorkbook wb, XSSFSheet sheet, String imagen, Posicion posicion, int ancho, int alto, int filaSuma) {
@@ -97,7 +97,6 @@ public class Utilidades {
 	public void insertarImagen(XSSFWorkbook wb, XSSFSheet sheet, String rutaImagenSinExtension, String extension, Posicion posicion, int anchoMaximo, int altoMaximo, int filaSuma) {
 
 		try {
-
 			File temporal = new File(rutaImagenSinExtension+"2."+extension);
 			File original = new File(rutaImagenSinExtension+"."+extension);
 
@@ -230,10 +229,16 @@ public class Utilidades {
 			cell = sheet.getRow(posiciones.getTarifa().getFila()).getCell(posiciones.getTarifa().getColumna());
 			cell.setCellValue("Hora Normal: " + cliente.getHora_normal() + " €/h");
 
-			if (!servicio.getImagenOrdenDePedido().isEmpty()) {
-				String destino = "img/ordenpedido"+servicio.getNumAccion()+servicio.getImagenOrdenDePedido().substring(servicio.getImagenOrdenDePedido().length()-4);
-				descargarImagen(servicio.getImagenOrdenDePedido(), destino);
-				insertarImagen(workbook, sheet, destino.substring(0, destino.length()-4), destino.substring(destino.length()-3), posiciones.getImagenOrdenDePedido(), 480, 700, 0);
+			if (!servicio.getImagenPantallazoValidacion().isEmpty()) {
+				String destino = "img/ordenpedido"+servicio.getNumAccion()+servicio.getImagenPantallazoValidacion().substring(servicio.getImagenPantallazoValidacion().length()-4);
+				descargarImagen(servicio.getImagenPantallazoValidacion(), destino);
+				insertarImagen(workbook, sheet, destino.substring(0, destino.length()-4), destino.substring(destino.length()-3), posiciones.getImagenPantallazoValidacion(), 480, 700, 0);
+			}
+			
+			if (!servicio.getImagenFirmaValidacion().isEmpty()) {
+				String destino = "img/firmaValidacion"+servicio.getNumAccion()+servicio.getImagenFirmaValidacion().substring(servicio.getImagenFirmaValidacion().length()-4);
+				descargarImagen(servicio.getImagenFirmaValidacion(), destino);
+				insertarImagen(workbook, sheet, destino.substring(0, destino.length()-4), destino.substring(destino.length()-3), posiciones.getImagenFirmaValidacion(), 250, 75, 0);
 			}
 
 
@@ -401,6 +406,10 @@ public class Utilidades {
 				operario += "; A6";
 			if (servicio.isOperarioA7())
 				operario += "; A7";
+			if (servicio.isOperarioA8())
+				operario += "; A8";
+			if (servicio.isOperarioA9())
+				operario += "; A9";
 			if (operario.startsWith("; "))
 				operario = operario.substring(2);
 
@@ -1102,7 +1111,10 @@ public class Utilidades {
 				firstRemoteFile = nombreCarpeta+"/img/personal" + extension;
 			} else if (pestanya == 2) {
 				firstRemoteFile = nombreCarpeta+"/img/retrabajos" + extension;
+			} else if (pestanya == 9) {
+				firstRemoteFile = nombreCarpeta+"/img/firmaValidacion" + extension;
 			}
+			System.out.println(firstRemoteFile);
 			InputStream inputStream = new FileInputStream(ficheroLocal);
 
 			ftpClient.storeFile(firstRemoteFile, inputStream);

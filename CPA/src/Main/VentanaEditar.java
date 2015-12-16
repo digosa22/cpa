@@ -37,6 +37,7 @@ public class VentanaEditar extends JDialog {
 	private JPanel panel;
 
 	private JPanel ordenDePedido;
+	private JButton firmaValidacion;
 	private JButton confirmacionValidacion;
 	private JTextField nombrePieza;
 	private JTextField referencias;
@@ -76,6 +77,8 @@ public class VentanaEditar extends JDialog {
 	private JCheckBox operarioA5;
 	private JCheckBox operarioA6;
 	private JCheckBox operarioA7;
+	private JCheckBox operarioA8;
+	private JCheckBox operarioA9;
 	private JCheckBox peticionMaterial;
 	private JCheckBox referenciasPiezas;
 	private JCheckBox seleccion;
@@ -147,7 +150,8 @@ public class VentanaEditar extends JDialog {
 
 	private Utilidades utilidades;
 
-	private String imagenOrdenDePedido = "";
+	private String imagenFirmaValidacion = "";
+	private String imagenPantallazoValidacion = "";
 	private String imagenPersonal = "";
 	private String imagenRetrabajos = "";
 
@@ -192,21 +196,33 @@ public class VentanaEditar extends JDialog {
 		nombreCarpetaVieja = servicio.getNombreCarpeta();		
 
 		//TODO PESTAÑA ORDEN DE PEDIDO
-		imagenOrdenDePedido = servicio.getImagenOrdenDePedido();
+		imagenFirmaValidacion = servicio.getImagenFirmaValidacion();
+		imagenPantallazoValidacion = servicio.getImagenPantallazoValidacion();
 		ordenDePedido = new JPanel();
 		panelDePestanas.addTab("Orden de pedido", null, ordenDePedido, null);
 		ordenDePedido.setLayout(null);
-		confirmacionValidacion = new JButton("Añadir imagen");
-		confirmacionValidacion.setBounds(40, 20, 100, 20);
+		firmaValidacion = new JButton("Añadir firma");
+		firmaValidacion.setBounds(35, 20, 100, 20);
+		ordenDePedido.add(firmaValidacion);
+		confirmacionValidacion = new JButton("Añadir Pantallazo");
+		confirmacionValidacion.setBounds(150, 20, 120, 20);
 		ordenDePedido.add(confirmacionValidacion);
 
 		VentanaEditar im = this;
+
+		firmaValidacion.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new VentanaImagen(im, imagenFirmaValidacion, 1, 9, nombreCarpeta,utilidades).setVisible(true);
+			}
+		});
 
 		confirmacionValidacion.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new VentanaImagen(im, imagenOrdenDePedido, 1, 0, nombreCarpeta, utilidades).setVisible(true);
+				new VentanaImagen(im, imagenPantallazoValidacion, 1, 0, nombreCarpeta, utilidades).setVisible(true);
 			}
 		});
 
@@ -496,6 +512,12 @@ public class VentanaEditar extends JDialog {
 		operarioA7 = new JCheckBox("A7");
 		operarioA7.setBounds(10, 80, 40, 20);
 		panelOperarios.add(operarioA7);
+		operarioA8 = new JCheckBox("A8");
+		operarioA8.setBounds(60, 80, 40, 20);
+		panelOperarios.add(operarioA8);
+		operarioA9 = new JCheckBox("A9");
+		operarioA9.setBounds(110, 80, 40, 20);
+		panelOperarios.add(operarioA9);
 		JLabel aplicaLabel = new JLabel("Aplica");
 		aplicaLabel.setBounds(145, 15, 50, 20);
 		panelControl.add(aplicaLabel);
@@ -1064,6 +1086,7 @@ public class VentanaEditar extends JDialog {
 					if(!cliente.getTipo().equalsIgnoreCase(clienteNuevo.getTipo())) {
 						cliente = clienteNuevo;
 						clienteLabel2.setText("<html><h4>"+cliente+"</h4></html>");
+						llamadas.guardarNumAccionComoDisponible(numAccion);
 						numAccion = llamadas.generarNumAccion(cliente.getTipo());
 						numAccionLabel2.setText("<html><h4>"+numAccion+"</h4></html>");
 
@@ -1177,6 +1200,8 @@ public class VentanaEditar extends JDialog {
 		operarioA5.setSelected(servicio.isOperarioA5());
 		operarioA6.setSelected(servicio.isOperarioA6());
 		operarioA7.setSelected(servicio.isOperarioA7());
+		operarioA8.setSelected(servicio.isOperarioA8());
+		operarioA9.setSelected(servicio.isOperarioA9());
 
 		peticionMaterial.setSelected(servicio.isPeticionMaterialInstruccion());
 		referenciasPiezas.setSelected(servicio.isReferenciasCorrectasInstruccion());
@@ -1575,7 +1600,7 @@ public class VentanaEditar extends JDialog {
 			servi = new Servicio(cliente.getId(),cliente.getNombre(), servicio.getPersonaCPA(), numAccion, servicio.getFechaInicio(), nombrePieza.getText(), referencias.getText(), numChasis1.getText(), numChasis2.getText(), numChasis3.getText(), numChasis4.getText(),
 					responsable.getText(), piezasVerde.isSelected(), piezasBlanco.isSelected(), piezasOtros.isSelected(), piezasRojo.isSelected(), contenedorVerde.isSelected(), contenedorRojo.isSelected(), recomPersonaContacto.getText(),
 					recomDepartamento.getText(), recomTelefono.getText(), recomEmail.getText(), recomFechaSolicitud.getDate(), descripcionServicio.getText(), calzado.isSelected(), gafas.isSelected(), chaleco.isSelected(), tapones.isSelected(),
-					guantes.isSelected(), res, imagenOrdenDePedido , operarioA1.isSelected(), operarioA2.isSelected(), operarioA3.isSelected(), operarioA4.isSelected(), operarioA5.isSelected(), operarioA6.isSelected(), operarioA7.isSelected(),
+					guantes.isSelected(), res, imagenFirmaValidacion+";;"+imagenPantallazoValidacion , operarioA1.isSelected(), operarioA2.isSelected(), operarioA3.isSelected(), operarioA4.isSelected(), operarioA5.isSelected(), operarioA6.isSelected(), operarioA7.isSelected(), operarioA8.isSelected(), operarioA9.isSelected(),
 					peticionMaterial.isSelected(), referenciasPiezas.isSelected(), seleccion.isSelected(), retrabajo.isSelected(), trasvase.isSelected(), otrosPiezas.isSelected(), accionesIntruccion, tablaDefectos, piezasOK, piezasRecuperadas,
 					recuentoFinal, arrayHoraNormal, arrayHoraExtra, arrayHoraSabado, arrayHoraFestivo, arrayHoraNocturna, arrayHoraEspecialistaNormal, arrayHoraEspecialistaExtra, arrayHoraEspecialistaSabado, arrayHoraEspecialistaFestiva, 
 					arrayHoraEspecialistaNocturna, arrayHoraCoordinacion, arrayHoraAdministracion, arrayGastosLogisticos, arrayOtros1, arrayOtros2, realizadoRetrabajos.getText(), fechaRetrabajos.getDate(), fechaLiberacion.getDate(), 
@@ -1585,7 +1610,7 @@ public class VentanaEditar extends JDialog {
 			servi = new Servicio(cliente.getId(),cliente.getNombre(), servicio.getPersonaCPA(), numAccion, servicio.getFechaInicio(), nombrePieza.getText(), referencias.getText(), numChasis1.getText(), numChasis2.getText(), numChasis3.getText(), numChasis4.getText(),
 					responsable.getText(), piezasVerde.isSelected(), piezasBlanco.isSelected(), piezasOtros.isSelected(), piezasRojo.isSelected(), contenedorVerde.isSelected(), contenedorRojo.isSelected(), recomPersonaContacto.getText(),
 					recomDepartamento.getText(), recomTelefono.getText(), recomEmail.getText(), recomFechaSolicitud.getDate(), descripcionServicio.getText(), calzado.isSelected(), gafas.isSelected(), chaleco.isSelected(), tapones.isSelected(),
-					guantes.isSelected(), res, imagenOrdenDePedido, operarioA1.isSelected(), operarioA2.isSelected(), operarioA3.isSelected(), operarioA4.isSelected(), operarioA5.isSelected(), operarioA6.isSelected(), operarioA7.isSelected(),
+					guantes.isSelected(), res, imagenFirmaValidacion+";;"+imagenPantallazoValidacion, operarioA1.isSelected(), operarioA2.isSelected(), operarioA3.isSelected(), operarioA4.isSelected(), operarioA5.isSelected(), operarioA6.isSelected(), operarioA7.isSelected(), operarioA8.isSelected(), operarioA9.isSelected(),
 					peticionMaterial.isSelected(), referenciasPiezas.isSelected(), seleccion.isSelected(), retrabajo.isSelected(), trasvase.isSelected(), otrosPiezas.isSelected(), accionesIntruccion, tablaDefectos, piezasOK, piezasRecuperadas,
 					recuentoFinal, arrayHoraNormal, arrayHoraExtra, arrayHoraSabado, arrayHoraFestivo, arrayHoraNocturna, arrayHoraEspecialistaNormal, arrayHoraEspecialistaExtra, arrayHoraEspecialistaSabado, arrayHoraEspecialistaFestiva, 
 					arrayHoraEspecialistaNocturna, arrayHoraCoordinacion, arrayHoraAdministracion, arrayGastosLogisticos, arrayOtros1, arrayOtros2, null, null, null, 
@@ -1595,7 +1620,7 @@ public class VentanaEditar extends JDialog {
 			servi = new Servicio(cliente.getId(),cliente.getNombre(), servicio.getPersonaCPA(), numAccion, servicio.getFechaInicio(), nombrePieza.getText(), referencias.getText(), numChasis1.getText(), numChasis2.getText(), numChasis3.getText(), numChasis4.getText(),
 					responsable.getText(), piezasVerde.isSelected(), piezasBlanco.isSelected(), piezasOtros.isSelected(), piezasRojo.isSelected(), contenedorVerde.isSelected(), contenedorRojo.isSelected(), recomPersonaContacto.getText(),
 					recomDepartamento.getText(), recomTelefono.getText(), recomEmail.getText(), recomFechaSolicitud.getDate(), descripcionServicio.getText(), calzado.isSelected(), gafas.isSelected(), chaleco.isSelected(), tapones.isSelected(),
-					guantes.isSelected(), res, imagenOrdenDePedido, operarioA1.isSelected(), operarioA2.isSelected(), operarioA3.isSelected(), operarioA4.isSelected(), operarioA5.isSelected(), operarioA6.isSelected(), operarioA7.isSelected(),
+					guantes.isSelected(), res, imagenFirmaValidacion+";;"+imagenPantallazoValidacion, operarioA1.isSelected(), operarioA2.isSelected(), operarioA3.isSelected(), operarioA4.isSelected(), operarioA5.isSelected(), operarioA6.isSelected(), operarioA7.isSelected(), operarioA8.isSelected(), operarioA9.isSelected(),
 					peticionMaterial.isSelected(), referenciasPiezas.isSelected(), seleccion.isSelected(), retrabajo.isSelected(), trasvase.isSelected(), otrosPiezas.isSelected(), accionesIntruccion, tablaDefectos, piezasOK, piezasRecuperadas,
 					recuentoFinal, arrayHoraNormal, arrayHoraExtra, arrayHoraSabado, arrayHoraFestivo, arrayHoraNocturna, arrayHoraEspecialistaNormal, arrayHoraEspecialistaExtra, arrayHoraEspecialistaSabado, arrayHoraEspecialistaFestiva, 
 					arrayHoraEspecialistaNocturna, arrayHoraCoordinacion, arrayHoraAdministracion, arrayGastosLogisticos, arrayOtros1, arrayOtros2, realizadoRetrabajos.getText(), fechaRetrabajos.getDate(), fechaLiberacion.getDate(), 
@@ -1605,7 +1630,7 @@ public class VentanaEditar extends JDialog {
 			servi = new Servicio(cliente.getId(),cliente.getNombre(), servicio.getPersonaCPA(), numAccion, servicio.getFechaInicio(), nombrePieza.getText(), referencias.getText(), numChasis1.getText(), numChasis2.getText(), numChasis3.getText(), numChasis4.getText(),
 					responsable.getText(), piezasVerde.isSelected(), piezasBlanco.isSelected(), piezasOtros.isSelected(), piezasRojo.isSelected(), contenedorVerde.isSelected(), contenedorRojo.isSelected(), recomPersonaContacto.getText(),
 					recomDepartamento.getText(), recomTelefono.getText(), recomEmail.getText(), recomFechaSolicitud.getDate(), descripcionServicio.getText(), calzado.isSelected(), gafas.isSelected(), chaleco.isSelected(), tapones.isSelected(),
-					guantes.isSelected(), res, imagenOrdenDePedido, operarioA1.isSelected(), operarioA2.isSelected(), operarioA3.isSelected(), operarioA4.isSelected(), operarioA5.isSelected(), operarioA6.isSelected(), operarioA7.isSelected(),
+					guantes.isSelected(), res, imagenFirmaValidacion+";;"+imagenPantallazoValidacion, operarioA1.isSelected(), operarioA2.isSelected(), operarioA3.isSelected(), operarioA4.isSelected(), operarioA5.isSelected(), operarioA6.isSelected(), operarioA7.isSelected(), operarioA8.isSelected(), operarioA9.isSelected(),
 					peticionMaterial.isSelected(), referenciasPiezas.isSelected(), seleccion.isSelected(), retrabajo.isSelected(), trasvase.isSelected(), otrosPiezas.isSelected(), accionesIntruccion, tablaDefectos, piezasOK, piezasRecuperadas,
 					recuentoFinal, arrayHoraNormal, arrayHoraExtra, arrayHoraSabado, arrayHoraFestivo, arrayHoraNocturna, arrayHoraEspecialistaNormal, arrayHoraEspecialistaExtra, arrayHoraEspecialistaSabado, arrayHoraEspecialistaFestiva, 
 					arrayHoraEspecialistaNocturna, arrayHoraCoordinacion, arrayHoraAdministracion, arrayGastosLogisticos, arrayOtros1, arrayOtros2, null, null, null, 
@@ -1641,7 +1666,11 @@ public class VentanaEditar extends JDialog {
 
 	public void actualizarImagen(String imagen, int pestanya) {
 		if (pestanya == 0) {
-			imagenOrdenDePedido = imagen;
+			imagenPantallazoValidacion = imagen;
+			imagen = imagenFirmaValidacion+";;"+imagenPantallazoValidacion;
+		} else if (pestanya == 9) {
+			imagenFirmaValidacion = imagen;
+			imagen = imagenFirmaValidacion+";;"+imagenPantallazoValidacion;
 		} else if (pestanya == 1) {
 			imagenPersonal = imagen;
 		} else {

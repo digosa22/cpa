@@ -34,9 +34,13 @@ public class VentanaPestanasAMostrar extends JDialog {
 		
 		mostrarRetrabajos = new JCheckBox("Gama de retrabajos");
 		mostrarRetrabajos.setBounds(10, 40, 130, 20);
+		if (cliente.getNombre().toLowerCase().contains("sas "))
+			mostrarRetrabajos.setSelected(true);
 		panel.add(mostrarRetrabajos);
 		mostrarFormacion = new JCheckBox("Formación personal");
 		mostrarFormacion.setBounds(140, 40, 130, 20);
+		if (cliente.getNombre().toLowerCase().contains("mercedes"))
+			mostrarFormacion.setSelected(true);
 		panel.add(mostrarFormacion);
 		JLabel texto = new JLabel("Selecciona las pestañas que deseas mostrar");
 		texto.setBounds(30, 10, 240, 25);
