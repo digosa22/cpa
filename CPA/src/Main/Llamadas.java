@@ -98,7 +98,7 @@ public class Llamadas {
 						rs.getString("firmas_retrabajos"), rs.getString("imagen_retrabajos"), rs.getString("realizado_por_personal"),
 						rs.getDate("fecha_personal"), rs.getString("cliente_personal"), rs.getString("pieza_personal"),
 						rs.getString("referencia_personal"), rs.getString("firmas_personal"), rs.getString("imagen_personal"), 
-						rs.getBoolean("retrabajos"), rs.getBoolean("formacion"), rs.getString("nombre_carpeta"));
+						rs.getBoolean("retrabajos"), rs.getBoolean("formacion"), rs.getString("nombre_carpeta"), rs.getString("piezas_muestra"), rs.getString("comprobacion_servicio"));
 			}
 			rs.close();
 			ps.close();
@@ -128,7 +128,7 @@ public class Llamadas {
 							+ " seguridad_calzado, seguridad_gafas, seguridad_chaleco, seguridad_tapones,"
 							+ " seguridad_guantes, informacion_resultados, imagen_orden_de_pedido,"
 							+ " operario_a1, operario_a2, operario_a3, operario_a4, operario_a5,"
-							+ " operario_a6, operario_a7, peticion_material_instruccion,"
+							+ " operario_a6, operario_a7, operario_a8, operario_a9, peticion_material_instruccion,"
 							+ " referencias_correctas_instruccion, seleccion_piezas_instruccion,"
 							+ " retrabajo_piezas_instruccion, trasvase_instruccion, otros_instruccion,"
 							+ " acciones_instruccion, array_defectos, array_piezas_ok,"
@@ -142,7 +142,7 @@ public class Llamadas {
 							+ " referencia_pieza_retrabajos, fecha_comienzo_retrabajos, tiempo_retrabajos,"
 							+ " clientes_retrabajos, firmas_retrabajos, imagen_retrabajos, realizado_por_personal,"
 							+ " fecha_personal, cliente_personal, pieza_personal, referencia_personal, firmas_personal,"
-							+ " imagen_personal, retrabajos, formacion, nombre_carpeta"
+							+ " imagen_personal, retrabajos, formacion, nombre_carpeta, piezas_muestra, comprobacion_servicio"
 							+ ") VALUES(?,?,?,?,?,?,?,?,?,?,"
 							+ "?,?,?,?,?,?,?,?,?,?,"
 							+ "?,?,?,?,?,?,?,?,?,?,"
@@ -151,7 +151,7 @@ public class Llamadas {
 							+ "?,?,?,?,?,?,?,?,?,?,"
 							+ "?,?,?,?,?,?,?,?,?,?,"
 							+ "?,?,?,?,?,?,?,?,?,?,"
-							+ "?,?,?,?,?"
+							+ "?,?,?,?,?,?,?,?,?"
 							+ ")");
 
 			preparedStatement.setInt(1, servicio.getIdCliente());
@@ -198,117 +198,121 @@ public class Llamadas {
 			preparedStatement.setBoolean(36, servicio.isOperarioA5());
 			preparedStatement.setBoolean(37, servicio.isOperarioA6());
 			preparedStatement.setBoolean(38, servicio.isOperarioA7());
-			preparedStatement.setBoolean(39, servicio.isPeticionMaterialInstruccion());
-			preparedStatement.setBoolean(40, servicio.isReferenciasCorrectasInstruccion());
-			preparedStatement.setBoolean(41, servicio.isSeleccionPiezasInstruccion());
-			preparedStatement.setBoolean(42, servicio.isRetrabajoPiezasInstruccion());
-			preparedStatement.setBoolean(43, servicio.isTrasvaseInstruccion());
-			preparedStatement.setBoolean(44, servicio.isOtrosInstruccion());
-			preparedStatement.setString(45, servicio.getAccionesIntruccion());
+			preparedStatement.setBoolean(39, servicio.isOperarioA8());
+			preparedStatement.setBoolean(40, servicio.isOperarioA9());
+			preparedStatement.setBoolean(41, servicio.isPeticionMaterialInstruccion());
+			preparedStatement.setBoolean(42, servicio.isReferenciasCorrectasInstruccion());
+			preparedStatement.setBoolean(43, servicio.isSeleccionPiezasInstruccion());
+			preparedStatement.setBoolean(44, servicio.isRetrabajoPiezasInstruccion());
+			preparedStatement.setBoolean(45, servicio.isTrasvaseInstruccion());
+			preparedStatement.setBoolean(46, servicio.isOtrosInstruccion());
+			preparedStatement.setString(47, servicio.getAccionesIntruccion());
 
-			preparedStatement.setString(46, servicio.getTablaDefectos());
-			preparedStatement.setString(47, servicio.getPiezasOK());
-			preparedStatement.setString(48, servicio.getPiezasRecuperadas());
-			preparedStatement.setString(49, servicio.getRecuentoFinal());
-			preparedStatement.setString(50, servicio.getArrayHoraNormal());
-			preparedStatement.setString(51, servicio.getArrayHoraExtra());
-			preparedStatement.setString(52, servicio.getArrayHoraSabado());
-			preparedStatement.setString(53, servicio.getArrayHoraFestivo());
-			preparedStatement.setString(54, servicio.getArrayHoraNocturna());
-			preparedStatement.setString(55, servicio.getArrayHoraEspecialistaNormal());
-			preparedStatement.setString(56, servicio.getArrayHoraEspecialistaExtra());
-			preparedStatement.setString(57, servicio.getArrayHoraEspecialistaSabado());
-			preparedStatement.setString(58, servicio.getArrayHoraEspecialistaFestiva());
-			preparedStatement.setString(59, servicio.getArrayHoraEspecialistaNocturna());
-			preparedStatement.setString(60, servicio.getArrayHoraCoordinacion());
-			preparedStatement.setString(61, servicio.getArrayHoraAdministracion());
-			preparedStatement.setString(62, servicio.getArrayGastosLogisticos());
-			preparedStatement.setString(63, servicio.getArrayOtros1());
-			preparedStatement.setString(64, servicio.getArrayOtros2());
+			preparedStatement.setString(48, servicio.getTablaDefectos());
+			preparedStatement.setString(49, servicio.getPiezasOK());
+			preparedStatement.setString(50, servicio.getPiezasRecuperadas());
+			preparedStatement.setString(51, servicio.getRecuentoFinal());
+			preparedStatement.setString(52, servicio.getArrayHoraNormal());
+			preparedStatement.setString(53, servicio.getArrayHoraExtra());
+			preparedStatement.setString(54, servicio.getArrayHoraSabado());
+			preparedStatement.setString(55, servicio.getArrayHoraFestivo());
+			preparedStatement.setString(56, servicio.getArrayHoraNocturna());
+			preparedStatement.setString(57, servicio.getArrayHoraEspecialistaNormal());
+			preparedStatement.setString(58, servicio.getArrayHoraEspecialistaExtra());
+			preparedStatement.setString(59, servicio.getArrayHoraEspecialistaSabado());
+			preparedStatement.setString(60, servicio.getArrayHoraEspecialistaFestiva());
+			preparedStatement.setString(61, servicio.getArrayHoraEspecialistaNocturna());
+			preparedStatement.setString(62, servicio.getArrayHoraCoordinacion());
+			preparedStatement.setString(63, servicio.getArrayHoraAdministracion());
+			preparedStatement.setString(64, servicio.getArrayGastosLogisticos());
+			preparedStatement.setString(65, servicio.getArrayOtros1());
+			preparedStatement.setString(66, servicio.getArrayOtros2());
 
 			if (servicio.getRealizadoPorRetrabajos() != null)
-				preparedStatement.setString(65, servicio.getRealizadoPorRetrabajos());
+				preparedStatement.setString(67, servicio.getRealizadoPorRetrabajos());
 			else
-				preparedStatement.setString(65, null);
+				preparedStatement.setString(67, null);
 			java.sql.Date FechaRetrabajos = null;
 			if (servicio.getFechaRetrabajos() != null) {
 				FechaRetrabajos = new java.sql.Date(servicio.getFechaRetrabajos().getTime());
 			}
-			preparedStatement.setDate(66, FechaRetrabajos);
+			preparedStatement.setDate(68, FechaRetrabajos);
 			java.sql.Date FechaLiberacionRetrabajos = null;
 			if (servicio.getFechaLiberacionRetrabajos() != null) {
 				FechaLiberacionRetrabajos = new java.sql.Date(servicio.getFechaLiberacionRetrabajos().getTime());
 			}
-			preparedStatement.setDate(67, FechaLiberacionRetrabajos);
+			preparedStatement.setDate(69, FechaLiberacionRetrabajos);
 			if (servicio.getNumReclamacionRetrabajos() != null)
-				preparedStatement.setString(68, servicio.getNumReclamacionRetrabajos());
+				preparedStatement.setString(70, servicio.getNumReclamacionRetrabajos());
 			else
-				preparedStatement.setString(68, null);
+				preparedStatement.setString(70, null);
 			java.sql.Date FechaReclamacionRetrabajos = null;
 			if (servicio.getFechaReclamacionRetrabajos() != null) {
 				FechaReclamacionRetrabajos = new java.sql.Date(servicio.getFechaReclamacionRetrabajos().getTime());
 			}
-			preparedStatement.setDate(69, FechaReclamacionRetrabajos);
+			preparedStatement.setDate(71, FechaReclamacionRetrabajos);
 			if (servicio.getReferenciaPiezaRetrabajos() != null)
-				preparedStatement.setString(70, servicio.getReferenciaPiezaRetrabajos());
+				preparedStatement.setString(72, servicio.getReferenciaPiezaRetrabajos());
 			else
-				preparedStatement.setString(70, null);
+				preparedStatement.setString(72, null);
 			java.sql.Date FechaComienzoRetrabajos = null;
 			if (servicio.getFechaComienzoRetrabajos() != null) {
 				FechaComienzoRetrabajos = new java.sql.Date(servicio.getFechaComienzoRetrabajos().getTime());
 			}
-			preparedStatement.setDate(71, FechaComienzoRetrabajos);
+			preparedStatement.setDate(73, FechaComienzoRetrabajos);
 			if (servicio.getTiempoRetrabajos() != null)
-				preparedStatement.setString(72, servicio.getTiempoRetrabajos());
-			else
-				preparedStatement.setString(72, null);
-			if (servicio.getClienteRetrabajos() != null)
-				preparedStatement.setString(73, servicio.getClienteRetrabajos());
-			else
-				preparedStatement.setString(73, null);
-			if (servicio.getFirmasRetrabajos() != null)
-				preparedStatement.setString(74, servicio.getFirmasRetrabajos());
+				preparedStatement.setString(74, servicio.getTiempoRetrabajos());
 			else
 				preparedStatement.setString(74, null);
-			if (servicio.getImagenRetrabajos() != null)
-				preparedStatement.setString(75, servicio.getImagenRetrabajos());
+			if (servicio.getClienteRetrabajos() != null)
+				preparedStatement.setString(75, servicio.getClienteRetrabajos());
 			else
 				preparedStatement.setString(75, null);
+			if (servicio.getFirmasRetrabajos() != null)
+				preparedStatement.setString(76, servicio.getFirmasRetrabajos());
+			else
+				preparedStatement.setString(76, null);
+			if (servicio.getImagenRetrabajos() != null)
+				preparedStatement.setString(77, servicio.getImagenRetrabajos());
+			else
+				preparedStatement.setString(77, null);
 
 
 			if (servicio.getRealizadoPorPersonal() != null)
-				preparedStatement.setString(76, servicio.getRealizadoPorPersonal());
+				preparedStatement.setString(78, servicio.getRealizadoPorPersonal());
 			else
-				preparedStatement.setString(76, null);
+				preparedStatement.setString(78, null);
 			java.sql.Date FechaPersonal = null;
 			if (servicio.getFechaPersonal() != null) {
 				FechaPersonal = new java.sql.Date(servicio.getFechaPersonal().getTime());
 			}
-			preparedStatement.setDate(77, FechaPersonal);
+			preparedStatement.setDate(79, FechaPersonal);
 			if (servicio.getClientePersonal() != null)
-				preparedStatement.setString(78, servicio.getClientePersonal());
-			else
-				preparedStatement.setString(78, null);
-			if (servicio.getPiezaPersonal() != null)
-				preparedStatement.setString(79, servicio.getPiezaPersonal());
-			else
-				preparedStatement.setString(79, null);
-			if (servicio.getReferenciaPersonal() != null)
-				preparedStatement.setString(80, servicio.getReferenciaPersonal());
+				preparedStatement.setString(80, servicio.getClientePersonal());
 			else
 				preparedStatement.setString(80, null);
-			if (servicio.getFirmasPersonal() != null)
-				preparedStatement.setString(81, servicio.getFirmasPersonal());
+			if (servicio.getPiezaPersonal() != null)
+				preparedStatement.setString(81, servicio.getPiezaPersonal());
 			else
 				preparedStatement.setString(81, null);
-			if (servicio.getImagenPersonal() != null)
-				preparedStatement.setString(82, servicio.getImagenPersonal());
+			if (servicio.getReferenciaPersonal() != null)
+				preparedStatement.setString(82, servicio.getReferenciaPersonal());
 			else
 				preparedStatement.setString(82, null);
+			if (servicio.getFirmasPersonal() != null)
+				preparedStatement.setString(83, servicio.getFirmasPersonal());
+			else
+				preparedStatement.setString(83, null);
+			if (servicio.getImagenPersonal() != null)
+				preparedStatement.setString(84, servicio.getImagenPersonal());
+			else
+				preparedStatement.setString(84, null);
 
-			preparedStatement.setBoolean(83, servicio.isRetrabajos());
-			preparedStatement.setBoolean(84, servicio.isFormacion());
-			preparedStatement.setString(85, servicio.getNombreCarpeta());
+			preparedStatement.setBoolean(85, servicio.isRetrabajos());
+			preparedStatement.setBoolean(86, servicio.isFormacion());
+			preparedStatement.setString(87, servicio.getNombreCarpeta());
+			preparedStatement.setString(88, servicio.getPiezasMuestraInstruccion());
+			preparedStatement.setString(89, servicio.getComprobacionServicioInstruccion());
 
 			preparedStatement.executeUpdate();
 			preparedStatement.close();
@@ -355,7 +359,7 @@ public class Llamadas {
 							+ " referencia_pieza_retrabajos, fecha_comienzo_retrabajos, tiempo_retrabajos,"
 							+ " clientes_retrabajos, firmas_retrabajos, imagen_retrabajos, realizado_por_personal,"
 							+ " fecha_personal, cliente_personal, pieza_personal, referencia_personal, firmas_personal,"
-							+ " imagen_personal, retrabajos, formacion, nombre_carpeta"
+							+ " imagen_personal, retrabajos, formacion, nombre_carpeta, piezas_muestra, comprobacion_servicio"
 							+ ") VALUES(?,?,?,?,?,?,?,?,?,?"
 							+ ",?,?,?,?,?,?,?,?,?,?"
 							+ ",?,?,?,?,?,?,?,?,?,?"
@@ -364,7 +368,7 @@ public class Llamadas {
 							+ ",?,?,?,?,?,?,?,?,?,?"
 							+ ",?,?,?,?,?,?,?,?,?,?"
 							+ ",?,?,?,?,?,?,?,?,?,?"
-							+ "?,?,?,?,?,?,?)");
+							+ "?,?,?,?,?,?,?,?,?)");
 
 			preparedStatement.setInt(1, servicio.getIdCliente());
 			preparedStatement.setString(2, servicio.getNomCliente());
@@ -459,6 +463,8 @@ public class Llamadas {
 			preparedStatement.setBoolean(85, servicio.isRetrabajos());
 			preparedStatement.setBoolean(86, servicio.isFormacion());
 			preparedStatement.setString(87, servicio.getNombreCarpeta());
+			preparedStatement.setString(88, servicio.getPiezasMuestraInstruccion());
+			preparedStatement.setString(89, servicio.getComprobacionServicioInstruccion());
 
 			preparedStatement.executeUpdate();
 			preparedStatement.close();
@@ -763,5 +769,28 @@ public class Llamadas {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public boolean actualizarImagenesMuestra(String imagenesMuestra, String numAccion) {
+		
+		Database database = new Database();
+		Connection connection;
+		try {
+			connection = database.Get_Connection();
+			Statement statement = connection.createStatement();
+
+			statement
+			.executeUpdate("UPDATE servicios_en_linea SET piezas_muestra='"
+					+ imagenesMuestra
+					+ "' where num_accion='"
+					+ numAccion + "'");
+			statement.close();
+			connection.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		return true;
 	}
 }

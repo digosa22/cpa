@@ -12,38 +12,27 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
 
-public class VentanaImagenes extends JDialog {
+public class VentanaImagenesPiezasMuestraOKNOK extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel panel;
-	private String[] arrayInstrucciones;
+	private String imagenes;
 	private JLabel label;
 	private JLabel label2;
 
+	private int accion;
 	private JDialog ventanaPadre;
-	private int nuevoEditar;
-	
-	private int accionSeleccionada = 0;
-	private JComboBox<String> comboAcciones;
-	private JTextArea textoArea;
-	private JCheckBox aplicaCheckbox;
 
-	private String texto;
-	private String imagen1;
-	private String imagen2;
-	private boolean aplica;
+	private String ruta1;
+	private String ruta2;
 
 	private JButton botonAnadir1;
 	private JButton botonBorrar1;
@@ -53,7 +42,7 @@ public class VentanaImagenes extends JDialog {
 	private boolean existeImagen1 = false;
 	private boolean existeImagen2 = false;
 
-	public VentanaImagenes(JDialog ventanaPadre, String[] arrayInst, int nuevoEditar, Utilidades utilidades, String nombreCarpeta) {
+	public VentanaImagenesPiezasMuestraOKNOK(JDialog ventanaPadre, String imags, Utilidades utilidades, String nombreCarpeta, int acci) {
 
 		super(ventanaPadre, true);
 
@@ -64,97 +53,65 @@ public class VentanaImagenes extends JDialog {
 		}
 
 		this.ventanaPadre = ventanaPadre;
-		this.nuevoEditar = nuevoEditar;
-
-		this.arrayInstrucciones = arrayInst;
+		imagenes = imags;
+		accion = acci;
 		panel = new JPanel();
 		panel.setLayout(null);
-		
-		cargarDatosDeAccion();
-		
-		JLabel seleccionaAccionLabel = new JLabel("<html><h4>Selecciona la acción a modificar</h4></html>");
-		seleccionaAccionLabel.setBounds(10, 15, 200, 30);
-		panel.add(seleccionaAccionLabel);
-		comboAcciones = new JComboBox<String>();
-		comboAcciones.addItem("Acción 3");
-		comboAcciones.addItem("Acción 4");
-		comboAcciones.addItem("Acción 5");
-		comboAcciones.addItem("Acción 6");
-		comboAcciones.addItem("Acción 7");
-		comboAcciones.addItem("Acción 8");
-		comboAcciones.addItem("Acción 9");
-		comboAcciones.addItem("Acción 10");
-		comboAcciones.addItem("Acción 11");
-		comboAcciones.addItem("Acción 12");
-		comboAcciones.setBounds(40, 60, 120, 30);
-		panel.add(comboAcciones);
+
+		ruta1 = imagenes.substring(0, imagenes.indexOf("#;#"));
+		ruta2 = imagenes.substring(imagenes.indexOf("#;#")+3);
 
 		label = new JLabel();
-		label.setBounds(300, 20, 300, 300);
+		label.setBounds(10, 50, 450, 450);
 		label2 = new JLabel();
-		label2.setBounds(620, 20, 300, 300);
-		
-		textoArea = new JTextArea();
-		textoArea.setLineWrap(true);
-		textoArea.setWrapStyleWord(true);
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setViewportView(textoArea);
-		scrollPane.setBounds(15, 120, 200, 180);
-		panel.add(scrollPane);
-		
-		aplicaCheckbox = new JCheckBox("Aplica");
-		aplicaCheckbox.setBounds(200, 65, 80, 20);
-		panel.add(aplicaCheckbox);
-		
-		imagen1 = "http://lamelonera.com/wp-content/uploads/2014/03/textura-negra_2-1600x1591.jpg";
-		imagen2 = "http://lamelonera.com/wp-content/uploads/2014/03/textura-negra_2-1600x1591.jpg";
-		
+		label2.setBounds(470, 50, 450, 450);
+
 
 		try {
-			if (!imagen1.isEmpty()) {
-				ImageIcon imgTemporal = new ImageIcon(ImageIO.read(new URL(imagen1)));
+			if (!ruta1.isEmpty()) {
+				ImageIcon imgTemporal = new ImageIcon(ImageIO.read(new URL(ruta1)));
 				int anchoOriginal = imgTemporal.getIconWidth();
 				int altoOriginal = imgTemporal.getIconHeight();
 				if (anchoOriginal > altoOriginal) {
-					if (anchoOriginal > 300) {
-						double coeficiente = (double)300 / (double)anchoOriginal;
+					if (anchoOriginal > 450) {
+						double coeficiente = (double)450 / (double)anchoOriginal;
 						anchoOriginal = (int) (coeficiente * anchoOriginal);
 						altoOriginal = (int) (coeficiente * altoOriginal);
 					}
 				}
 				else {
-					if (anchoOriginal > 300) {
-						double coeficiente = (double)300 / (double)altoOriginal;
+					if (anchoOriginal > 450) {
+						double coeficiente = (double)450 / (double)altoOriginal;
 						anchoOriginal = (int) (coeficiente * anchoOriginal);
 						altoOriginal = (int) (coeficiente * altoOriginal);
 					}
 				}
 				Image img = imgTemporal.getImage().getScaledInstance(anchoOriginal, altoOriginal, Image.SCALE_SMOOTH);
 				label = new JLabel(new ImageIcon(img));
-				label.setBounds(300, 20, 300, 300);
+				label.setBounds(10, 50, 450, 450);
 				existeImagen1 = true;
 			}
-			if (!imagen2.isEmpty()) {
-				ImageIcon imgTemporal = new ImageIcon(ImageIO.read(new URL(imagen2)));
+			if (!ruta2.isEmpty()) {
+				ImageIcon imgTemporal = new ImageIcon(ImageIO.read(new URL(ruta2)));
 				int anchoOriginal = imgTemporal.getIconWidth();
 				int altoOriginal = imgTemporal.getIconHeight();
 				if (anchoOriginal > altoOriginal) {
-					if (anchoOriginal > 300) {
-						double coeficiente = (double)300 / (double)anchoOriginal;
+					if (anchoOriginal > 450) {
+						double coeficiente = (double)450 / (double)anchoOriginal;
 						anchoOriginal = (int) (coeficiente * anchoOriginal);
 						altoOriginal = (int) (coeficiente * altoOriginal);
 					}
 				}
 				else {
-					if (anchoOriginal > 300) {
-						double coeficiente = (double)300 / (double)altoOriginal;
+					if (anchoOriginal > 450) {
+						double coeficiente = (double)450 / (double)altoOriginal;
 						anchoOriginal = (int) (coeficiente * anchoOriginal);
 						altoOriginal = (int) (coeficiente * altoOriginal);
 					}
 				}
 				Image img = imgTemporal.getImage().getScaledInstance(anchoOriginal, altoOriginal, Image.SCALE_SMOOTH);
 				label2 = new JLabel(new ImageIcon(img));
-				label2.setBounds(620, 20, 300, 300);
+				label2.setBounds(470, 50, 450, 450);
 				existeImagen2 = true;
 			}
 		} catch (IOException e) {
@@ -163,6 +120,10 @@ public class VentanaImagenes extends JDialog {
 
 		panel.add(label);
 		panel.add(label2);
+
+		JLabel nombreLabel = new JLabel("<html><h2>Imágenes Piezas Muestra</h2></html>");
+		nombreLabel.setBounds(370, 10, 500, 30);
+		panel.add(nombreLabel);
 
 		botonAnadir1 = new JButton("Añadir imagen");
 		botonBorrar1 = new JButton("Borrar imagen");
@@ -214,7 +175,7 @@ public class VentanaImagenes extends JDialog {
 
 					if (existe) {
 						int reply = 0;
-						if (existeImagen1 && nuevoEditar == 1)
+						if (existeImagen1 && accion == 1)
 							reply = JOptionPane.showConfirmDialog(null, "¿Deseas sobreescribir la imagen actual por la imagen seleccionada?", "Sobreescribir imagen", JOptionPane.YES_NO_OPTION);
 
 						if (reply == JOptionPane.YES_OPTION) {
@@ -225,25 +186,24 @@ public class VentanaImagenes extends JDialog {
 								extension = ".png";
 
 							utilidades.crearCarpetas(nombreCarpeta);
-							int temp = accionSeleccionada + 1;
-							String nombre = "instruccion" + temp + "1" + extension;
+							String nombre = "piezamuestra1" + extension;
 							utilidades.subirImagenInstruccion(imagen, nombreCarpeta, nombre);
-							imagen1 = "http://clientes-cpavitoria06.com/"+nombreCarpeta+"/img/"+nombre;
+							ruta1 = "http://clientes-cpavitoria06.com/"+nombreCarpeta+"/img/"+nombre;
 							actualizarImagenes();
 							try {
-								ImageIcon imgTemporal = new ImageIcon(ImageIO.read(new URL(imagen1)));
+								ImageIcon imgTemporal = new ImageIcon(ImageIO.read(new URL(ruta1)));
 								int anchoOriginal = imgTemporal.getIconWidth();
 								int altoOriginal = imgTemporal.getIconHeight();
 								if (anchoOriginal > altoOriginal) {
-									if (anchoOriginal > 300) {
-										double coeficiente = (double)300 / (double)anchoOriginal;
+									if (anchoOriginal > 450) {
+										double coeficiente = (double)450 / (double)anchoOriginal;
 										anchoOriginal = (int) (coeficiente * anchoOriginal);
 										altoOriginal = (int) (coeficiente * altoOriginal);
 									}
 								}
 								else {
-									if (anchoOriginal > 300) {
-										double coeficiente = (double)300 / (double)altoOriginal;
+									if (anchoOriginal > 450) {
+										double coeficiente = (double)450 / (double)altoOriginal;
 										anchoOriginal = (int) (coeficiente * anchoOriginal);
 										altoOriginal = (int) (coeficiente * altoOriginal);
 									}
@@ -297,7 +257,7 @@ public class VentanaImagenes extends JDialog {
 
 					if (existe) {
 						int reply = 0;
-						if (existeImagen2 && nuevoEditar == 1)
+						if (existeImagen2 && accion == 1)
 							reply = JOptionPane.showConfirmDialog(null, "¿Deseas sobreescribir la imagen actual por la imagen seleccionada?", "Sobreescribir imagen", JOptionPane.YES_NO_OPTION);
 
 						if (reply == JOptionPane.YES_OPTION) {
@@ -308,26 +268,25 @@ public class VentanaImagenes extends JDialog {
 								extension = ".png";
 
 							utilidades.crearCarpetas(nombreCarpeta);
-							int temp = accionSeleccionada + 1;
-							String nombre = "instruccion" + temp + "2" + extension;
+							String nombre = "piezamuestra2" + extension;
 							utilidades.subirImagenInstruccion(imagen, nombreCarpeta, nombre);
 
-							imagen2 = "http://clientes-cpavitoria06.com/"+nombreCarpeta+"/img/"+nombre;
+							ruta2 = "http://clientes-cpavitoria06.com/"+nombreCarpeta+"/img/"+nombre;
 							actualizarImagenes();
 							try {
-								ImageIcon imgTemporal = new ImageIcon(ImageIO.read(new URL(imagen2)));
+								ImageIcon imgTemporal = new ImageIcon(ImageIO.read(new URL(ruta2)));
 								int anchoOriginal = imgTemporal.getIconWidth();
 								int altoOriginal = imgTemporal.getIconHeight();
 								if (anchoOriginal > altoOriginal) {
-									if (anchoOriginal > 300) {
-										double coeficiente = (double)300 / (double)anchoOriginal;
+									if (anchoOriginal > 450) {
+										double coeficiente = (double)450 / (double)anchoOriginal;
 										anchoOriginal = (int) (coeficiente * anchoOriginal);
 										altoOriginal = (int) (coeficiente * altoOriginal);
 									}
 								}
 								else {
-									if (anchoOriginal > 300) {
-										double coeficiente = (double)300 / (double)altoOriginal;
+									if (anchoOriginal > 450) {
+										double coeficiente = (double)450 / (double)altoOriginal;
 										anchoOriginal = (int) (coeficiente * anchoOriginal);
 										altoOriginal = (int) (coeficiente * altoOriginal);
 									}
@@ -353,8 +312,9 @@ public class VentanaImagenes extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				int reply = JOptionPane.showConfirmDialog(null, "¿Deseas borrar la imagen?", "Borrar imagen", JOptionPane.YES_NO_OPTION);
 				if (reply == JOptionPane.YES_OPTION) {
-					utilidades.borrarImagen(imagen1);
-					imagen1 = "";
+					if (ruta1.contains("06.com/img"))
+						utilidades.borrarImagen(ruta1);
+					ruta1 = "";
 					actualizarImagenes();
 					botonBorrar1.setEnabled(false);
 					label.setIcon(null);
@@ -367,8 +327,9 @@ public class VentanaImagenes extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				int reply = JOptionPane.showConfirmDialog(null, "¿Deseas borrar la imagen?", "Borrar imagen", JOptionPane.YES_NO_OPTION);
 				if (reply == JOptionPane.YES_OPTION) {
-					utilidades.borrarImagen(imagen2);
-					imagen2 = "";
+					if (ruta2.contains("06.com/img"))
+						utilidades.borrarImagen(ruta2);
+					ruta2 = "";
 					actualizarImagenes();
 					botonBorrar2.setEnabled(false);
 					label2.setIcon(null);
@@ -378,37 +339,21 @@ public class VentanaImagenes extends JDialog {
 
 		this.getContentPane().add(panel);
 		this.setSize(940, 580);
-		this.setTitle("Acciones instrucción");
+		this.setTitle("Añadir imágenes");
 		this.setResizable(false);
 		this.setLocation((getToolkit().getScreenSize().width - this.getBounds().width) / 2,
 				(getToolkit().getScreenSize().height - this.getBounds().height) / 2);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	}
 
-	public void cargarDatosDeAccion() {
-		String temp = arrayInstrucciones[accionSeleccionada];
-		texto = temp.substring(0, temp.indexOf("@;@"));
-		temp = temp.substring(temp.indexOf("@;@")+3);
-		imagen1 = temp.substring(0, temp.indexOf("#;#"));
-		temp = temp.substring(temp.indexOf("#;#")+3);
-		imagen2 = temp.substring(0, temp.indexOf("@;@"));
-		temp = temp.substring(temp.indexOf("@;@")+3);
-		if (temp.equalsIgnoreCase("0")) {
-			aplica = false;
-		} else {
-			aplica = true;
-		}
-	}
-
 	public void actualizarImagenes() {
-		
-//		imagenes = imagen1 + "#;#" + imagen2;
-//		if (nuevoEditar == 0) {
-//			((VentanaNuevo)ventanaPadre).actualizarAccionesInstruccion(arrayInstrucciones);
-//		}
-//		else {
-//			((VentanaEditar)ventanaPadre).actualizarAccionesInstruccion(arrayInstrucciones);
-//		}
+		imagenes = ruta1 + "#;#" + ruta2;
+		if (accion == 0) {
+			((VentanaNuevo)ventanaPadre).actualizarImagenesPiezasMuestra(imagenes);
+		}
+		else {
+			((VentanaEditar)ventanaPadre).actualizarImagenesPiezasMuestra(imagenes);
+		}
 	}
 
 }

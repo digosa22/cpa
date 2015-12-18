@@ -415,60 +415,108 @@ public class Utilidades {
 
 			cell = sheet.getRow(posiciones.getOperario().getFila()).getCell(posiciones.getOperario().getColumna());
 			cell.setCellValue(operario);
+			
+			if (servicio.isPeticionMaterialInstruccion()) {
+				cell = sheet.getRow(posiciones.getPeticionMaterialInstruccionAplica().getFila()).getCell(posiciones.getPeticionMaterialInstruccionAplica().getColumna());
+				cell.setCellValue("X");
+			} else {
+				cell = sheet.getRow(posiciones.getPeticionMaterialInstruccionNoAplica().getFila()).getCell(posiciones.getPeticionMaterialInstruccionNoAplica().getColumna());
+				cell.setCellValue("X");
+			}
+			if (servicio.isReferenciasCorrectasInstruccion()) {
+				cell = sheet.getRow(posiciones.getReferenciasCorrectasInstruccionAplica().getFila()).getCell(posiciones.getReferenciasCorrectasInstruccionAplica().getColumna());
+				cell.setCellValue("X");
+			} else {
+				cell = sheet.getRow(posiciones.getReferenciasCorrectasInstruccionNoAplica().getFila()).getCell(posiciones.getReferenciasCorrectasInstruccionNoAplica().getColumna());
+				cell.setCellValue("X");
+			}
+			if (servicio.isSeleccionPiezasInstruccion()) {
+				cell = sheet.getRow(posiciones.getSeleccionPiezasInstruccionAplica().getFila()).getCell(posiciones.getSeleccionPiezasInstruccionAplica().getColumna());
+				cell.setCellValue("X");
+			} else {
+				cell = sheet.getRow(posiciones.getSeleccionPiezasInstruccionNoAplica().getFila()).getCell(posiciones.getSeleccionPiezasInstruccionNoAplica().getColumna());
+				cell.setCellValue("X");
+			}
+			if (servicio.isRetrabajoPiezasInstruccion()) {
+				cell = sheet.getRow(posiciones.getRetrabajoPiezasInstruccionAplica().getFila()).getCell(posiciones.getRetrabajoPiezasInstruccionAplica().getColumna());
+				cell.setCellValue("X");
+			} else {
+				cell = sheet.getRow(posiciones.getRetrabajoPiezasInstruccionNoAplica().getFila()).getCell(posiciones.getRetrabajoPiezasInstruccionNoAplica().getColumna());
+				cell.setCellValue("X");
+			}
+			if (servicio.isTrasvaseInstruccion()) {
+				cell = sheet.getRow(posiciones.getTrasvaseInstruccionAplica().getFila()).getCell(posiciones.getTrasvaseInstruccionAplica().getColumna());
+				cell.setCellValue("X");
+			} else {
+				cell = sheet.getRow(posiciones.getTrasvaseInstruccionNoAplica().getFila()).getCell(posiciones.getTrasvaseInstruccionNoAplica().getColumna());
+				cell.setCellValue("X");
+			}
+			if (servicio.isOtrosInstruccion()) {
+				cell = sheet.getRow(posiciones.getOtrosInstruccionAplica().getFila()).getCell(posiciones.getOtrosInstruccionAplica().getColumna());
+				cell.setCellValue("X");
+			} else {
+				cell = sheet.getRow(posiciones.getOtrosInstruccionNoAplica().getFila()).getCell(posiciones.getOtrosInstruccionNoAplica().getColumna());
+				cell.setCellValue("X");
+			}
+			
+			cell = sheet.getRow(posiciones.getAccionesInstruccionComprobacionServicioPrestado().getFila()).getCell(posiciones.getAccionesInstruccionComprobacionServicioPrestado().getColumna());
+			cell.setCellValue(servicio.getComprobacionServicioInstruccion());
+			
+			//TODO PONER EL accionesInstruccionPiezaMuestraImagen1 Y accionesInstruccionPiezaMuestraImagen2
 
 
 			String[] arrTemp = servicio.getAccionesIntruccion().split("@;@");
 			int fila = 0;
 			int columna = 0;
-			String[] imagenes;
-			boolean anadir = false;
-			for (int i=0; i<arrTemp.length; i++) {
-
-				if (i%3 == 0 || i == 0) {
-					if (arrTemp[i].trim().isEmpty()) {
-						anadir = false;
-					}
-					else {
-						anadir = true;
-					}
-				}
-
-				if (anadir){
-					if (columna == 0) {
-						cell = sheet.getRow(posiciones.getAccionesInstruccionDescripcionInicial().getFila()+fila).getCell(posiciones.getAccionesInstruccionDescripcionInicial().getColumna());
-						cell.setCellValue(arrTemp[i]);
-					} else if (columna == 1) {
-						imagenes = new String[2];
-						imagenes[0] = arrTemp[i].substring(0, arrTemp[i].indexOf("#;#"));
-						imagenes[1] = arrTemp[i].substring(arrTemp[i].indexOf("#;#")+3);
-						if (!imagenes[0].isEmpty()) {
-							String destino = "img/instruccion"+servicio.getNumAccion()+imagenes[0].substring(imagenes[0].length()-4);
-							descargarImagen(imagenes[0], destino);
-							insertarImagen(workbook, sheet, destino.substring(0, destino.length()-4), destino.substring(destino.length()-3), posiciones.getAccionesInstruccionOtros1Inicial(), 150, 150, fila);//TODO CAMBIAR ANCHO Y ALTO CUANDO ESTE PLANTILLA
-						}
-						if (!imagenes[1].isEmpty()) {
-							String destino = "img/instruccion"+servicio.getNumAccion()+imagenes[1].substring(imagenes[1].length()-4);
-							descargarImagen(imagenes[1], destino);
-							insertarImagen(workbook, sheet, destino.substring(0, destino.length()-4), destino.substring(destino.length()-3), posiciones.getAccionesInstruccionOtros2Inicial(), 150, 150, fila);//TODO CAMBIAR ANCHO Y ALTO CUANDO ESTE PLANTILLA
-						}
-					} else {
-						cell = sheet.getRow(posiciones.getAccionesInstruccionAplicaInicial().getFila()+fila).getCell(posiciones.getAccionesInstruccionAplicaInicial().getColumna());
-						if (arrTemp[i].equalsIgnoreCase("0")) {
-							cell = sheet.getRow(posiciones.getAccionesInstruccionNoAplicaInicial().getFila()+fila).getCell(posiciones.getAccionesInstruccionNoAplicaInicial().getColumna());
-						}
-						cell.setCellValue("X");
-					}
-				}
-
-				columna++;
-				if (columna > 2) {
-					fila = fila + 3;
-					if (fila == 33) {
-						fila++;
-					}
-					columna = 0;
-				}
-			}
+//			String[] imagenes;
+//			boolean anadir = false;
+//			for (int i=0; i<arrTemp.length; i++) {
+//
+//				if (i%3 == 0 || i == 0) {
+//					if (arrTemp[i].trim().isEmpty()) {
+//						anadir = false;
+//					}
+//					else {
+//						anadir = true;
+//					}
+//				}
+//
+//				if (anadir){
+//					if (columna == 0) {
+//						cell = sheet.getRow(posiciones.getAccionesInstruccionDescripcionInicial().getFila()+fila).getCell(posiciones.getAccionesInstruccionDescripcionInicial().getColumna());
+//						cell.setCellValue(arrTemp[i]);
+//					} else if (columna == 1) {
+//						imagenes = new String[2];
+//						imagenes[0] = arrTemp[i].substring(0, arrTemp[i].indexOf("#;#"));
+//						imagenes[1] = arrTemp[i].substring(arrTemp[i].indexOf("#;#")+3);
+//						if (!imagenes[0].isEmpty()) {
+//							String destino = "img/instruccion"+servicio.getNumAccion()+imagenes[0].substring(imagenes[0].length()-4);
+//							descargarImagen(imagenes[0], destino);
+//							insertarImagen(workbook, sheet, destino.substring(0, destino.length()-4), destino.substring(destino.length()-3), posiciones.getAccionesInstruccionOtros1Inicial(), 150, 150, fila);//TODO CAMBIAR ANCHO Y ALTO CUANDO ESTE PLANTILLA
+//						}
+//						if (!imagenes[1].isEmpty()) {
+//							String destino = "img/instruccion"+servicio.getNumAccion()+imagenes[1].substring(imagenes[1].length()-4);
+//							descargarImagen(imagenes[1], destino);
+//							insertarImagen(workbook, sheet, destino.substring(0, destino.length()-4), destino.substring(destino.length()-3), posiciones.getAccionesInstruccionOtros2Inicial(), 150, 150, fila);//TODO CAMBIAR ANCHO Y ALTO CUANDO ESTE PLANTILLA
+//						}
+//					} else {
+//						cell = sheet.getRow(posiciones.getAccionesInstruccionAplicaInicial().getFila()+fila).getCell(posiciones.getAccionesInstruccionAplicaInicial().getColumna());
+//						if (arrTemp[i].equalsIgnoreCase("0")) {
+//							cell = sheet.getRow(posiciones.getAccionesInstruccionNoAplicaInicial().getFila()+fila).getCell(posiciones.getAccionesInstruccionNoAplicaInicial().getColumna());
+//						}
+//						cell.setCellValue("X");
+//					}
+//				}
+//
+//				columna++;
+//				if (columna > 2) {
+//					fila = fila + 3;
+//					if (fila == 33) {
+//						fila++;
+//					}
+//					columna = 0;
+//				}
+//			}
 
 			// INFORMACION DE RESULTADOS 3
 

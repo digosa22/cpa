@@ -82,13 +82,9 @@ public class Posiciones {
 	private Posicion accionesInstruccionOtros2Inicial = new Posicion(7,23); // H24
 	private Posicion accionesInstruccionAplicaInicial = new Posicion(9,22); // J23
 	private Posicion accionesInstruccionNoAplicaInicial = new Posicion(10,22); // K23
-	
-	
-	private Posicion accionesInstruccionDescripcion12 = new Posicion(1,56); // B57
-	private Posicion accionesInstruccionOtros121 = new Posicion(4,57); // E58
-	private Posicion accionesInstruccionOtro122 = new Posicion(7,57); // H58
-	private Posicion accionesInstruccionAplica12 = new Posicion(9,56); // J57
-	private Posicion accionesInstruccionNoAplica12 = new Posicion(10,56); // K57
+	private Posicion accionesInstruccionPiezaMuestraImagen1 = new Posicion(4,53); // E54
+	private Posicion accionesInstruccionPiezaMuestraImagen2 = new Posicion(7,53); // H54
+	private Posicion accionesInstruccionComprobacionServicioPrestado = new Posicion(3,56); // D57
 	
 	
 	
@@ -417,24 +413,16 @@ public class Posiciones {
 		return accionesInstruccionNoAplicaInicial;
 	}
 
-	public Posicion getAccionesInstruccionDescripcion12() {
-		return accionesInstruccionDescripcion12;
+	public Posicion getAccionesInstruccionPiezaMuestraImagen1() {
+		return accionesInstruccionPiezaMuestraImagen1;
 	}
 
-	public Posicion getAccionesInstruccionOtros121() {
-		return accionesInstruccionOtros121;
+	public Posicion getAccionesInstruccionPiezaMuestraImagen2() {
+		return accionesInstruccionPiezaMuestraImagen2;
 	}
 
-	public Posicion getAccionesInstruccionOtro122() {
-		return accionesInstruccionOtro122;
-	}
-
-	public Posicion getAccionesInstruccionAplica12() {
-		return accionesInstruccionAplica12;
-	}
-
-	public Posicion getAccionesInstruccionNoAplica12() {
-		return accionesInstruccionNoAplica12;
+	public Posicion getAccionesInstruccionComprobacionServicioPrestado() {
+		return accionesInstruccionComprobacionServicioPrestado;
 	}
 
 	public Posicion getDefecto1Nombre() {

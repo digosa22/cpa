@@ -60,6 +60,8 @@ public class Servicio {
 	private boolean trasvaseInstruccion;
 	private boolean otrosInstruccion;
 	private String accionesIntruccion;
+	private String piezasMuestraInstruccion;
+	private String comprobacionServicioInstruccion;
 	
 	
 	
@@ -148,7 +150,7 @@ public class Servicio {
 			Date fechaComienzoRetrabajos, String tiempoRetrabajos, String clienteRetrabajos, String firmasRetrabajos,
 			String imagenRetrabajos, String realizadoPorPersonal, Date fechaPersonal, String clientePersonal,
 			String piezaPersonal, String referenciaPersonal, String firmasPersonal, String imagenPersonal, 
-			boolean retrabajos, boolean formacion, String nombreCarpeta) {
+			boolean retrabajos, boolean formacion, String nombreCarpeta, String piezasMuestraInstruccion, String comprobacionServicioInstruccion) {
 		super();
 		this.idCliente = idCliente;
 		this.nomCliente = nomCliente;
@@ -237,6 +239,20 @@ public class Servicio {
 		this.retrabajos = retrabajos;
 		this.formacion = formacion;
 		this.nombreCarpeta = nombreCarpeta;
+		this.piezasMuestraInstruccion = piezasMuestraInstruccion;
+		this.comprobacionServicioInstruccion = comprobacionServicioInstruccion;
+	}
+	public String getPiezasMuestraInstruccion() {
+		return piezasMuestraInstruccion;
+	}
+	public void setPiezasMuestraInstruccion(String piezasMuestraInstruccion) {
+		this.piezasMuestraInstruccion = piezasMuestraInstruccion;
+	}
+	public String getComprobacionServicioInstruccion() {
+		return comprobacionServicioInstruccion;
+	}
+	public void setComprobacionServicioInstruccion(String comprobacionServicioInstruccion) {
+		this.comprobacionServicioInstruccion = comprobacionServicioInstruccion;
 	}
 	public int getIdCliente() {
 		return idCliente;

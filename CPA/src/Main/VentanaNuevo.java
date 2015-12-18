@@ -22,6 +22,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
@@ -84,8 +85,12 @@ public class VentanaNuevo extends JDialog {
 	private JCheckBox retrabajo;
 	private JCheckBox trasvase;
 	private JCheckBox otrosPiezas;
-	private JTable trabajos;
-	private String [] arrayImagenes;
+	private String [] arrayInstrucciones = new String[10];
+	
+	private JTextArea comprobacionDelServicio;
+	private JButton accionesInstruccionBoton;
+	private JButton imagenesPiezasMuestraBoton;
+	private String imagenesPiezasMuestra = "http://clientes-cpavitoria06.com/img/piezaOK.jpg#;#http://clientes-cpavitoria06.com/img/piezaNOK.jpg";
 
 
 	private JPanel informacion;
@@ -165,6 +170,9 @@ public class VentanaNuevo extends JDialog {
 		}
 
 		utilidades = new Utilidades();
+		
+		for (int i=0; i<arrayInstrucciones.length; i++)
+			arrayInstrucciones[i] = "@;@#;#@;@";
 
 		panel = new JPanel();
 		panel.setLayout(null);
@@ -416,74 +424,58 @@ public class VentanaNuevo extends JDialog {
 		panelControl.setBounds(10, 180, 200, 200);
 		panelControl.setLayout(null);
 		instruccionDeTrabajo.add(panelControl);
+		
+		JPanel panelComprobacionDelServicioPrestado = new JPanel();
+		panelComprobacionDelServicioPrestado.setBorder(BorderFactory.createTitledBorder("Comprobación del servicio prestado"));
+		panelComprobacionDelServicioPrestado.setBounds(230, 180, 500, 200);
+		panelComprobacionDelServicioPrestado.setLayout(null);
+		instruccionDeTrabajo.add(panelComprobacionDelServicioPrestado);
 
-		String[] columnNames = { "Descripción", "Otros", "Aplica"};
+		JPanel panelPiezaMuestra = new JPanel();
+		panelPiezaMuestra.setBorder(BorderFactory.createTitledBorder("Pieza muestra OK y NOK"));
+		panelPiezaMuestra.setBounds(520, 85, 260, 75);
+		panelPiezaMuestra.setLayout(null);
+		instruccionDeTrabajo.add(panelPiezaMuestra);
 
-		Object[][] data = new Object[12][3];
-		arrayImagenes = new String[12];
-
-		String strTmp = "";
-		for (int i=0; i<12; i++) {
-			strTmp += "@;@@;@#;#@;@0";
-		}
-		strTmp = strTmp.substring(3);
-
-		String[] arr = strTmp.split("@;@");
-		int row1 = 0;
-		int col1 = 0;
-		for(int i=0; i<arr.length; i++) {
-			if (col1 == 0) {
-				data[row1][col1] = arr[i];
-			} else if(col1 == 1) {
-				data[row1][col1] = "Imágenes";
-				arrayImagenes[row1] = arr[i];
-			} else {
-				if (arr[i].equalsIgnoreCase("1")) {
-					data[row1][col1] = true;
-				} else {
-					data[row1][col1] = false;
-				}
-			}
-			col1++;
-			if (col1 > 2) {
-				col1 = 0;
-				row1++;
-			}
-		}
-
-
-		TableModel model = new DefaultTableModel(data, columnNames);
-		trabajos = new JTable(model) {
-
-			private static final long serialVersionUID = 1L;
+		JPanel panelAccionesInstruccion = new JPanel();
+		panelAccionesInstruccion.setBorder(BorderFactory.createTitledBorder("Acciones instrucción"));
+		panelAccionesInstruccion.setBounds(230, 85, 260, 75);
+		panelAccionesInstruccion.setLayout(null);
+		instruccionDeTrabajo.add(panelAccionesInstruccion);
+		
+		comprobacionDelServicio = new JTextArea();
+		comprobacionDelServicio.setLineWrap(true);
+		comprobacionDelServicio.setWrapStyleWord(true);
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setViewportView(comprobacionDelServicio);
+		scrollPane.setBounds(40, 30, 420, 150);
+		panelComprobacionDelServicioPrestado.add(scrollPane);
+		
+		accionesInstruccionBoton = new JButton("Acciones instrucción");
+		accionesInstruccionBoton.setBounds(30, 30, 150, 20);
+		panelAccionesInstruccion.add(accionesInstruccionBoton);
+		accionesInstruccionBoton.addActionListener(new ActionListener() {
+			
 			@Override
-			public Class<?> getColumnClass(int column) {
-				switch (column) {
-				case 0:
-					return String.class;
-				case 1:
-					return String.class;
-				case 2:
-					return Boolean.class;
-				default:
-					return String.class;
-				}
+			public void actionPerformed(ActionEvent e) {
+				new VentanaImagenes(im, arrayInstrucciones, 0, utilidades, nombreCarpeta).setVisible(true);
 			}
-		};
-		trabajos.getColumnModel().getColumn(1).setCellRenderer(new ClientsTableButtonRenderer());
-		trabajos.getColumnModel().getColumn(1).setCellEditor(new ClientsTableRenderer(new JCheckBox(), arrayImagenes, this, 0, nombreCarpeta, utilidades));
-		trabajos.getTableHeader().setReorderingAllowed(false);
-		trabajos.setRowSelectionAllowed(false);
-		JScrollPane scrollTrabajos = new JScrollPane();
-		scrollTrabajos.setViewportView(trabajos);
-		scrollTrabajos.setBounds(220, 130, 550, 220);
-		instruccionDeTrabajo.add(scrollTrabajos);
+		});
+		
+		imagenesPiezasMuestraBoton = new JButton("Imágenes piezas muestra");
+		imagenesPiezasMuestraBoton.setBounds(30, 30, 160, 20);
+		panelPiezaMuestra.add(imagenesPiezasMuestraBoton);
+		imagenesPiezasMuestraBoton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new VentanaImagenesPiezasMuestraOKNOK(im, imagenesPiezasMuestra, utilidades, nombreCarpeta, 0).setVisible(true);
+			}
+		});
+		
 		JLabel labelInstruccion = new JLabel("<html><h2>INSTRUCCIÓN DE TRABAJO</h2></html>");
 		labelInstruccion.setBounds(310, 32, 300, 25);
 		instruccionDeTrabajo.add(labelInstruccion);
-		JLabel labelInstruccionTabla = new JLabel("<html><h3>Acciones</h3></html>");
-		labelInstruccionTabla.setBounds(470, 85, 200, 25);
-		instruccionDeTrabajo.add(labelInstruccionTabla);
 		JLabel labelVersionInstruccion = new JLabel("<html><h5>PC-01-FOR-05 REV.02</h5></html>");
 		labelVersionInstruccion.setBounds(660, 5, 140, 25);
 		instruccionDeTrabajo.add(labelVersionInstruccion);
@@ -761,7 +753,7 @@ public class VentanaNuevo extends JDialog {
 		filaVacia = new String[1];
 		String[] tiposHora = new String[] {"Hora Normal","Hora extra","Hora sábados","Hora festivos","Hora Nocturna",
 				"H. Especialista Normal", "H. Especialista Extra", "H. Especialista Sabado", "H. Especialista Festiva",
-				"H. Especial. Nocturna","Hora de Coordinación", "H. de Administración","Gastos logisticos","Otros 1","Otros 2"};
+				"H. Especial. Nocturna","Hora de Coordinación", "H. de Administración","Gastos logisticos (cantidad)","Otros 1 (€)","Otros 2 (€)"};
 		for (int i=0; i<tiposHora.length; i++) {
 			modelo1.addRow(filaVacia);
 			modelo1.setValueAt(tiposHora[i], i, 0);
@@ -807,9 +799,9 @@ public class VentanaNuevo extends JDialog {
 		new ExcelAdapter(horas);
 		tablaHeaders.getTableHeader().setReorderingAllowed(false);
 		scroll1 = new JScrollPane(tablaHeaders);
-		scroll1.setBounds(10, 90, 120, 267);
+		scroll1.setBounds(10, 90, 140, 267);
 		estimacionHorasCostes.add(scroll1);
-		scrollHoras.setBounds(128, 90, 660, 290);
+		scrollHoras.setBounds(148, 90, 640, 290);
 		estimacionHorasCostes.add(scrollHoras);
 		JLabel labelEstimacionHoras = new JLabel("<html><h2>TIEMPO INVERTIDO Y COSTES</h2></html>");
 		labelEstimacionHoras.setBounds(280, 40, 300, 25);
@@ -1307,25 +1299,11 @@ public class VentanaNuevo extends JDialog {
 		tablaDefectos = tablaDefectos.replace("null", "");
 
 		String accionesIntruccion = "";
-
-		for (int i = 0; i < trabajos.getRowCount() ; i++) {
-			for (int j = 0; j < trabajos.getColumnCount(); j++) {
-
-				if ( j == 0) {
-					accionesIntruccion += "@;@" + trabajos.getValueAt(i, j);
-				} else if (j == 1) {
-					accionesIntruccion += "@;@" + arrayImagenes[i];
-				} else {
-					if ((boolean) trabajos.getValueAt(i, j))
-						accionesIntruccion += "@;@1";
-					else
-						accionesIntruccion += "@;@0";
-
-				}
-			}
+		
+		for (int i=0; i<arrayInstrucciones.length; i++) {
+			accionesIntruccion += "@;@" + arrayInstrucciones[i];
 		}
-
-
+		accionesIntruccion = accionesIntruccion.substring(3);
 
 		String firmasRetrabajos = "";
 		String firmasPersonal = "";
@@ -1355,9 +1333,6 @@ public class VentanaNuevo extends JDialog {
 			firmasPersonal = firmasPersonal.substring(3);
 		}
 
-
-		accionesIntruccion = accionesIntruccion.substring(3);
-
 		Servicio servi = null;
 
 		if (anadirFormacion && anadirRetrabajos) {
@@ -1369,7 +1344,7 @@ public class VentanaNuevo extends JDialog {
 					recuentoFinal, arrayHoraNormal, arrayHoraExtra, arrayHoraSabado, arrayHoraFestivo, arrayHoraNocturna, arrayHoraEspecialistaNormal, arrayHoraEspecialistaExtra, arrayHoraEspecialistaSabado, arrayHoraEspecialistaFestiva, 
 					arrayHoraEspecialistaNocturna, arrayHoraCoordinacion, arrayHoraAdministracion, arrayGastosLogisticos, arrayOtros1, arrayOtros2, realizadoRetrabajos.getText(), fechaRetrabajos.getDate(), fechaLiberacion.getDate(), 
 					numReclamacion.getText(), fechaReclamacion.getDate(), referenciaRetrabajos.getText(), fechaComienzo.getDate(), tiempo.getText(), clienteRetrabajos.getText(), firmasRetrabajos, imagenRetrabajos, realizadoFormado.getText(), 
-					fechaFormado.getDate(), clienteFormado.getText(), piezaFormado.getText(), referenciaFormado.getText(), firmasPersonal, imagenPersonal, anadirRetrabajos, anadirFormacion, nombreCarpeta);
+					fechaFormado.getDate(), clienteFormado.getText(), piezaFormado.getText(), referenciaFormado.getText(), firmasPersonal, imagenPersonal, anadirRetrabajos, anadirFormacion, nombreCarpeta, imagenesPiezasMuestra, comprobacionDelServicio.getText());
 		} else if (anadirFormacion) {
 			servi = new Servicio(cliente.getId(),cliente.getNombre(), persona, numAccion, cal.getTime(), nombrePieza.getText(), referencias.getText(), numChasis1.getText(), numChasis2.getText(), numChasis3.getText(), numChasis4.getText(),
 					responsable.getText(), piezasVerde.isSelected(), piezasBlanco.isSelected(), piezasOtros.isSelected(), piezasRojo.isSelected(), contenedorVerde.isSelected(), contenedorRojo.isSelected(), recomPersonaContacto.getText(),
@@ -1379,7 +1354,7 @@ public class VentanaNuevo extends JDialog {
 					recuentoFinal, arrayHoraNormal, arrayHoraExtra, arrayHoraSabado, arrayHoraFestivo, arrayHoraNocturna, arrayHoraEspecialistaNormal, arrayHoraEspecialistaExtra, arrayHoraEspecialistaSabado, arrayHoraEspecialistaFestiva, 
 					arrayHoraEspecialistaNocturna, arrayHoraCoordinacion, arrayHoraAdministracion, arrayGastosLogisticos, arrayOtros1, arrayOtros2, null, null, null, 
 					null, null, null, null, null, null, null, null, realizadoFormado.getText(), 
-					fechaFormado.getDate(), clienteFormado.getText(), piezaFormado.getText(), referenciaFormado.getText(), firmasPersonal, imagenPersonal, anadirRetrabajos, anadirFormacion, nombreCarpeta);
+					fechaFormado.getDate(), clienteFormado.getText(), piezaFormado.getText(), referenciaFormado.getText(), firmasPersonal, imagenPersonal, anadirRetrabajos, anadirFormacion, nombreCarpeta, imagenesPiezasMuestra, comprobacionDelServicio.getText());
 		} else if (anadirRetrabajos) {
 			servi = new Servicio(cliente.getId(),cliente.getNombre(), persona, numAccion, cal.getTime(), nombrePieza.getText(), referencias.getText(), numChasis1.getText(), numChasis2.getText(), numChasis3.getText(), numChasis4.getText(),
 					responsable.getText(), piezasVerde.isSelected(), piezasBlanco.isSelected(), piezasOtros.isSelected(), piezasRojo.isSelected(), contenedorVerde.isSelected(), contenedorRojo.isSelected(), recomPersonaContacto.getText(),
@@ -1389,7 +1364,7 @@ public class VentanaNuevo extends JDialog {
 					recuentoFinal, arrayHoraNormal, arrayHoraExtra, arrayHoraSabado, arrayHoraFestivo, arrayHoraNocturna, arrayHoraEspecialistaNormal, arrayHoraEspecialistaExtra, arrayHoraEspecialistaSabado, arrayHoraEspecialistaFestiva, 
 					arrayHoraEspecialistaNocturna, arrayHoraCoordinacion, arrayHoraAdministracion, arrayGastosLogisticos, arrayOtros1, arrayOtros2, realizadoRetrabajos.getText(), fechaRetrabajos.getDate(), fechaLiberacion.getDate(), 
 					numReclamacion.getText(), fechaReclamacion.getDate(), referenciaRetrabajos.getText(), fechaComienzo.getDate(), tiempo.getText(), clienteRetrabajos.getText(), firmasRetrabajos, imagenRetrabajos, null, 
-					null, null, null, null, null, null, anadirRetrabajos, anadirFormacion, nombreCarpeta);
+					null, null, null, null, null, null, anadirRetrabajos, anadirFormacion, nombreCarpeta, imagenesPiezasMuestra, comprobacionDelServicio.getText());
 		} else {
 			servi = new Servicio(cliente.getId(),cliente.getNombre(), persona, numAccion, cal.getTime(), nombrePieza.getText(), referencias.getText(), numChasis1.getText(), numChasis2.getText(), numChasis3.getText(), numChasis4.getText(),
 					responsable.getText(), piezasVerde.isSelected(), piezasBlanco.isSelected(), piezasOtros.isSelected(), piezasRojo.isSelected(), contenedorVerde.isSelected(), contenedorRojo.isSelected(), recomPersonaContacto.getText(),
@@ -1398,7 +1373,7 @@ public class VentanaNuevo extends JDialog {
 					peticionMaterial.isSelected(), referenciasPiezas.isSelected(), seleccion.isSelected(), retrabajo.isSelected(), trasvase.isSelected(), otrosPiezas.isSelected(), accionesIntruccion, tablaDefectos, piezasOK, piezasRecuperadas,
 					recuentoFinal, arrayHoraNormal, arrayHoraExtra, arrayHoraSabado, arrayHoraFestivo, arrayHoraNocturna, arrayHoraEspecialistaNormal, arrayHoraEspecialistaExtra, arrayHoraEspecialistaSabado, arrayHoraEspecialistaFestiva, 
 					arrayHoraEspecialistaNocturna, arrayHoraCoordinacion, arrayHoraAdministracion, arrayGastosLogisticos, arrayOtros1, arrayOtros2, null, null, null, 
-					null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, anadirRetrabajos, anadirFormacion, nombreCarpeta);
+					null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, anadirRetrabajos, anadirFormacion, nombreCarpeta, imagenesPiezasMuestra, comprobacionDelServicio.getText());
 		}
 
 		llamadas.introducirServicio(servi);
@@ -1431,7 +1406,12 @@ public class VentanaNuevo extends JDialog {
 		}
 	}
 
-	public void actualizarImagenesAccionesInstruccion(String imgs, int fila) {
-		arrayImagenes[fila] = imgs;
+//	public void actualizarImagenesAccionesInstruccion(String imgs, int fila) {
+//		arrayImagenes[fila] = imgs;
+//	}TODO
+	
+	public void actualizarImagenesPiezasMuestra(String imagenesMuestra) {
+		imagenesPiezasMuestra = imagenesMuestra;
+		llamadas.actualizarImagenesMuestra(imagenesMuestra, numAccion);
 	}
 }
